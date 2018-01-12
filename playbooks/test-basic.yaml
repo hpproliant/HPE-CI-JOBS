@@ -1,0 +1,7 @@
+- hosts: all
+  name: testing job
+  tasks:
+
+    - shell:
+        cmd: |
+          touch file.txt

@@ -1,17 +1,9 @@
 - job:
-    name: test-base
-    description: A job to test base playbook
-    parent: upstream-base
-    run: playbooks/test-base.yaml
-
-- job:
-    name: test-basic-roles
+    name: test-basic
     description: A job to test prepare-workspace and emit-ara role
     parent: base
-    run: playbooks/test-basic-roles.yaml
-
-- job:
-    name: test-job-unittests
-    description: A job to test the unittests job
-    parent: unittests
-    run: playbooks/noop.yaml
+    run: playbooks/test-basic.yaml
+    nodeset:
+      nodes:
+        - name: ubuntu
+          label: cloud
