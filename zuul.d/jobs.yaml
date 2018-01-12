@@ -1,4 +1,10 @@
 - job:
+    name: base
+    parent: null
+    description: The base job not using openstack-infra/zuul-jobs roles
+    timeout: 1800
+
+- job:
     name: test-basic
     description: A job to test prepare-workspace and emit-ara role
     parent: base
