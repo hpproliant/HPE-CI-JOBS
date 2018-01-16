@@ -1,11 +1,7 @@
 - hosts: all
-  name: testing job
+  name: Autoconverted job legacy-tempest-dsvm-ironic-bfv from old job gate-tempest-dsvm-ironic-bfv-ubuntu-xenial
   tasks:
 
-    - shell:
-        cmd: |
-          set -e
-          set -x
-          export ANKIT=1
-        executable: /bin/bash
-
+    - name: set timezone to Asia/Tokyo
+      timezone:
+        name: Asia/Tokyo
