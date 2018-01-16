@@ -4,7 +4,7 @@
 
     - name: Ensure legacy workspace directory
       file:
-        path: '/var/workspace'
+        path: '/tmp/workspace'
         state: directory
 
     - shell:
@@ -13,4 +13,4 @@
           set -x
           export ANKIT=1
         executable: /bin/bash
-        chdir: '/var/workspace'
+        chdir: '/tmp/workspace'

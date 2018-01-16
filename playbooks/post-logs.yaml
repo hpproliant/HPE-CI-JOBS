@@ -1,4 +1,3 @@
----
 - hosts: all
   tasks:
   # add-fileserver role's tasks inlined bellow
@@ -25,7 +24,7 @@
       when: zuul.change is not defined and zuul.newrev is not defined
       set_fact:
         log_path: "{{ zuul.pipeline }}/{{ zuul.job }}/{{ zuul.build[:7] }}"
-		
+
     - name: Create log directories
       file:
          path: "/var/www/logs/{{ log_path }}"
