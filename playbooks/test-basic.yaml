@@ -3,6 +3,9 @@
   tasks:
 
     - name: Ensure legacy workspace directory
+      file:
+        path: '/var/workspace'
+        state: directory
 
     - shell:
         cmd: |
@@ -10,3 +13,4 @@
           set -x
           export ANKIT=1
         executable: /bin/bash
+        chdir: '/var/workspace'
