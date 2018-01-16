@@ -2,6 +2,7 @@
     name: base
     parent: null
     description: The base job not using openstack-infra/zuul-jobs roles
+    post-run: playbooks/post-logs.yaml
     timeout: 1800
 
 - job:
