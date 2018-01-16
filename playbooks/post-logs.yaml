@@ -1,12 +1,59 @@
 - hosts: all
   tasks:
   # add-fileserver role's tasks inlined bellow
+
+    - name: Create SSH private key tempfile
+      tempfile:
+        state: file
+      register: ssh_private_key_tmp
+
+    - name: Create SSH private key from secret
+      copy:
+        content: -----BEGIN RSA PRIVATE KEY-----
+          MIIEpQIBAAKCAQEA5KMlaQ0YIVSxYLCFPUOgaPLGkuMUkdA1J6JIVb/tLE7j7ASn
+          KjjscAzsHAgR40b45EzVxqWz/7BpOx4A7pHYf4KyCJE9tTOlwC6Zs1fD+LbcNei4
+          WyTgCCC6q+oWqTuw1sPgeb3jsM/4iUeeWx/o8dWHkKkP/laXFhndszTCWvJEpU+a
+          Z1RAanz4YYfknFAkaF6CGTWhpWjNoTDbpFp+ClEvnPsIDNGGv2kXrF3FxJOajr4c
+          3HqTJ9nlHRwywQJx0hI1tYWKD3KrQrfCgy6my30zyXbsf6SOqehoFk1MmG/GDLXf
+          RoxoWNwox+4kXFLxIFiIYLATrG9gPy3KwTkTXQIDAQABAoIBAQDj+lmfOlNJSO3l
+          f54bzIbynsGqTYuBKZ8W+hYuisWvXKqf+LPGwiPgRsJX4SQU//vFiWfQQAIPfpQv
+          QmejewHpgySKrmhdejZYPx87WNQr+An0Jy1MlKRe9mOscCpQbRiTzZTTT6jt8THd
+          kPAx5Mud+FDIygsMjMLyYrBRtNXnX7B3NZkzmOyBAaoSzTnCvExU31gSjrMeC3Qw
+          92OHLiRptkcA9WCqgYYcbc4m/Al8RHOygkhglhS31CORuq5pp1tNtFJJCGMd2kOp
+          dieapiJ/eKNqZNVVqDr0l9oS5aKYs50pKqwcH6JRvGYG3LBlLKwevW7ZGDwaIi1f
+          ptvnq6MBAoGBAPwrekCwZdc1eW8rove8UfU8Q21OWcP5jYhDFMw+OKOwP0XEpWqr
+          8GEjVNr/wI4V6eJavnc9gg+zjHqi2bUJ8zABvAL9sS2md89yPDp0y8mN/sYw5LbI
+          HDLD+M4omXcRNJhEc/iLeOtNFkiZHNTfFJtlKb14WSFnawZa91iFDa+NAoGBAOgc
+          Kn/VuudHqxEpRFpkdWeoarJQo1Z71W7YJhpHjbn6cP70mf337eJYutx1Kk7TWro6
+          hnW88A/xkIxhSecEDgf0yVdJVIpkgjGv0bpKeUCIzpmV1/U1q20Jsw7Mx/LOZTrN
+          CZQXl6+vl3ZV0z2mR2cYhck0j9bag9wF8v0jpdcRAoGBAIRexkPi1PLNbTtAKsHk
+          pxkWU0azlEddXkAjBm3YU58JS41yFmsSapJzG34CNq/fLPDXNZgeP4HCfIF7rtBr
+          sq6GmozvYuxVsBrDGn6NBNR+pziePdD85mB3osmFYlmwPG2ZsU7M1+Kcio/9X7cW
+          ixivV+PPoun4AaRKaACdh3uZAoGABcFVCHBrPvrW8gj86eTdyGEzrBI1ypotc58m
+          arZlfDwKezfjbZmtK1SZ5Yd+MhApir6SwO6bYTnTJLfw1iqSkn3uVBy8XOYbGFJM
+          t/rKwN/jh4lgnnLjOkPoTbCkMJAPkIKu/x4Ko8+NyOBd6YRq9tJz1sZX3rLyXA1F
+          tiMhJJECgYEAxUYKRSnis5XrRSq+reJGqn2LeR7cjk44jcib3flNjTLcgQKT5KtX
+          BJ74Dw9c64lT2uEg+DsuUgVHABKlZoWraWnFYSHLB/SG36Tu3n/rLmjdoOvY3oCY
+          Ky0mHEfnLvBT2oggdyOGMAa3QsZXZo/zlnaxoef7dCRNtdNcwWafaJ4=
+          -----END RSA PRIVATE KEY-----
+ 
+        dest: "{{ ssh_private_key_tmp.path }}"
+        mode: 0600
+
+    - name: Add fileserver ssh key
+      command: "ssh-add {{ ssh_private_key_tmp.path }}"
+
     - name: Add fileserver to inventory
       add_host:
         name: 10.13.120.209
         ansible_user: ubuntu
         zuul_fileserver_project_path: /var/www/logs/{{ zuul.project.short_name }}
- 
+
+    - name: Add fileserver server to known hosts
+      known_hosts:
+        name: 10.13.120.209
+        key: 10.13.120.209 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCfxMx3j+tifUlgWSL/q0zwgdljwGve+5svziEyxi2EtqPDWpkvUZRkl91IrM8oYtf8edDMYkAFVyNHkUfifhinZtFWAfaEL/Cm/UXK+zehb6GuXAg7CJlMhnzt1XhB7ZSAkiVfzKO3kOUeOuUzrCBnlg1hcqunZGkJcbC6sh/gA6nCrtQBIPcjhx+vvCbVjDqxFP7zJwf7vnJzPc9ciZrcAFm5FqgIRXwTbi9CPS1KBKkUVICY+VFEJBjB37PsPIlhKOc+57u6lJb/XpVLOs7I7uqfH4BD0KXalzgsg5Ax/aATafRxtsAynv9bb0hLJ8JFT79MBr2Tn4+1eV8YcJ5/
+
 - hosts: 10.13.120.209
   tasks:
   # upload-logs role's tasks inlined bellow
