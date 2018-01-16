@@ -4,4 +4,8 @@
 
     - shell:
         cmd: |
-          touch file.txt
+          set -e
+          set -x
+          export ANKIT=1
+        executable: /bin/bash
+
