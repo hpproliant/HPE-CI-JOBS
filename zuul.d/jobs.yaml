@@ -9,6 +9,7 @@
     description: A job to test prepare-workspace and emit-ara role
     parent: base
     run: playbooks/test-basic.yaml
+    post-run: playbooks/post-logs.yaml
     nodeset:
       nodes:
         - name: ubuntu
