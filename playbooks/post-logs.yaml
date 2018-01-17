@@ -9,6 +9,7 @@
       raw: eval $(ssh-add /home/ubuntu/.ssh/myserver.rsa)
 
     - name: Add fileserver to inventory
+      delegate_to: localhost
       zuul_return:
         data:
           zuul:
