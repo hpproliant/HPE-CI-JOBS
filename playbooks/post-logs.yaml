@@ -3,9 +3,10 @@
   # add-fileserver role's tasks inlined bellow
 
     - name: Add fileserver to inventory
+      sudo: yes
       add_host:
         name: 10.13.120.209
-        ansible_user: ubuntu
+        ansible_user: root
         zuul_fileserver_project_path: /var/www/logs/{{ zuul.project.short_name }}
 
 - hosts: 10.13.120.209
