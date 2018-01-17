@@ -3,7 +3,7 @@
   # add-fileserver role's tasks inlined bellow
 
     - name: Run agent
-      raw: evel $(/usr/bin/ssh-agent -s)
+      raw: eval $(/usr/bin/ssh-agent -s)
 
     - name: Add fileserver ssh key
       command: "ssh-add /etc/zuul-keys/myserver.rsa"
