@@ -5,9 +5,8 @@
     - name: Add fileserver to inventory
       add_host:
         name: 10.13.120.209
-        ansible_user: root
+        ansible_user: ubuntu
         zuul_fileserver_project_path: /var/www/logs/{{ zuul.project.short_name }}
-      become: true
 
 - hosts: 10.13.120.209
   tasks:
