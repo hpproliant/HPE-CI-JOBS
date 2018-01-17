@@ -12,7 +12,7 @@
       zuul_return:
         data:
           zuul:
-            log_url: "http://10.13.120.209/"
+            log_url: "http://10.13.120.209/openstack/ironic"
 
 #    - name: Add fileserver to inventory
 #      add_host:
