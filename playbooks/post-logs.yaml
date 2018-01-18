@@ -18,7 +18,7 @@
         log_path: "{{ zuul.pipeline }}/{{ zuul.job }}/{{ zuul.build[:7] }}"
 
     - name: Create log directories
-      raw: mkdir -p /var/www/logs/{{ log_path }}
+      raw: ssh ubuntu@10.13.120.209 "mkdir -p /var/www/logs/{{ log_path }}"
    
     - name: Upload logs to log server
       raw: rsync --exclude=job-output.txt -a "{{ zuul.executor.log_root }}/" "ubuntu@10.13.120.209:/var/www/logs/{{ log_path }}/"
