@@ -56,7 +56,9 @@
         mode: 0600
 
     - name: Run ssh agent
-      command: "eval `ssh-agent -s`"
+      module: shell
+      _raw_params: eval `ssh-agent -s`
+
     - name: Add log server
       command: "ssh-add {{ ssh_private_key_tmp.path }}"
 #      script: /home/zuul/test.sh
