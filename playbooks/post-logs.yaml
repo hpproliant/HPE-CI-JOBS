@@ -19,7 +19,7 @@
 
     - name: Upload logs to log server
       delegate_to: localhost
-      local_action: command sudo sh /home/zuul/test.sh
+      local_action: command sh /home/zuul/test.sh
 #      raw: rsync -a --exclude=job-output.txt --rsync-path="mkdir -p /var/www/logs/{{ log_path }}/ && rsync" "{{ zuul.executor.log_root }}/" ubuntu@10.13.120.209:/var/www/logs/{{ log_path }}/
 
     - name: Gzip console log
