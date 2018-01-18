@@ -55,9 +55,10 @@
         dest: "{{ ssh_private_key_tmp.path }}"
         mode: 0600
 
-    - name: Run ssh agent
-      module: shell
-      _raw_params: eval `ssh-agent -s`
+    - name: enable ssh-agent
+      shell: echo "ssh-agent = $(ssh-agent)"
+    - name: enable ssh-agent
+      shell: eval $(ssh-agent)
 
     - name: Add log server
       command: "ssh-add {{ ssh_private_key_tmp.path }}"
