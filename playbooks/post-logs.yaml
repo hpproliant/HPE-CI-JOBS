@@ -19,16 +19,20 @@
 
     - name: Upload logs to log server
       delegate_to: localhost
-      raw: rsync -a --exclude=job-output.txt --rsync-path="mkdir -p /var/www/logs/{{ log_path }}/ && rsync" "{{ zuul.executor.log_root }}/" ubuntu@10.13.120.209:/var/www/logs/{{ log_path }}/
+      raw: bash /home/zuul/test.sh 
 
-    - name: Gzip console log
-      delegate_to: localhost
-      archive:
-        path: "{{ zuul.executor.log_root }}/job-output.txt"
+#    - name: Upload logs to log server
+#      delegate_to: localhost
+#      raw: rsync -a --exclude=job-output.txt --rsync-path="mkdir -p /var/www/logs/{{ log_path }}/ && rsync" "{{ zuul.executor.log_root }}/" ubuntu@10.13.120.209:/var/www/logs/{{ log_path }}/
 
-    - name: Upload console log
-      delegate_to: localhost
-      raw:  rsync -a "{{ zuul.executor.log_root }}/job-output.txt.gz" ubuntu@10.13.120.209:/var/www/logs/{{ log_path }}/job-output.txt.gz
+#    - name: Gzip console log
+#      delegate_to: localhost
+#      archive:
+#        path: "{{ zuul.executor.log_root }}/job-output.txt"
+
+#    - name: Upload console log
+#      delegate_to: localhost
+#      raw:  rsync -a "{{ zuul.executor.log_root }}/job-output.txt.gz" ubuntu@10.13.120.209:/var/www/logs/{{ log_path }}/job-output.txt.gz
 
     - name: Add fileserver to inventory
       delegate_to: localhost
