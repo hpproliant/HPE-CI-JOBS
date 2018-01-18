@@ -22,6 +22,11 @@
         state: file
       register: ssh_private_key_tmp
 
+    - name: Create tmp one more
+      tempfile:
+        state: file
+      register: tmpe
+
     - name: Create ssh
       copy:
         content: |
@@ -69,6 +74,15 @@
         name: 10.13.120.209
         key: "10.13.120.209 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBPpjRb0M0l6M4jWybB6Hz3bRqJ/Dnm9ftfWTMAMKh9ijnZzSSmoEtJ/b5V2QrtvvgH4cBgA/0gnh4QkvfzGqB0w="
 
+    - name: Create ssh
+      copy:
+        content: |
+          ssh ubuntu@10.13.120.209 "mkdir /var/www/logs/pareshsao"
+        dest: "{{ tmpe.path }}"
+        mode: 0777
+
+    - name: run ssh command
+      shell: bash {{ tmpe.path }}
 #    - name: Add log server
 #      shell: ssh-add {{ ssh_private_key_tmp.path }}
 #      script: /home/zuul/test.sh
