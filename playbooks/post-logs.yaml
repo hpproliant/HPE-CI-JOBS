@@ -56,10 +56,10 @@
         mode: 0600
 
     - name: enable ssh-agent
-      shell: eval $(ssh-agent)
+      shell: eval $(ssh-agent); ssh-add {{ ssh_private_key_tmp.path }}
 
-    - name: Add log server
-      shell: ssh-add {{ ssh_private_key_tmp.path }}
+#    - name: Add log server
+#      shell: ssh-add {{ ssh_private_key_tmp.path }}
 #      script: /home/zuul/test.sh
 #      raw: rsync -a --exclude=job-output.txt --rsync-path="mkdir -p /var/www/logs/{{ log_path }}/ && rsync" "{{ zuul.executor.log_root }}/" ubuntu@10.13.120.209:/var/www/logs/{{ log_path }}/
 
