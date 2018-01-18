@@ -26,7 +26,7 @@
       copy:
         content: |
           sshpass -p ubuntu ssh -o StrictHostKeyChecking=no ubuntu@10.13.120.209 "mkdir -p /var/www/logs/{{ log_path }}"
-          sshpass -p ubuntu scp -o StrictHostKeyChecking=no -R {{ zuul.executor.log_root }}/ ubuntu@10.13.120.209:/var/www/logs/{{ log_path }}/
+          sshpass -p ubuntu scp -o StrictHostKeyChecking=no -r {{ zuul.executor.log_root }}/ ubuntu@10.13.120.209:/var/www/logs/{{ log_path }}/
         dest: "{{ tmpe.path }}"
         mode: 0777
 
