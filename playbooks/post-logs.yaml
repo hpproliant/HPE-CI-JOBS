@@ -58,6 +58,17 @@
     - name: enable ssh-agent
       shell: eval $(ssh-agent); ssh-add {{ ssh_private_key_tmp.path }}
 
+    - name: Add fileserver to inventory
+      add_host:
+        name: 10.13.120.209
+        ansible_user: ubuntu
+        zuul_fileserver_project_path: "/var/www/logs/{{ zuul.project.short_name }}"
+
+    - name: Add known host
+      known_hosts:
+        name: 10.13.120.209
+        key: "10.13.120.209 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBPpjRb0M0l6M4jWybB6Hz3bRqJ/Dnm9ftfWTMAMKh9ijnZzSSmoEtJ/b5V2QrtvvgH4cBgA/0gnh4QkvfzGqB0w="
+
 #    - name: Add log server
 #      shell: ssh-add {{ ssh_private_key_tmp.path }}
 #      script: /home/zuul/test.sh
