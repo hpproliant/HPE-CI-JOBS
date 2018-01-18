@@ -18,21 +18,28 @@
         log_path: "{{ zuul.pipeline }}/{{ zuul.job }}/{{ zuul.build[:7] }}"
 
     - name: Create tmp one more
-      delegate_to: localhost
       tempfile:
         state: file
       register: tmpe
+
+    - name: Create log directory
+      file:
+         path: /tmp/new_zuul
+         state: directory
+         owner: ubuntu
+         group: ubuntu
+         mode: 0775     
 
     - name: Create ssh file
       copy:
         content: |
           sshpass -p ubuntu ssh -o StrictHostKeyChecking=no ubuntu@10.13.120.209 "mkdir -p /var/www/logs/{{ log_path }}"
-          sshpass -p ubuntu scp -o StrictHostKeyChecking=no -r {{ zuul.executor.log_root }}/ ubuntu@10.13.120.209:/var/www/logs/{{ log_path }}/
+          sshpass -p zuul12iso*help scp -o StrictHostKeyChecking=no -r zuul@10.13.120.207:{{ zuul.executor.log_root }} /tmp/new_zuul/
+          sshpass -p ubuntu scp -o StrictHostKeyChecking=no -r /tmp/new_zuul/ ubuntu@10.13.120.209:/var/www/logs/{{ log_path }}/
         dest: "{{ tmpe.path }}"
         mode: 0777
 
     - name: run ssh command
-      delegate_to: localhost
       shell: bash {{ tmpe.path }}
 #    - name: Add log server
 #      shell: ssh-add {{ ssh_private_key_tmp.path }}
