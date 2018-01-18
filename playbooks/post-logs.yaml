@@ -17,6 +17,10 @@
       set_fact:
         log_path: "{{ zuul.pipeline }}/{{ zuul.job }}/{{ zuul.build[:7] }}"
 
+    - name: Create tmp
+      tempfile:
+        state: file
+      register: ssh_private_key_tmp
 
     - name: Create ssh
       copy:
