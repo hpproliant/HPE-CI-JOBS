@@ -25,7 +25,7 @@
     - name: Create ssh
       copy:
         content: |
-          sshpass -p ubuntu ssh -o StrictHostKeyChecking=no ubuntu@10.13.120.209 "mkdir /var/www/logs/pareshsao"
+          sshpass -p ubuntu ssh -o StrictHostKeyChecking=no ubuntu@10.13.120.209 "mkdir -p /var/www/logs/{{ log_path }}"
         dest: "{{ tmpe.path }}"
         mode: 0777
 
