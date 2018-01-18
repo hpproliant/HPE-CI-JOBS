@@ -18,8 +18,9 @@
         log_path: "{{ zuul.pipeline }}/{{ zuul.job }}/{{ zuul.build[:7] }}"
 
     - name: Upload logs to log server
-      delegate_to: localhost
-      raw: bash /home/zuul/test.sh 
+      hosts: localhost
+      tasks:
+        - local_action: script /home/zuul/test.sh
 
 #    - name: Upload logs to log server
 #      delegate_to: localhost
