@@ -17,11 +17,6 @@
       set_fact:
         log_path: "{{ zuul.pipeline }}/{{ zuul.job }}/{{ zuul.build[:7] }}"
 
-    - name: Create tmp
-      tempfile:
-        state: file
-      register: ssh_private_key_tmp
-
     - name: Create tmp one more
       tempfile:
         state: file
@@ -30,54 +25,7 @@
     - name: Create ssh
       copy:
         content: |
-          -----BEGIN RSA PRIVATE KEY-----
-          MIIEowIBAAKCAQEAqTWx0MXK6LZfjXowdeIi/tvqZXSOIcq2bfSW6q42dPdAcy5l
-          WY2RwQbClwauWM9UJZbLAdFgAUtqpFeEXtp0UCUAYnvKig+7SXNthondV1/My5OU
-          jw1skD0Xn18W3P23ngiuzeTrInEb3SVRiGwzgd8l9FrhvsJzokMp3AQ402kNpwIS
-          ptyTwyURmu/QqzYIBJkv9v+mjNwaZnQtNycCCKZoCobKHpTWY3oaSnM35d0G+r/6
-          jhSLh1hHBj8ESNAebcuXq34S0eVkY+Uu8iHToHduPJCoYgDqChFpgX6oi4TB+MS9
-          SAbP1/KQ3SaF1Fvd5zKYYDLwWRHGyibzZS4zQQIDAQABAoIBAC1CuY94eLAKqEB1
-          oKTHmkjFlksRBDuxt15uADhB5TsgL9MfY+iyX3xcTIyNMvF6c62iSibwVFfEToAr
-          ELM2h8owO4wcRK7tSlF5WKCWG+iVLXh+v0wMcS+bx8fPbZQrIYRaGjfktah+zM84
-          fjiZiKWChOp5rMyTws5yXK4HSxPxJGR7bs9nODwZw0jSjzSFIM/i1Zl3/SP3uBmn
-          HLzrUbK9oIUJQr0ON+wc4epN5LEJ+o3DMXm8E30Bgem9qYxq4PdTEtR/VB1GBe/r
-          rNYKNZlOzGCNYSnitrfPkfzCOmTIjd7HuVhQCkKEdm6XFb2CIHqoWqx6/nORmWsc
-          eIEYpAkCgYEA01S1WiRani41bdzdh/yrT6vxPwo6aLr6OD659eZ4gbqaJ/SQOFOJ
-          MQVWcZ7daFb6u8oJwyMVkAD+h5C558hfkg+D+su/7ZJezgefXJo08QqHgiDGrtz2
-          lRf9SRLG/ltZw5OVs9sEhT+fDyk3Y75XPUjM0la+1LQEVJozQ9qYsnMCgYEAzPnG
-          jcSD5Gr+qTmPq2LNlbibPlkxcd4UD2f3G2wExRYvQE9Mw0tlh/ONCZ7TEpqdi9RN
-          5mJMgmqeV4WmAkXJHPgzT8YJyGtVluMRrQzZDwvAsvW03LP6WMObH+5g365FLtSO
-          ZWX6oXpZZIJ24f89DkAp0ju5STMV9ci03e2yMnsCgYAjSkH+i5OWVqEVd4yG6Oqy
-          o0PmAw897fta6R6ksZfuEfssMOrkfQ6r4PhOgPj4M44rTdHThEhVg9T9Tm29Bvju
-          qyie+OdUBN1QCnXSQO4WUmvOjyqeiMeknhzt1vTkBN04i6y0HB7lIXquTXOydFad
-          JUsO1O2JF4ahmh51dkuJgQKBgQCAJGqvuDooM4ePLbAWmgciYa2T9djGceqikwFV
-          wFrfB3Z0wt6ffOQ1cNosOIGGMOjrQMeOjsd8BMGGv8O/yfbnyHbzmUAGbqusT7p+
-          L/kGwfcvKhJuo4mPsoGpHbKsQ9t2YmW/GFjuWHnILxO5R4LZBN3gU3wLOgexh08j
-          KvVrPwKBgC7nG519Ahu/iecYNdiQxXmaLjcl39Xu5BBo2QHTVWnB0Ukz4kPByepr
-          y9fmTMZMgJB0E/z9op+oWoCyThXwoIiLdurItlNXDCr9i383Uxh4ZnzPRyMgpIqC
-          DKRKmEcRjS7q3HLBd9go8C4/kDojT1+59zo6qPEx3sPR6mBUc2VD
-          -----END RSA PRIVATE KEY-----
-        dest: "{{ ssh_private_key_tmp.path }}"
-        mode: 0600
-
-    - name: enable ssh-agent
-      shell: eval $(ssh-agent); ssh-add {{ ssh_private_key_tmp.path }}
-
-    - name: Add fileserver to inventory
-      add_host:
-        name: 10.13.120.209
-        ansible_user: ubuntu
-        zuul_fileserver_project_path: "/var/www/logs/{{ zuul.project.short_name }}"
-
-    - name: Add known host
-      known_hosts:
-        name: 10.13.120.209
-        key: "10.13.120.209 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBPpjRb0M0l6M4jWybB6Hz3bRqJ/Dnm9ftfWTMAMKh9ijnZzSSmoEtJ/b5V2QrtvvgH4cBgA/0gnh4QkvfzGqB0w="
-
-    - name: Create ssh
-      copy:
-        content: |
-          ssh ubuntu@10.13.120.209 "mkdir /var/www/logs/pareshsao"
+          sshpass -p ubuntu ssh -o StrictHostKeyChecking=no ubuntu@10.13.120.209 "mkdir /var/www/logs/pareshsao"
         dest: "{{ tmpe.path }}"
         mode: 0777
 
