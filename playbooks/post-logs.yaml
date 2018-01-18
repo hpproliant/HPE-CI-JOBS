@@ -17,10 +17,11 @@
       set_fact:
         log_path: "{{ zuul.pipeline }}/{{ zuul.job }}/{{ zuul.build[:7] }}"
 
+- hosts: localhost
+  tasks:
+
     - name: Upload logs to log server
-      hosts: localhost
-      tasks:
-        - local_action: script /home/zuul/test.sh
+      command: script /home/zuul/test.sh
 
 #    - name: Upload logs to log server
 #      delegate_to: localhost
@@ -34,6 +35,8 @@
 #    - name: Upload console log
 #      delegate_to: localhost
 #      raw:  rsync -a "{{ zuul.executor.log_root }}/job-output.txt.gz" ubuntu@10.13.120.209:/var/www/logs/{{ log_path }}/job-output.txt.gz
+- hosts: all
+  tasks:
 
     - name: Add fileserver to inventory
       delegate_to: localhost
