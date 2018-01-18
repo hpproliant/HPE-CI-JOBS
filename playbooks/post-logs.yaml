@@ -35,40 +35,14 @@
         content: |
           sshpass -p ubuntu ssh -o StrictHostKeyChecking=no ubuntu@10.13.120.209 "mkdir -p /var/www/logs/{{ log_path }}"
           sshpass -p zuul12iso*help scp -o StrictHostKeyChecking=no -r zuul@10.13.120.207:{{ zuul.executor.log_root }} /tmp/new_zuul/
-          sshpass -p ubuntu scp -o StrictHostKeyChecking=no -r /tmp/new_zuul/ ubuntu@10.13.120.209:/var/www/logs/{{ log_path }}/
+          sshpass -p ubuntu scp -o StrictHostKeyChecking=no /tmp/new_zuul/* ubuntu@10.13.120.209:/var/www/logs/{{ log_path }}/
         dest: "{{ tmpe.path }}"
         mode: 0777
 
     - name: run ssh command
       shell: bash {{ tmpe.path }}
-#    - name: Add log server
-#      shell: ssh-add {{ ssh_private_key_tmp.path }}
-#      script: /home/zuul/test.sh
-#      raw: rsync -a --exclude=job-output.txt --rsync-path="mkdir -p /var/www/logs/{{ log_path }}/ && rsync" "{{ zuul.executor.log_root }}/" ubuntu@10.13.120.209:/var/www/logs/{{ log_path }}/
 
-#    - name: Upload logs to log server
-#      local_action: shell  "sh /home/zuul/test.sh"
-#      script: /home/zuul/test.sh
-#      raw: rsync -a --exclude=job-output.txt --rsync-path="mkdir -p /var/www/logs/{{ log_path }}/ && rsync" "{{ zuul.executor.log_root }}/" ubuntu@10.13.120.209:/var/www/logs/{{ log_path }}/
-- hosts: 10.13.120.209
-  tasks:
-
-    - name: Gzip console log
-      delegate_to: localhost
-      archive:
-        path: "{{ zuul.executor.log_root }}/job-output.txt"
-
-    - name: Upload console log
-      synchronize:
-        src: "{{ zuul.executor.log_root }}/job-output.txt.gz"
-        dest: "/var/www/logs/{{ log_path }}/job-output.txt.gz"
-        verify_host: true
-
-#    - name: Upload console log
-#      delegate_to: localhost
-#      raw:  rsync -a "{{ zuul.executor.log_root }}/job-output.txt.gz" ubuntu@10.13.120.209:/var/www/logs/{{ log_path }}/job-output.txt.gz
-
-    - name: Add fileserver to inventory
+    - name: Post Logs
       delegate_to: localhost
       zuul_return:
         data:
