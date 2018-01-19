@@ -59,7 +59,7 @@ function run_stack {
     wget http://10.13.120.207:9999/fedora-wd-uefi.qcow2 -O files/fedora-wd-uefi.qcow2
     cp /tmp/agent-ilo/HPE-CI-JOBS/agent-ilo/local.conf.sample local.conf
     ip=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
-    echo "HOST_IP=$ip" >> local.conf
+    sed -i "s/192.168.1.2/$ip/g" local.conf
     # Do unstack to make sure there aren't any previous leftover services.
     #./unstack.sh
 
