@@ -24,7 +24,7 @@ source "$DIR/functions.sh"
 set -e
 set -x
 set -o pipefail
-
+echo "We are inside agent gate"
 export PATH=$PATH:/var/lib/gems/1.8/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
 export DIB_DEPLOY_ISO_KERNEL_CMDLINE_ARGS="console=ttyS1"
 export IRONIC_USER_IMAGE_PREFERRED_DISTRO=${IRONIC_USER_IMAGE_PREFERRED_DISTRO:-fedora}
