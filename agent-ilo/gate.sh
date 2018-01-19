@@ -37,6 +37,8 @@ function install_packages {
 
 function clone_projects {
     sudo mkdir -p /opt/stack
+    sudo chown ubuntu.ubuntu /opt/stack
+    sudo chmod 0777 /opt/stack
     cd /opt/stack
     git clone https://github.com/openstack-dev/devstack.git
     git clone https://github.com/openstack/ironic.git
