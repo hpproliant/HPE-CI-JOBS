@@ -1,0 +1,14 @@
+- hosts: all
+  name: HPE Proliant boot from volume job
+  tasks:
+
+    - name: Create workspace directory to run bfv
+      file:
+        path: '/tmp/bfv'
+        state: directory
+
+    - name: Clonning devstack-gate for bfv
+      shell: cd /tmp/bfv; git clone https://github.com/hpproliant/HPE-CI-JOBS.git
+
+    - name: Running bfv
+      shell: bash /tmp/bfv/HPE-CI-JOBS/bfv/gate.sh

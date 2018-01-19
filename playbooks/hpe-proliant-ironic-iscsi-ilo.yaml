@@ -1,0 +1,14 @@
+- hosts: all
+  name: HPE Proliant iscsi-ilo job
+  tasks:
+
+    - name: Create workspace directory to run iscsi-ilo
+      file:
+        path: '/tmp/iscsi-ilo'
+        state: directory
+
+    - name: Clonning devstack-gate for iscsi-ilo
+      shell: cd /tmp/iscsi-ilo; git clone https://github.com/hpproliant/HPE-CI-JOBS.git
+
+    - name: Running iscsi-ilo
+      shell: bash /tmp/iscsi-ilo/HPE-CI-JOBS/iscsi-ilo/gate.sh

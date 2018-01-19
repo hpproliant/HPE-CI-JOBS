@@ -1,0 +1,14 @@
+- hosts: all
+  name: HPE Proliant agent-ilo job
+  tasks:
+
+    - name: Create workspace directory to run agent-ilo
+      file:
+        path: '/tmp/agent-ilo'
+        state: directory
+
+    - name: Clonning devstack-gate for agent-ilo
+      shell: cd /tmp/agent-ilo; git clone https://github.com/hpproliant/HPE-CI-JOBS.git
+
+    - name: Running agent-ilo
+      shell: bash /tmp/agent-ilo/HPE-CI-JOBS/agent-ilo/gate.sh
