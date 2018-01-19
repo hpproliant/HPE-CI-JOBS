@@ -35,7 +35,7 @@ function restart_service {
     local restarted
 
     echo "Restarting $1 ..."
-    restarted=$(sudo service $1 restart)
+    restarted=$(service $1 restart)
 }
 
 function install_packages{
@@ -44,7 +44,7 @@ function install_packages{
 }
 
 function clone_projects{
-    sudo mkdir -p /opt/stack
+    mkdir -p /opt/stack
     cd /opt/stack
     git clone https://github.com/openstack-dev/devstack.git
     git clone https://github.com/openstack/ironic.git
@@ -114,7 +114,7 @@ function run_stack {
         local interface
         interface=$(awk -F'=' '/PUBLIC_INTERFACE/{print $2}' /opt/stack/devstack/local.conf)
         if [[ -n "$interface" ]]; then
-            sudo tcpdump -i eth1 >& $LOGDIR/tcpdump &
+            tcpdump -i eth1 >& $LOGDIR/tcpdump &
         fi
     fi
 
