@@ -1,5 +1,0 @@
-- project:
-    name: openstack/ironic
-    check:
-      jobs:
-        - test-basic
