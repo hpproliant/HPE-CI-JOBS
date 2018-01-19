@@ -18,9 +18,6 @@
 
 env
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source "$DIR/functions.sh"
-
 set -e
 set -x
 set -o pipefail
@@ -33,16 +30,6 @@ export SECURE_BOOT=${SECURE_BOOT:-}
 export BOOT_LOADER=${BOOT_LOADER:-grub2}
 export IRONIC_IPA_RAMDISK_DISTRO=ubuntu
 export BRANCH=${ZUUL_BRANCH:-master}
-
-#function stop_ilo_gate_process {
-#    local pid
-#    local stopped#
-#
-#    pid=$(pidof $1 || true)
-#    if [[ -n "$pid" ]]; then
-#        stopped=$(sudo kill $pid)
-#    fi
-#}
 
 function restart_service {
     local restarted
