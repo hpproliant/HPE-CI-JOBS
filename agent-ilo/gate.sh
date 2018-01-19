@@ -35,16 +35,16 @@ function restart_service {
     local restarted
 
     echo "Restarting $1 ..."
-    restarted=$(service $1 restart)
+    restarted=$(sudo service $1 restart)
 }
 
 function install_packages {
-    apt install apache2
-    apt install openvswitch-switch
+    sudo apt install apache2
+    sudo apt install openvswitch-switch
 }
 
 function clone_projects {
-    mkdir -p /opt/stack
+    sudo mkdir -p /opt/stack
     cd /opt/stack
     git clone https://github.com/openstack-dev/devstack.git
     git clone https://github.com/openstack/ironic.git
