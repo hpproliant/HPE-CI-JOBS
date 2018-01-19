@@ -1,5 +1,0 @@
-- project:
-    name: openstack/ironic
-    check:
-      jobs:
-        - hpe-proliant-ironic-agent-ilo
