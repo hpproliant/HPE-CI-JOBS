@@ -56,7 +56,7 @@ function run_stack {
     #cp /opt/stack/devstack/local.conf $LOGDIR
 
     cd /opt/stack/devstack
-    wget http://10.13.120.196:9999/fedora-wd-uefi.qcow2 -O files/fedora-wd-uefi.qcow2
+    wget http://10.13.120.207:9999/fedora-wd-uefi.qcow2 -O files/fedora-wd-uefi.qcow2
     cp /tmp/agent-ilo/HPE-CI-JOBS/agent-ilo/local.conf.sample local.conf
     ip=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     echo "HOST_IP=$ip" >> local.conf
