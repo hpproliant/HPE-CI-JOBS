@@ -28,9 +28,9 @@ SWIFT_START_ALL_SERVICES=False
 SWIFT_REPLICAS=1
 
 SYSLOG=False
-SCREEN_LOGDIR=/opt/stack/screen-logs
-IRONIC_VM_LOG_DIR=/opt/stack/ironic-bm-logs
-LOGFILE=/opt/stack/devstacklog.txt
+SCREEN_LOGDIR=/tmp/devstack_logs
+IRONIC_VM_LOG_DIR=/tmp/devstack_logs/ironic-bm-logs
+LOGFILE=/tmp/devstack_logs/devstacklog.txt
 VERBOSE=True
 ETCD_DOWNLOAD_URL=http://tarballs.openstack.org/etcd/
 
