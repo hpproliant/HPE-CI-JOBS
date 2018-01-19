@@ -40,7 +40,7 @@ function restart_service {
 
 function install_packages{
     sudo apt install apache2
-	sudo apt install openvswitch-switch
+    sudo apt install openvswitch-switch
 }
 
 function clone_projects{
