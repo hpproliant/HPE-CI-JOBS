@@ -127,6 +127,8 @@ function run_stack {
 
 function update_ironic {
     cd /opt/stack/ironic
+    git config --global user.email "proliantutils@gmail.com"
+    git config --global user.name "proliantci"
     git fetch https://git.openstack.org/openstack/ironic refs/changes/51/535651/1 && git cherry-pick FETCH_HEAD
 }
 
