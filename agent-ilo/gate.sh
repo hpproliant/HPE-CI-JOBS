@@ -38,7 +38,7 @@ function restart_service {
     restarted=$(service $1 restart)
 }
 
-function install_packages{
+function install_packages {
     apt install apache2
     apt install openvswitch-switch
 }
