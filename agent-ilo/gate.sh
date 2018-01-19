@@ -43,7 +43,7 @@ function install_packages {
     apt install openvswitch-switch
 }
 
-function clone_projects{
+function clone_projects {
     mkdir -p /opt/stack
     cd /opt/stack
     git clone https://github.com/openstack-dev/devstack.git
