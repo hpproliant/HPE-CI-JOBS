@@ -31,16 +31,8 @@ export BOOT_LOADER=${BOOT_LOADER:-grub2}
 export IRONIC_IPA_RAMDISK_DISTRO=ubuntu
 export BRANCH=${ZUUL_BRANCH:-master}
 
-function restart_service {
-    local restarted
-
-    echo "Restarting $1 ..."
-    restarted=$(sudo service $1 restart)
-}
-
 function install_packages {
-    sudo apt install apache2
-    sudo apt install openvswitch-switch
+    sudo apt -y install apache2 openvswitch-switch
 }
 
 function clone_projects {
@@ -141,7 +133,7 @@ function update_ironic_tempest_plugin {
     git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/52/535652/2 && git cherry-pick FETCH_HEAD
 }
  
-install_packages
+#install_packages
 clone_projects
 update_ironic
 update_ironic_tempest_plugin
