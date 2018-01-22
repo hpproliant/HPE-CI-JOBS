@@ -50,28 +50,12 @@ function run_stack {
     local ironic_node
     local capabilities
     local hardware_info
-    local root_device_hint
-
-    # Move the current local.conf to the logs directory.
-    #cp /opt/stack/devstack/local.conf $LOGDIR
 
     cd /opt/stack/devstack
     wget http://10.13.120.207:9999/fedora-wd-uefi.qcow2 -O files/fedora-wd-uefi.qcow2
     cp /tmp/agent-ilo/HPE-CI-JOBS/agent-ilo/local.conf.sample local.conf
     ip=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sed -i "s/192.168.1.2/$ip/g" local.conf
-    # Do unstack to make sure there aren't any previous leftover services.
-    #./unstack.sh
-
-    #Restart services
-    #restart_service "openvswitch-switch"
-
-    # Final environment variable list.
-    echo "-----------------------------------"
-    echo "Final list of environment variables"
-    echo "-----------------------------------"
-    env
-    echo "-----------------------------------"
 
     # Run stack.sh
     ./stack.sh
@@ -96,33 +80,14 @@ function run_stack {
 
     # Update the root device hint if it was specified for some node.
     hardware_info=${IRONIC_ILO_HWINFO}
-    root_device_hint=$(echo $hardware_info |awk '{print $5}')
-    if [[ -n "$root_device_hint" ]]; then
-        ironic node-update $ironic_node add properties/root_device="{\"size\": \"$root_device_hint\"}"
-    fi
-
-
-
-    # Enable tcpdump for pxe drivers
-    if [[ "$ILO_DRIVER" = "pxe_ilo" ]]; then
-        local interface
-        interface=$(awk -F'=' '/PUBLIC_INTERFACE/{print $2}' /opt/stack/devstack/local.conf)
-        if [[ -n "$interface" ]]; then
-            tcpdump -i eth1 >& $LOGDIR/tcpdump &
-        fi
-    fi
 
     # Run the tempest test.
-    cd /opt/stack/ironic
+    cd /opt/stack/ironic-tempest-plugin
     export OS_TEST_TIMEOUT=3000
     #tox -eall -- test_baremetal_server_ops
     tox -eall -- ironic_tempest_plugin.tests.scenario.ironic_standalone.test_basic_ops.BaremetalAgentIloWholediskHttpLink
     tox -eall -- ironic_tempest_plugin.tests.scenario.ironic_standalone.test_basic_ops.BaremetalAgentIloPartitioned
 
-    git reset --hard HEAD~2
-    # Stop console and tcpdump processes.
-    stop_console
-    stop_tcpdump
 }
 
 function update_ironic {
