@@ -52,7 +52,7 @@ function run_stack {
     local hardware_info
 
     cd /opt/stack/devstack
-    wget http://10.13.120.207:9999/fedora-wd-uefi.qcow2 -O files/fedora-wd-uefi.qcow2
+    wget http://10.13.120.210:9999/fedora-wd-uefi.qcow2 -O files/fedora-wd-uefi.qcow2
     cp /tmp/agent-ilo/HPE-CI-JOBS/agent-ilo/local.conf.sample local.conf
     ip=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sed -i "s/192.168.1.2/$ip/g" local.conf
@@ -73,8 +73,8 @@ function run_stack {
         capabilities="$capabilities,secure_boot:true"
         nova flavor-key baremetal set capabilities:secure_boot="true"
     fi
-    ironic node-update $ironic_node add driver_info/ilo_deploy_iso=http://10.13.120.207:9999/fedora-raid-deploy-ank-proliant-tools.iso
-    ironic node-update $ironic_node add instance_info/image_source=http://10.13.120.207:9999/fedora-wd-uefi.qcow2 instance_info/image_checksum=83b0671c9dfef5315c78de6da133c902
+    ironic node-update $ironic_node add driver_info/ilo_deploy_iso=http://10.13.120.210:9999/fedora-raid-deploy-ank-proliant-tools.iso
+    ironic node-update $ironic_node add instance_info/image_source=http://10.13.120.210:9999/fedora-wd-uefi.qcow2 instance_info/image_checksum=83b0671c9dfef5315c78de6da133c902
     ironic node-set-power-state $ironic_node off
     ironic node-update $ironic_node add properties/capabilities="$capabilities"
 
