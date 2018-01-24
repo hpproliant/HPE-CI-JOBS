@@ -49,7 +49,6 @@ function run_stack {
 
     local ironic_node
     local capabilities
-    local hardware_info
 
     cd /opt/stack/devstack
     wget http://10.13.120.210:9999/fedora-wd-uefi.qcow2 -O files/fedora-wd-uefi.qcow2
@@ -65,10 +64,6 @@ function run_stack {
     source /opt/stack/devstack/openrc admin admin
     ironic_node=$(ironic node-list | grep -v UUID | grep "\w" | awk '{print $2}' | tail -n1)
     capabilities="boot_mode:$BOOT_MODE"
-    if [[ "$BOOT_OPTION" = "local" ]]; then
-        capabilities="$capabilities,boot_option:local"
-        nova flavor-key baremetal set capabilities:boot_option="local"
-    fi
     if [[ "$SECURE_BOOT" = "true" ]]; then
         capabilities="$capabilities,secure_boot:true"
         nova flavor-key baremetal set capabilities:secure_boot="true"
@@ -77,9 +72,6 @@ function run_stack {
     ironic node-update $ironic_node add instance_info/image_source=http://10.13.120.210:9999/fedora-wd-uefi.qcow2 instance_info/image_checksum=83b0671c9dfef5315c78de6da133c902
     ironic node-set-power-state $ironic_node off
     ironic node-update $ironic_node add properties/capabilities="$capabilities"
-
-    # Update the root device hint if it was specified for some node.
-    hardware_info=${IRONIC_ILO_HWINFO}
 
     # Run the tempest test.
     cd /opt/stack/ironic-tempest-plugin
