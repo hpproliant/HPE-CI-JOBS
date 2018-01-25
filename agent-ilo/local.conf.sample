@@ -20,7 +20,7 @@ SWIFT_TEMPURL_KEY=password
 
 # Below lines enable only the minimum services required for Ironic.
 # Enable more services as required.
-disable_service n-net q-l3
+#disable_service n-net q-l3
 disable_service horizon
 disable_service heat h-api h-api-cfn h-api-cw
 disable_service cinder c-sch c-api c-vol
@@ -34,8 +34,10 @@ LOGFILE=/tmp/devstack_logs/devstacklog.txt
 VERBOSE=True
 ETCD_DOWNLOAD_URL=http://tarballs.openstack.org/etcd/
 
-enable_service q-svc q-agt q-dhcp
-enable_service q-meta neutron
+ENABLED_SERVICES+=,neutron,neutron-agent,neutron-l3,neutron-dhcp,neutron-api
+NEUTRON_AGENT="linuxbridge"
+#enable_service q-svc q-agt q-dhcp
+#enable_service q-meta neutron
 enable_service s-proxy s-object s-container s-account
 disable_service nova n-api n-cond n-sch n-cpu n-crt n-net n-novnc n-xvnc n-cauth n-spice n-cell n-cell n-api-meta n-sproxy
 disable_service nova
@@ -58,7 +60,7 @@ WSGI_MODE=uwsgi
 
 USE_SUBNETPOOL=False
 ## General settings.
-GIT_BASE=http://git.openstack.org
+GIT_BASE=https://github.com
 
 # RECLONE is disabled for gate. Enable if required.
 RECLONE=no
@@ -66,9 +68,11 @@ RECLONE=no
 # Neutron settings.
 IP_VERSION=4
 #PHYSICAL_NETWORK=baremetal_network
-PHYSICAL_NETWORK=private
+PUBLIC_PHYSICAL_NETWORK=public
+PUBLIC_BRIDGE=br0
+#PHYSICAL_NETWORK=private
 PROVIDER_NETWORK_TYPE=flat
-Q_USE_PROVIDER_NETWORKING=True
+Q_USE_PROVIDER_NETWORKING=False
 
 # Swift related options
 SWIFT_ENABLE_TEMPURLS="True"
@@ -124,8 +128,8 @@ IRONIC_ENABLED_BOOT_INTERFACES=ilo-virtual-media
 IRONIC_TEMPEST_WHOLE_DISK_IMAGE="True"
 IRONIC_ILO_HWINFO="10.12.12.233 8c:dc:d4:af:6f:bc Administrator ironmantesting"
 
-PUBLIC_INTERFACE=ens3
-OVS_PHYSICAL_BRIDGE=br-ens3
+#PUBLIC_INTERFACE=ens3
+#OVS_PHYSICAL_BRIDGE=br-ens3
 FIXED_RANGE=10.13.120.192/27
 NETWORK_GATEWAY=10.13.120.196
 ALLOCATION_POOL=start=10.13.120.217,end=10.13.120.218
