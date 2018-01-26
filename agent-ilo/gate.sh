@@ -88,6 +88,7 @@ function update_ironic {
     git config --global user.email "proliantutils@gmail.com"
     git config --global user.name "proliantci"
     git fetch https://git.openstack.org/openstack/ironic refs/changes/51/535651/1 && git cherry-pick FETCH_HEAD
+    git fetch https://git.openstack.org/openstack/ironic refs/changes/25/454625/18 && git cherry-pick FETCH_HEAD
 }
 
 function update_ironic_tempest_plugin {
