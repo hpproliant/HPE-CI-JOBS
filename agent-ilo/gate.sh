@@ -51,6 +51,7 @@ function run_stack {
     local capabilities
 
     cd /opt/stack/devstack
+    wget http://10.13.120.210:9999/fedora-raid-deploy-ank-proliant-tools.iso -O files/ir-deploy-ilo.iso
     wget http://10.13.120.210:9999/fedora-wd-uefi.qcow2 -O files/fedora-wd-uefi.qcow2
     cp /tmp/agent-ilo/HPE-CI-JOBS/agent-ilo/local.conf.sample local.conf
     ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)

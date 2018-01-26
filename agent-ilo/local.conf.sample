@@ -171,4 +171,4 @@ use_web_server_for_images=True
 
 [deploy]
 http_root=/home/ironman/images/
-http_url=http://10.13.120.196:9999/
+http_url=http://10.13.120.207:9999/
