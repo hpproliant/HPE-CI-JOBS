@@ -33,7 +33,7 @@ export BRANCH=${ZUUL_BRANCH:-master}
 
 function install_packages {
     sudo apt -y install apache2
-    sudo apt install python-pip
+    sudo apt -y install python-pip
     sudo pip install setuptools
     sudo pip install proliantutils
 }
