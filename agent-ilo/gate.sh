@@ -32,7 +32,10 @@ export IRONIC_IPA_RAMDISK_DISTRO=ubuntu
 export BRANCH=${ZUUL_BRANCH:-master}
 
 function install_packages {
-    sudo apt -y install apache2 openvswitch-switch
+    sudo apt -y install apache2
+    sudo apt install python-pip
+    sudo pip install setuptools
+    sudo pip install proliantutils
 }
 
 function clone_projects {
@@ -95,8 +98,8 @@ function update_ironic_tempest_plugin {
     cd /opt/stack/ironic-tempest-plugin
     git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/52/535652/2 && git cherry-pick FETCH_HEAD
 }
- 
-#install_packages
+
+install_packages
 clone_projects
 update_ironic
 update_ironic_tempest_plugin
