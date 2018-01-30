@@ -36,8 +36,7 @@ ETCD_DOWNLOAD_URL=http://tarballs.openstack.org/etcd/
 
 ENABLED_SERVICES+=,neutron,neutron-agent,neutron-l3,neutron-dhcp,neutron-api
 NEUTRON_AGENT="linuxbridge"
-#enable_service q-svc q-agt q-dhcp
-#enable_service q-meta neutron
+disable_service q-svc
 enable_service s-proxy s-object s-container s-account
 disable_service nova n-api n-cond n-sch n-cpu n-crt n-net n-novnc n-xvnc n-cauth n-spice n-cell n-cell n-api-meta n-sproxy
 disable_service nova
@@ -45,7 +44,7 @@ disable_service placement-api
 
 enable_service ironic ir-api ir-cond
 enable_service tempest
-IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image
+#IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image
 IRONIC_WHOLEDISK_IMAGE_NAME=fedora-wd-uefi
 #IRONIC_USER_IMAGE=""
 IRONIC_WHOLE_DISK_USER_IMAGE=True
@@ -80,7 +79,7 @@ SWIFT_ENABLE_TEMPURLS="True"
 FORCE=yes
 LOG_COLOR=True
 
-IRONIC_HTTP_PORT=9999
+IRONIC_HTTP_PORT=81
 IRONIC_HTTP_SERVER=10.13.120.210
 
 # Tempest related options
@@ -171,4 +170,4 @@ use_web_server_for_images=True
 
 [deploy]
 http_root=/home/ironman/images/
-http_url=http://10.13.120.207:9999/
+http_url=http://10.13.120.210:81/
