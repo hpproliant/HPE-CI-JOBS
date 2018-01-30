@@ -34,8 +34,17 @@ export BRANCH=${ZUUL_BRANCH:-master}
 function install_packages {
     sudo apt -y install apache2
     sudo apt -y install python-pip
+    sudo apt -y install bridge-utils
     sudo pip install setuptools
     sudo pip install proliantutils
+}
+
+function configure_bridge_interface {
+    sudo brctl addbr br0
+    sudo brctl addif br0 ens3
+    sudo ifconfig br0 inet 10.13.120.209 netmask 255.255.255.224
+    sudo ip addr flush dev ens3
+    sudo ip route add 10.0.0.0/8 via 10.13.120.193 dev br0
 }
 
 function clone_projects {
@@ -57,7 +66,7 @@ function run_stack {
     wget http://10.13.120.210:81/fedora-raid-deploy-ank-proliant-tools.iso -O files/ir-deploy-ilo.iso
     wget http://10.13.120.210:81/fedora-wd-uefi.qcow2 -O files/fedora-wd-uefi.img
     cp /tmp/agent-ilo/HPE-CI-JOBS/agent-ilo/local.conf.sample local.conf
-    ip=$(ip addr show br0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+    ip=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sed -i "s/192.168.1.2/$ip/g" local.conf
 
     # Run stack.sh
@@ -100,6 +109,7 @@ function update_ironic_tempest_plugin {
 }
 
 install_packages
+configure_bridge_interface
 clone_projects
 update_ironic
 update_ironic_tempest_plugin
