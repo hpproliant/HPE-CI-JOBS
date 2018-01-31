@@ -23,7 +23,7 @@ SWIFT_TEMPURL_KEY=password
 #disable_service n-net q-l3
 disable_service horizon
 disable_service heat h-api h-api-cfn h-api-cw
-disable_service cinder c-sch c-api c-vol
+disable_service cinder c-sch c-api c-vol neutron-l3
 SWIFT_START_ALL_SERVICES=False
 SWIFT_REPLICAS=1
 
@@ -125,6 +125,7 @@ IRONIC_ENABLED_BOOT_INTERFACES=ilo-virtual-media
 IMAGE_URLS="file:///opt/stack/devstack/files/fedora-wd-uefi.img"
 #IRONIC_IMAGE_NAME=ubuntu-cloud-image-disk
 #IRONIC_HWINFO_FILE="/home/ubuntu/slave_data/hardware_info"
+IRONIC_HWINFO_FILE="/opt/stack/devstack/files/hardware_info"
 IRONIC_TEMPEST_WHOLE_DISK_IMAGE="False"
 IRONIC_ILO_HWINFO="10.12.12.229 8c:dc:d4:af:6e:20 Administrator ironmantesting"
 
