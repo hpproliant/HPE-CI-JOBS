@@ -20,10 +20,10 @@ SWIFT_TEMPURL_KEY=password
 
 # Below lines enable only the minimum services required for Ironic.
 # Enable more services as required.
-#disable_service n-net q-l3
+disable_service n-net
 disable_service horizon
 disable_service heat h-api h-api-cfn h-api-cw
-disable_service cinder c-sch c-api c-vol neutron-l3
+disable_service cinder c-sch c-api c-vol
 SWIFT_START_ALL_SERVICES=False
 SWIFT_REPLICAS=1
 
@@ -34,9 +34,7 @@ LOGFILE=/tmp/devstack_logs/devstacklog.txt
 VERBOSE=True
 ETCD_DOWNLOAD_URL=http://tarballs.openstack.org/etcd/
 
-ENABLED_SERVICES+=,neutron,neutron-agent,neutron-dhcp,neutron-api
-NEUTRON_AGENT="linuxbridge"
-disable_service q-svc
+ENABLED_SERVICES+=,neutron,q-svc,q-agt,q-dhcp,q-meta,q-l3
 enable_service s-proxy s-object s-container s-account
 disable_service nova n-api n-cond n-sch n-cpu n-crt n-net n-novnc n-xvnc n-cauth n-spice n-cell n-cell n-api-meta n-sproxy
 disable_service nova
@@ -46,13 +44,11 @@ enable_service ironic ir-api ir-cond
 enable_service tempest
 #IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image
 IRONIC_WHOLEDISK_IMAGE_NAME=fedora-wd-uefi
-#IRONIC_USER_IMAGE=""
-#IRONIC_WHOLE_DISK_USER_IMAGE=True
 #IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image.qcow2
 #IRONIC_USE_MOD_WSGI=True
 USE_SYSTEMD=False
-#IRONIC_STANDALONE=True
 #IRONIC_WHOLE_DISK_IMAGE=True
+#IRONIC_STANDALONE=True
 
 #WSGI_MODE=mod_wsgi
 WSGI_MODE=uwsgi
@@ -66,10 +62,7 @@ RECLONE=no
 
 # Neutron settings.
 IP_VERSION=4
-#PHYSICAL_NETWORK=baremetal_network
-PUBLIC_PHYSICAL_NETWORK=public
-PUBLIC_BRIDGE=br0
-PHYSICAL_NETWORK=public
+PHYSICAL_NETWORK=private
 PROVIDER_NETWORK_TYPE=flat
 Q_USE_PROVIDER_NETWORKING=True
 
@@ -90,7 +83,6 @@ POWER_TIMEOUT=600
 SERVICE_TIMEOUT=600
 DEFAULT_INSTANCE_USER=fedora
 TEMPEST_SSH_CONNECT_METHOD=fixed
-TEMPEST_SSH_NETWORK_NAME=private
 DEFAULT_INSTANCE_TYPE=baremetal
 
 # Ironic related options
@@ -107,10 +99,7 @@ IRONIC_CONFIGURE_GLANCE_WITH_SWIFT="True"
 IRONIC_IS_HARDWARE=True
 IRONIC_RAMDISK_TYPE="dib"
 IRONIC_DEPLOY_ISO="/opt/stack/devstack/files/ir-deploy-ilo.iso"
-#IRONIC_ENABLED_DEPLOY_INTERFACES="direct"
-#IRONIC_ENABLED_BOOT_INTERFACES="ilo-virtual-media"
 IRONIC_DEPLOY_DRIVER="ilo"
-#IRONIC_ENABLED_HARDWARE_TYPES="ilo"
 IRONIC_AUTOMATED_CLEAN_ENABLED=False
 IRONIC_IPXE_ENABLED=False
 IRONIC_ENABLED_HARDWARE_TYPES=ilo
@@ -118,19 +107,18 @@ IRONIC_ENABLED_DEPLOY_INTERFACES=direct
 IRONIC_ENABLED_MANAGEMENT_INTERFACES=ilo
 IRONIC_ENABLED_POWER_INTERFACES=ilo
 IRONIC_ENABLED_BOOT_INTERFACES=ilo-virtual-media
+IRONIC_PING_TIMEOUT=1200
 # Ironic iLO driver options
 
 #IMAGE_URLS=file:///home/user/path/file
-#IMAGE_URLS="file:///opt/stack/devstack/files/ubuntu-cloud-image.tar.gz"
 IMAGE_URLS="file:///opt/stack/devstack/files/fedora-wd-uefi.img"
 #IRONIC_IMAGE_NAME=ubuntu-cloud-image-disk
-#IRONIC_HWINFO_FILE="/home/ubuntu/slave_data/hardware_info"
 IRONIC_HWINFO_FILE="/opt/stack/devstack/files/hardware_info"
 IRONIC_TEMPEST_WHOLE_DISK_IMAGE="False"
 IRONIC_ILO_HWINFO="10.12.12.229 8c:dc:d4:af:6e:20 Administrator ironmantesting"
 
-#PUBLIC_INTERFACE=ens3
-#OVS_PHYSICAL_BRIDGE=br-ens3
+PUBLIC_INTERFACE=ens2.100
+OVS_PHYSICAL_BRIDGE=br-ens2.100
 FIXED_RANGE=10.13.120.192/27
 NETWORK_GATEWAY=10.13.120.196
 ALLOCATION_POOL=start=10.13.120.219,end=10.13.120.220
@@ -142,11 +130,6 @@ HOST_IP=192.168.1.2
 # For example,
 # IRONIC_ILO_NETWORK = 10.10.2.0/24
 #IRONIC_ILO_NETWORK=<Optional TBF>
-
-# The below line makes proliantutils to be fetched from git. To install from
-# pypi instead, remove/comment the below line.
-#Removing line
-#LIBS_FROM_GIT="proliantutils"
 
 # iLO driver plugin.
 IRONIC_USING_PLUGIN=true

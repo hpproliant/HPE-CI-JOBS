@@ -34,17 +34,9 @@ export BRANCH=${ZUUL_BRANCH:-master}
 function install_packages {
     sudo apt -y install apache2
     sudo apt -y install python-pip
-    sudo apt -y install bridge-utils
+    sudo apt -y isc-dhcp-server
     sudo pip install setuptools
     sudo pip install proliantutils
-}
-
-function configure_bridge_interface {
-    sudo brctl addbr br0
-    sudo brctl addif br0 ens3
-    sudo ifconfig br0 inet 10.13.120.209 netmask 255.255.255.224
-    sudo ip addr flush dev ens3
-    sudo ip route add 10.0.0.0/8 via 10.13.120.193 dev br0
 }
 
 function clone_projects {
@@ -55,6 +47,20 @@ function clone_projects {
     git clone https://github.com/openstack-dev/devstack.git
     git clone https://github.com/openstack/ironic.git
     git clone https://github.com/openstack/ironic-tempest-plugin.git
+}
+
+function configure_dhcp_server {
+    wget http://10.13.120.210:81/agent_dhcp_server.txt -O files/
+    sudo sh -c 'cat /opt/stack/devstack/files/agent_dhcp_server.txt >> /etc/dhcp/dhcpd.conf'
+    sudo service isc-dhcp-server restart
+}
+
+function configure_interface {
+    ip1=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+    sudo ip route add 10.0.0.0/8 via 10.13.120.193 dev ens2
+    sudo modprobe 8021q
+    sudo vconfig add ens2 100
+    sudo ifconfig ens2.100 inet $ip1 netmask 255.255.255.224
 }
 
 function run_stack {
@@ -75,6 +81,7 @@ function run_stack {
 
     # Modify the node to reflect the boot_mode and secure_boot capabilities.
     # Also modify the nova flavor accordingly.
+    sudo ovs-vsctl del-br br-ens2.100
     source /opt/stack/devstack/openrc admin admin
     ironic_node=$(ironic node-list | grep -v UUID | grep "\w" | awk '{print $2}' | tail -n1)
     capabilities="boot_mode:$BOOT_MODE"
@@ -88,30 +95,29 @@ function run_stack {
     ironic node-update $ironic_node add properties/capabilities="$capabilities"
 
     # Run the tempest test.
-    cd /opt/stack/ironic-tempest-plugin
+    cd /opt/stack/tempest
     export OS_TEST_TIMEOUT=3000
-    #tox -eall -- test_baremetal_server_ops
-    tox -eall -- ironic_tempest_plugin.tests.scenario.ironic_standalone.test_basic_ops.BaremetalAgentIloWholediskHttpLink
-#    tox -eall -- ironic_tempest_plugin.tests.scenario.ironic_standalone.test_basic_ops.BaremetalAgentIloPartitioned
-
+    sudo tox -e all-plugin -- ironic_tempest_plugin.tests.scenario.ironic_standalone.test_basic_ops.BaremetalAgentIloWholediskHttpLink.test_ip_access_to_server
 }
 
 function update_ironic {
     cd /opt/stack/ironic
     git config --global user.email "proliantutils@gmail.com"
     git config --global user.name "proliantci"
-    git fetch https://git.openstack.org/openstack/ironic refs/changes/51/535651/1 && git cherry-pick FETCH_HEAD
+    git fetch https://git.openstack.org/openstack/ironic refs/changes/51/535651/2 && git cherry-pick FETCH_HEAD
     git fetch https://git.openstack.org/openstack/ironic refs/changes/25/454625/18 && git cherry-pick FETCH_HEAD
 }
 
 function update_ironic_tempest_plugin {
     cd /opt/stack/ironic-tempest-plugin
+    git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/92/542792/1 && git cherry-pick FETCH_HEAD
     git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/52/535652/2 && git cherry-pick FETCH_HEAD
 }
 
 install_packages
-configure_bridge_interface
 clone_projects
+configure_dhcp_server
+configure_interface
 update_ironic
 update_ironic_tempest_plugin
 run_stack
