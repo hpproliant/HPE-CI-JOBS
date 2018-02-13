@@ -69,6 +69,7 @@ function run_stack {
     local capabilities
 
     cd /opt/stack/devstack
+    wget http://10.13.120.214:81/cirros-0.3.5-x86_64-uec.tar.gz -P files/
     wget http://10.13.120.214:81/cirros-0.3.5-x86_64-disk.img -P files/
     wget http://10.13.120.214:81/fedora-raid-deploy-ank-proliant-tools.iso -P files/
     wget http://10.13.120.214:81/fedora-wd-uefi.img -P files/
