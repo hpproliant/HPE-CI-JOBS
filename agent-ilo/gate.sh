@@ -50,7 +50,7 @@ function clone_projects {
 }
 
 function configure_dhcp_server {
-    wget http://10.13.120.214:81/agent_dhcp_server.txt -O files/
+    wget http://10.13.120.214:81/agent_dhcp_server.txt -O files/agent_dhcp_server.txt
     sudo sh -c 'cat /opt/stack/devstack/files/agent_dhcp_server.txt >> /etc/dhcp/dhcpd.conf'
     sudo service isc-dhcp-server restart
 }
