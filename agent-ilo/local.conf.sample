@@ -73,7 +73,7 @@ FORCE=yes
 LOG_COLOR=True
 
 IRONIC_HTTP_PORT=81
-IRONIC_HTTP_SERVER=10.13.120.210
+IRONIC_HTTP_SERVER=10.13.120.214
 
 # Tempest related options
 IRONIC_USER_IMAGE_PREFERRED_DISTRO=fedora
@@ -154,5 +154,5 @@ iscsi_verify_attempts = 10
 use_web_server_for_images=True
 
 [deploy]
-http_root=/home/ironman/images/
-http_url=http://10.13.120.210:81/
+http_root=/var/www/html/
+http_url=http://10.13.120.214:81/
