@@ -50,17 +50,17 @@ function clone_projects {
 }
 
 function configure_dhcp_server {
-    wget http://10.13.120.214:81/agent_dhcp_server.txt -O files/agent_dhcp_server.txt
+    wget http://10.13.120.214:81/agent_dhcp_server.txt -P /opt/stack/devstack/files/
     sudo sh -c 'cat /opt/stack/devstack/files/agent_dhcp_server.txt >> /etc/dhcp/dhcpd.conf'
     sudo service isc-dhcp-server restart
 }
 
 function configure_interface {
-    ip1=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
-    sudo ip route add 10.0.0.0/8 via 10.13.120.193 dev ens2
+    ip1=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+    sudo ip route add 10.0.0.0/8 via 10.13.120.193 dev ens3
     sudo modprobe 8021q
-    sudo vconfig add ens2 100
-    sudo ifconfig ens2.100 inet $ip1 netmask 255.255.255.224
+    sudo vconfig add ens3 100
+    sudo ifconfig ens3.100 inet $ip1 netmask 255.255.255.224
 }
 
 function run_stack {
@@ -69,11 +69,11 @@ function run_stack {
     local capabilities
 
     cd /opt/stack/devstack
-    wget http://10.13.120.214:81/fedora-raid-deploy-ank-proliant-tools.iso -O files/ir-deploy-ilo.iso
-    wget http://10.13.120.214:81/fedora-wd-uefi.qcow2 -O files/fedora-wd-uefi.img
-    wget http://10.13.120.214:81/hardware_info -O files/hardware_info
+    wget http://10.13.120.214:81/fedora-raid-deploy-ank-proliant-tools.iso -P files/
+    wget http://10.13.120.214:81/fedora-wd-uefi.img -P files/
+    wget http://10.13.120.214:81/hardware_info -P files/
     cp /tmp/agent-ilo/HPE-CI-JOBS/agent-ilo/local.conf.sample local.conf
-    ip=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+    ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sed -i "s/192.168.1.2/$ip/g" local.conf
 
     # Run stack.sh
