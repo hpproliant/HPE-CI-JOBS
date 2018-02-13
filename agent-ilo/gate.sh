@@ -83,7 +83,7 @@ function run_stack {
 
     # Modify the node to reflect the boot_mode and secure_boot capabilities.
     # Also modify the nova flavor accordingly.
-    sudo ovs-vsctl del-br br-ens2.100
+    sudo ovs-vsctl del-br br-ens3.100
     source /opt/stack/devstack/openrc admin admin
     ironic_node=$(ironic node-list | grep -v UUID | grep "\w" | awk '{print $2}' | tail -n1)
     capabilities="boot_mode:$BOOT_MODE"
@@ -113,7 +113,7 @@ function update_ironic {
 function update_ironic_tempest_plugin {
     cd /opt/stack/ironic-tempest-plugin
     git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/92/542792/1 && git cherry-pick FETCH_HEAD
-    git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/52/535652/2 && git cherry-pick FETCH_HEAD
+    git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/52/535652/4 && git cherry-pick FETCH_HEAD
 }
 
 install_packages
