@@ -35,6 +35,7 @@ function install_packages {
     sudo apt -y install apache2
     sudo apt -y install python-pip
     sudo apt -y install isc-dhcp-server
+    sudo apt -y install webfs
     sudo pip install setuptools
     sudo pip install proliantutils
 }
@@ -57,6 +58,10 @@ function configure_dhcp_server {
 
 function configure_interface {
     ip1=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+    sudo sh -c 'echo web_root='/opt/stack/devstack/files' >> /etc/webfsd.conf'
+    sudo sh -c 'echo web_ip=$ip1 >> /etc/webfsd.conf'
+    sudo sh -c 'echo web_port=9999 >> /etc/webfsd.conf'
+    sudo service webfs restart
     sudo ip route add 10.0.0.0/8 via 10.13.120.193 dev ens3
     sudo modprobe 8021q
     sudo vconfig add ens3 100
@@ -114,6 +119,7 @@ function update_ironic_tempest_plugin {
     cd /opt/stack/ironic-tempest-plugin
     git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/92/542792/1 && git cherry-pick FETCH_HEAD
     git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/52/535652/4 && git cherry-pick FETCH_HEAD
+    sudo python setup.py install
 }
 
 install_packages

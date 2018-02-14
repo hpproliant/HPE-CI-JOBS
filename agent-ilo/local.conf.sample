@@ -154,5 +154,5 @@ iscsi_verify_attempts = 10
 use_web_server_for_images=True
 
 [deploy]
-http_root=/home/zuul/repo
-http_url=http://10.13.120.214:9999/
+http_root=/opt/stack/devstack/files
+http_url=http://192.168.1.2:9999/
