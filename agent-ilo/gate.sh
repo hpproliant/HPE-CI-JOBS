@@ -38,6 +38,8 @@ function install_packages {
     sudo apt -y install webfs
     sudo pip install setuptools
     sudo pip install proliantutils
+    wget http://mirror.ord.rax.openstack.org/wheel/ubuntu-16.04-x86_64/tinyrpc/tinyrpc-0.7-py2-none-any.whl
+    sudo pip install tinyrpc-0.7-py2-none-any.whl
 }
 
 function clone_projects {
