@@ -43,7 +43,7 @@ disable_service placement-api
 enable_service ironic ir-api ir-cond
 enable_service tempest
 #IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image
-IRONIC_WHOLEDISK_IMAGE_NAME=ubuntu-16.04_password
+IRONIC_WHOLEDISK_IMAGE_NAME=ubuntu1604-bios
 #IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image.qcow2
 #IRONIC_USE_MOD_WSGI=True
 USE_SYSTEMD=False
@@ -111,7 +111,7 @@ IRONIC_PING_TIMEOUT=1200
 # Ironic iLO driver options
 
 #IMAGE_URLS=file:///home/user/path/file
-IMAGE_URLS="file:///opt/stack/devstack/files/ubuntu-16.04_password.img"
+IMAGE_URLS="file:///opt/stack/devstack/files/ubuntu1604-bios.img"
 #IRONIC_IMAGE_NAME=ubuntu-cloud-image-disk
 IRONIC_HWINFO_FILE="/opt/stack/devstack/files/hardware_info_iscsi"
 #IRONIC_HWINFO_FILE="/tmp/hardware_info"
