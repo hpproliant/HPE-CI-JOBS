@@ -113,7 +113,8 @@ IRONIC_PING_TIMEOUT=1200
 #IMAGE_URLS=file:///home/user/path/file
 IMAGE_URLS="file:///opt/stack/devstack/files/fedora-wd-uefi.img"
 #IRONIC_IMAGE_NAME=ubuntu-cloud-image-disk
-IRONIC_HWINFO_FILE="/opt/stack/devstack/files/hardware_info"
+#IRONIC_HWINFO_FILE="/opt/stack/devstack/files/hardware_info"
+IRONIC_HWINFO_FILE="/tmp/hardware_info"
 IRONIC_TEMPEST_WHOLE_DISK_IMAGE="False"
 IRONIC_ILO_HWINFO="10.12.12.229 8c:dc:d4:af:6e:20 Administrator ironmantesting"
 
@@ -122,7 +123,7 @@ OVS_PHYSICAL_BRIDGE=br-ens3.100
 FIXED_RANGE=10.13.120.192/27
 NETWORK_GATEWAY=10.13.120.196
 ALLOCATION_POOL=start=10.13.120.219,end=10.13.120.220
-IRONIC_DEPLOY_DRIVER=agent_ilo
+#IRONIC_DEPLOY_DRIVER=agent_ilo
 HOST_IP=192.168.1.2
 
 # The subnet for iLO NICs. Leave this empty if iLO NIC is in same
