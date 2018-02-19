@@ -80,7 +80,7 @@ function run_stack {
     wget http://10.13.120.214:9999/ir-deploy-ilo.iso -P files/
     wget http://10.13.120.214:9999/ubuntu-16.04_password.img -P files/
     wget http://10.13.120.214:9999/hardware_info_iscsi -P files/
-    cp /tmp/agent-ilo/HPE-CI-JOBS/agent-ilo/local.conf.sample local.conf
+    cp /tmp/iscsi-ilo/HPE-CI-JOBS/iscsi-ilo/local.conf.sample local.conf
     ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sed -i "s/192.168.1.2/$ip/g" local.conf
 
