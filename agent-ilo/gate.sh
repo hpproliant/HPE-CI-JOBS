@@ -54,6 +54,8 @@ function clone_projects {
 
 function configure_dhcp_server {
     wget http://10.13.120.214:9999/agent_dhcp_server.txt -P /opt/stack/devstack/files/
+    mac=$(cat /tmp/hardware_info | awk '{print $2}')
+    sed -i "s/8c:dc:d4:af:78:ec/$mac/g" /opt/stack/devstack/files/agent_dhcp_server.txt
     sudo sh -c 'cat /opt/stack/devstack/files/agent_dhcp_server.txt >> /etc/dhcp/dhcpd.conf'
     sudo service isc-dhcp-server restart
 }
