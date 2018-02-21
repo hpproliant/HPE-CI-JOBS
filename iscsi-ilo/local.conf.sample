@@ -76,7 +76,7 @@ IRONIC_HTTP_PORT=9999
 IRONIC_HTTP_SERVER=10.13.120.214
 
 # Tempest related options
-IRONIC_USER_IMAGE_PREFERRED_DISTRO=ubuntu
+IRONIC_USER_IMAGE_PREFERRED_DISTRO=fedora
 BUILD_TIMEOUT=3000
 IRONIC_CALLBACK_TIMEOUT=3000
 POWER_TIMEOUT=600
@@ -111,12 +111,12 @@ IRONIC_PING_TIMEOUT=1200
 # Ironic iLO driver options
 
 #IMAGE_URLS=file:///home/user/path/file
-IMAGE_URLS="file:///opt/stack/devstack/files/ubuntu1604-bios.img"
+IMAGE_URLS="file:///opt/stack/devstack/files/fedora-bios.img"
 #IRONIC_IMAGE_NAME=ubuntu-cloud-image-disk
-IRONIC_HWINFO_FILE="/opt/stack/devstack/files/hardware_info_iscsi"
-#IRONIC_HWINFO_FILE="/tmp/hardware_info"
+#IRONIC_HWINFO_FILE="/opt/stack/devstack/files/hardware_info_iscsi"
+IRONIC_HWINFO_FILE="/tmp/hardware_info_iscsi"
 IRONIC_TEMPEST_WHOLE_DISK_IMAGE="False"
-IRONIC_ILO_HWINFO="10.12.12.229 8c:dc:d4:af:6e:20 Administrator ironmantesting"
+#IRONIC_ILO_HWINFO="10.12.12.229 8c:dc:d4:af:6e:20 Administrator ironmantesting"
 
 PUBLIC_INTERFACE=ens3.100
 OVS_PHYSICAL_BRIDGE=br-ens3.100

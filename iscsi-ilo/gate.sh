@@ -53,6 +53,9 @@ function clone_projects {
 
 function configure_dhcp_server {
     wget http://10.13.120.214:9999/iscsi_dhcp_server.txt -P /opt/stack/devstack/files/
+    wget http://10.13.120.214:9999/hardware_info_iscsi -P /tmp
+    mac=$(cat /tmp/hardware_info_iscsi | awk '{print $2}')
+    sed -i "s/8c:dc:d4:af:78:ec/$mac/g" /opt/stack/devstack/files/iscsi_dhcp_server.txt
     sudo sh -c 'cat /opt/stack/devstack/files/iscsi_dhcp_server.txt >> /etc/dhcp/dhcpd.conf'
     sudo service isc-dhcp-server restart
 }
@@ -78,8 +81,7 @@ function run_stack {
     wget http://10.13.120.214:9999/cirros-0.3.5-x86_64-uec.tar.gz -P files/
     wget http://10.13.120.214:9999/cirros-0.3.5-x86_64-disk.img -P files/
     wget http://10.13.120.214:9999/ir-deploy-ilo.iso -P files/
-    wget http://10.13.120.214:9999/ubuntu1604-bios.img -P files/
-    wget http://10.13.120.214:9999/hardware_info_iscsi -P files/
+    wget http://10.13.120.214:9999/fedora-bios.img -P files/
     cp /tmp/iscsi-ilo/HPE-CI-JOBS/iscsi-ilo/local.conf.sample local.conf
     ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sed -i "s/192.168.1.2/$ip/g" local.conf
@@ -87,19 +89,18 @@ function run_stack {
     # Run stack.sh
     ./stack.sh
 
-    # Modify the node to reflect the boot_mode and secure_boot capabilities.
-    # Also modify the nova flavor accordingly.
     sudo ovs-vsctl del-br br-ens3.100
+
     source /opt/stack/devstack/openrc admin admin
     ironic_node=$(ironic node-list | grep -v UUID | grep "\w" | awk '{print $2}' | tail -n1)
     ironic node-update $ironic_node add driver_info/ilo_deploy_iso=http://10.13.120.214:9999/fedora-raid-deploy-ank-proliant-tools.iso
-    ironic node-update $ironic_node add instance_info/image_source=http://10.13.120.214:9999/ubuntu1604-bios.img instance_info/image_checksum=34823347ad20698358d976b918b7e660
+    ironic node-update $ironic_node add instance_info/image_source=http://10.13.120.214:9999/fedora-bios.img instance_info/image_checksum=833de19d0e85ecac364669382389ad20
     ironic node-set-power-state $ironic_node off
 
     # Run the tempest test.
     cd /opt/stack/tempest
     export OS_TEST_TIMEOUT=3000
-    sudo tox -e all-plugin -- ironic_tempest_plugin.tests.scenario.ironic_standalone.test_basic_ops.BaremetalIscsiIloWholediskHttpLink.test_ip_access_to_server
+    sudo tox -e all-plugin -- ironic_tempest_plugin.tests.scenario.ironic_standalone.test_basic_ops.BaremetalIloIscsiWholediskHttpLink.test_ip_access_to_server
 }
 
 function update_ironic {
@@ -113,7 +114,7 @@ function update_ironic {
 function update_ironic_tempest_plugin {
     cd /opt/stack/ironic-tempest-plugin
     git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/92/542792/1 && git cherry-pick FETCH_HEAD
-    git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/52/535652/4 && git cherry-pick FETCH_HEAD
+    git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/52/535652/5 && git cherry-pick FETCH_HEAD
     sudo python setup.py install
 }
 
