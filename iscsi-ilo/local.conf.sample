@@ -43,7 +43,7 @@ disable_service placement-api
 enable_service ironic ir-api ir-cond
 enable_service tempest
 #IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image
-IRONIC_WHOLEDISK_IMAGE_NAME=ubuntu1604-bios
+IRONIC_WHOLEDISK_IMAGE_NAME=fedora-bios
 #IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image.qcow2
 #IRONIC_USE_MOD_WSGI=True
 USE_SYSTEMD=False
