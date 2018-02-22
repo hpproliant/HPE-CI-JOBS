@@ -116,7 +116,7 @@ IMAGE_URLS="file:///opt/stack/devstack/files/fedora-wd-uefi.img"
 #IRONIC_HWINFO_FILE="/opt/stack/devstack/files/hardware_info"
 IRONIC_HWINFO_FILE="/tmp/hardware_info"
 IRONIC_TEMPEST_WHOLE_DISK_IMAGE="False"
-IRONIC_ILO_HWINFO="10.12.12.229 8c:dc:d4:af:6e:20 Administrator ironmantesting"
+#IRONIC_ILO_HWINFO="10.12.12.229 8c:dc:d4:af:6e:20 Administrator ironmantesting"
 
 PUBLIC_INTERFACE=ens3.100
 OVS_PHYSICAL_BRIDGE=br-ens3.100
