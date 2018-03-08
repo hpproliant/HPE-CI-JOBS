@@ -85,6 +85,10 @@ function run_stack {
     ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sed -i "s/192.168.1.2/$ip/g" local.conf
 
+    sudo /tmp/iscsi-ilo/HPE-CI-JOBS/molteniron/configure_molten
+    sleep 8
+    /tmp/iscsi-ilo/HPE-CI-JOBS/molteniron/allocate_molten.py $1 Gen8
+
     # Run stack.sh
     ./stack.sh
 
