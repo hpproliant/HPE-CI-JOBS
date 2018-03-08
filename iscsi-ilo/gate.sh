@@ -53,6 +53,9 @@ function clone_projects {
 
 function configure_dhcp_server {
     wget http://10.13.120.214:9999/iscsi_dhcp_server.txt -P /opt/stack/devstack/files/
+    sudo /tmp/iscsi-ilo/HPE-CI-JOBS/molteniron/configure_molten
+    sleep 8
+    /tmp/iscsi-ilo/HPE-CI-JOBS/molteniron/allocate_molten.py $1 Gen8
     mac=$(cat /tmp/hardware_info | awk '{print $2}')
     sed -i "s/8c:dc:d4:af:78:ec/$mac/g" /opt/stack/devstack/files/iscsi_dhcp_server.txt
     sudo sh -c 'cat /opt/stack/devstack/files/iscsi_dhcp_server.txt >> /etc/dhcp/dhcpd.conf'
@@ -85,9 +88,9 @@ function run_stack {
     ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sed -i "s/192.168.1.2/$ip/g" local.conf
 
-    sudo /tmp/iscsi-ilo/HPE-CI-JOBS/molteniron/configure_molten
-    sleep 8
-    /tmp/iscsi-ilo/HPE-CI-JOBS/molteniron/allocate_molten.py $1 Gen8
+    #sudo /tmp/iscsi-ilo/HPE-CI-JOBS/molteniron/configure_molten
+    #sleep 8
+    #/tmp/iscsi-ilo/HPE-CI-JOBS/molteniron/allocate_molten.py $1 Gen8
 
     # Run stack.sh
     ./stack.sh
