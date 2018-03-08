@@ -53,11 +53,11 @@ function clone_projects {
 
 function configure_dhcp_server {
     wget http://10.13.120.214:9999/iscsi_dhcp_server.txt -P /opt/stack/devstack/files/
-    sudo /tmp/iscsi-ilo/HPE-CI-JOBS/molteniron/configure_molten
-    sleep 8
-    uuid=$1
-    echo $uuid
-    /tmp/iscsi-ilo/HPE-CI-JOBS/molteniron/allocate_molten.py $uuid Gen8
+    #sudo /tmp/iscsi-ilo/HPE-CI-JOBS/molteniron/configure_molten
+    #sleep 8
+    #uuid=$1
+    #echo $uuid
+    #/tmp/iscsi-ilo/HPE-CI-JOBS/molteniron/allocate_molten.py $uuid Gen8
     mac=$(cat /tmp/hardware_info | awk '{print $2}')
     sed -i "s/8c:dc:d4:af:78:ec/$mac/g" /opt/stack/devstack/files/iscsi_dhcp_server.txt
     sudo sh -c 'cat /opt/stack/devstack/files/iscsi_dhcp_server.txt >> /etc/dhcp/dhcpd.conf'
