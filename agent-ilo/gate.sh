@@ -38,8 +38,6 @@ function install_packages {
     sudo apt -y install webfs
     sudo pip install setuptools
     sudo pip install proliantutils
-    wget http://mirror.ord.rax.openstack.org/wheel/ubuntu-16.04-x86_64/tinyrpc/tinyrpc-0.7-py2-none-any.whl
-    sudo pip install tinyrpc-0.7-py2-none-any.whl
 }
 
 function clone_projects {
@@ -54,11 +52,6 @@ function clone_projects {
 
 function configure_dhcp_server {
     wget http://10.13.120.214:9999/agent_dhcp_server.txt -P /opt/stack/devstack/files/
-    #sudo /tmp/agent-ilo/HPE-CI-JOBS/molteniron/configure_molten
-    #sleep 8
-    #uuid=$1
-    #echo $uuid
-    #/tmp/agent-ilo/HPE-CI-JOBS/molteniron/allocate_molten.py $uuid Gen9
     mac=$(cat /tmp/hardware_info | awk '{print $2}')
     sed -i "s/8c:dc:d4:af:78:ec/$mac/g" /opt/stack/devstack/files/agent_dhcp_server.txt
     sudo sh -c 'cat /opt/stack/devstack/files/agent_dhcp_server.txt >> /etc/dhcp/dhcpd.conf'
@@ -87,15 +80,11 @@ function run_stack {
     wget http://10.13.120.214:9999/cirros-0.3.5-x86_64-disk.img -P files/
     wget http://10.13.120.214:9999/ir-deploy-ilo.iso -P files/
     wget http://10.13.120.214:9999/fedora-wd-uefi.img -P files/
-    wget http://10.13.120.214:9999/hardware_info -P files/
+    echo  >> /tmp/hardware_info
     cp /tmp/agent-ilo/HPE-CI-JOBS/agent-ilo/local.conf.sample local.conf
     ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sed -i "s/192.168.1.2/$ip/g" local.conf
 
-    #sudo /tmp/agent-ilo/HPE-CI-JOBS/molteniron/configure_molten
-    #sleep 8
-    #/tmp/agent-ilo/HPE-CI-JOBS/molteniron/allocate_molten.py $1 Gen9
-    # Run stack.sh
     ./stack.sh
 
     # Modify the node to reflect the boot_mode and secure_boot capabilities.
@@ -104,10 +93,6 @@ function run_stack {
     source /opt/stack/devstack/openrc admin admin
     ironic_node=$(ironic node-list | grep -v UUID | grep "\w" | awk '{print $2}' | tail -n1)
     capabilities="boot_mode:$BOOT_MODE"
-    if [[ "$SECURE_BOOT" = "true" ]]; then
-        capabilities="$capabilities,secure_boot:true"
-        nova flavor-key baremetal set capabilities:secure_boot="true"
-    fi
     ironic node-update $ironic_node add driver_info/ilo_deploy_iso=http://10.13.120.214:9999/fedora-raid-deploy-ank-proliant-tools.iso
     ironic node-update $ironic_node add instance_info/image_source=http://10.13.120.214:9999/fedora-wd-uefi.img instance_info/image_checksum=83b0671c9dfef5315c78de6da133c902
     ironic node-set-power-state $ironic_node off

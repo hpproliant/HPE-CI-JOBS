@@ -37,8 +37,6 @@ function install_packages {
     sudo apt -y install webfs
     sudo pip install setuptools
     sudo pip install proliantutils
-    wget http://mirror.ord.rax.openstack.org/wheel/ubuntu-16.04-x86_64/tinyrpc/tinyrpc-0.7-py2-none-any.whl
-    sudo pip install tinyrpc-0.7-py2-none-any.whl
 }
 
 function clone_projects {
@@ -53,11 +51,6 @@ function clone_projects {
 
 function configure_dhcp_server {
     wget http://10.13.120.214:9999/iscsi_dhcp_server.txt -P /opt/stack/devstack/files/
-    #sudo /tmp/iscsi-ilo/HPE-CI-JOBS/molteniron/configure_molten
-    #sleep 8
-    #uuid=$1
-    #echo $uuid
-    #/tmp/iscsi-ilo/HPE-CI-JOBS/molteniron/allocate_molten.py $uuid Gen8
     mac=$(cat /tmp/hardware_info | awk '{print $2}')
     sed -i "s/8c:dc:d4:af:78:ec/$mac/g" /opt/stack/devstack/files/iscsi_dhcp_server.txt
     sudo sh -c 'cat /opt/stack/devstack/files/iscsi_dhcp_server.txt >> /etc/dhcp/dhcpd.conf'
@@ -86,13 +79,10 @@ function run_stack {
     wget http://10.13.120.214:9999/cirros-0.3.5-x86_64-disk.img -P files/
     wget http://10.13.120.214:9999/ir-deploy-ilo.iso -P files/
     wget http://10.13.120.214:9999/fedora-bios.img -P files/
+    echo  >> /tmp/hardware_info
     cp /tmp/iscsi-ilo/HPE-CI-JOBS/iscsi-ilo/local.conf.sample local.conf
     ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sed -i "s/192.168.1.2/$ip/g" local.conf
-
-    #sudo /tmp/iscsi-ilo/HPE-CI-JOBS/molteniron/configure_molten
-    #sleep 8
-    #/tmp/iscsi-ilo/HPE-CI-JOBS/molteniron/allocate_molten.py $1 Gen8
 
     # Run stack.sh
     ./stack.sh
