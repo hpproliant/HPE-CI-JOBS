@@ -158,9 +158,10 @@ clean_nodes=false
 auth_version=3
 
 [pxe]
+ipxe_enabled=True
+uefi_pxe_bootfile_name=ipxe.efi
+uefi_pxe_config_template=$pybasedir/drivers/modules/ipxe_config.template
 pxe_append_params="console=ttyS1"
-uefi_pxe_config_template=/opt/stack/ironic/ironic/drivers/modules/pxe_grub_config.template
-uefi_pxe_bootfile_name=bootx64.efi
 
 [disk_utils]
 iscsi_verify_attempts = 10
