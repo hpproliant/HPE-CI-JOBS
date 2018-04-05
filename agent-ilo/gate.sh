@@ -94,7 +94,7 @@ function run_stack {
     ironic_node=$(ironic node-list | grep -v UUID | grep "\w" | awk '{print $2}' | tail -n1)
     capabilities="boot_mode:$BOOT_MODE"
     ironic node-update $ironic_node add driver_info/ilo_deploy_iso=http://10.13.120.214:9999/fedora-raid-deploy-ank-proliant-tools.iso
-    ironic node-update $ironic_node add instance_info/image_source=http://10.13.120.214:9999/fedora-wd-uefi.img instance_info/image_checksum=83b0671c9dfef5315c78de6da133c902
+    ironic node-update $ironic_node add instance_info/image_source=http://10.13.120.214:9999/fedora-wd-uefi.img instance_info/image_checksum=17a6c6df66d4c90b05554cdc2285d851
     ironic node-set-power-state $ironic_node off
     ironic node-update $ironic_node add properties/capabilities="$capabilities"
 

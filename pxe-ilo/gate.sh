@@ -31,9 +31,9 @@ function install_packages {
     sudo apt -y install apache2
     sudo apt -y install python-pip
     sudo apt -y install isc-dhcp-server
-    sudo apt -y install webfs
     sudo pip install setuptools
     sudo pip install proliantutils
+    sudo chown ubuntu.ubuntu /var/www/html
     #wget http://mirror.ord.rax.openstack.org/wheel/ubuntu-16.04-x86_64/tinyrpc/tinyrpc-0.7-py2-none-any.whl
     #sudo pip install tinyrpc-0.7-py2-none-any.whl
 }
@@ -52,7 +52,7 @@ function configure_dhcp_server {
     wget http://10.13.120.214:9999/pxe_dhcp_server.txt -P /opt/stack/devstack/files/
     ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sed -i "s/8.8.8.8/$ip/g" /opt/stack/devstack/files/pxe_dhcp_server.txt
-    sudo sh -c 'cat /opt/stack/devstack/files/pxe_dhcp_server.txt >> /etc/dhcp/dhcpd.conf'
+    sudo cp /opt/stack/devstack/files/pxe_dhcp_server.txt /etc/dhcp/dhcpd.conf
     sudo service isc-dhcp-server restart
 }
 
@@ -73,23 +73,24 @@ function run_stack {
     local ironic_node
     local capabilities
 
-    cd /opt/stack/devstack
-    wget http://10.13.120.214:9999/cirros-0.3.5-x86_64-uec.tar.gz -P files/
-    wget http://10.13.120.214:9999/cirros-0.3.5-x86_64-disk.img -P files/
-    wget http://10.13.120.214:9999/ir-deploy-pxe_ilo.initramfs -P files/
-    wget http://10.13.120.214:9999/ir-deploy-pxe_ilo.kernel -P files/
-    wget http://10.13.120.214:9999/fedora-wd-uefi.img -P files/
-    wget http://10.13.120.214:9999/hardware_info -P files/
-    wget http://10.13.120.214:9999/grubx64.efi -P files/
-    wget http://10.13.120.214:9999/bootx64.efi -P files/
-    wget http://10.13.120.214:9999/shim.efi -P files/
+    cd /opt/stack/devstack/files
+    wget http://10.13.120.214:9999/cirros-0.3.5-x86_64-uec.tar.gz
+    wget http://10.13.120.214:9999/cirros-0.3.5-x86_64-disk.img
+    wget http://10.13.120.214:9999/ir-deploy-pxe_ilo.initramfs
+    wget http://10.13.120.214:9999/ir-deploy-pxe_ilo.kernel
+    wget http://10.13.120.214:9999/fedora-wd-uefi.img
+    wget http://10.13.120.214:9999/grubx64.efi
+    wget http://10.13.120.214:9999/bootx64.efi
+    wget http://10.13.120.214:9999/shim.efi
+    wget http://10.13.120.214:9999/ipxe.efi
     cp /tmp/pxe-ilo/HPE-CI-JOBS/pxe-ilo/local.conf.sample local.conf
     ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sed -i "s/192.168.1.2/$ip/g" local.conf
 
     # Run stack.sh
     ./stack.sh
-
+    cp /opt/stack/devstack/files/ipxe.efi /opt/stack/data/ironic/tftpboot/
+    
     # Modify the node to reflect the boot_mode and secure_boot capabilities.
     # Also modify the nova flavor accordingly.
     sudo ovs-vsctl del-br br-ens3.100
@@ -97,7 +98,7 @@ function run_stack {
     ironic_node=$(ironic node-list | grep -v UUID | grep "\w" | awk '{print $2}' | tail -n1)
     #ironic node-update $ironic_node add driver_info/ilo_deploy_iso=http://10.13.120.214:9999/fedora-raid-deploy-ank-proliant-tools.iso
     ironic node-update $ironic_node add driver_info/deploy_kernel=http://10.13.120.214:9999/ir-deploy-pxe_ilo.kernel driver_info/deploy_ramdisk=http://10.13.120.214:9999/ir-deploy-pxe_ilo.initramfs 
-    ironic node-update $ironic_node add instance_info/image_source=http://10.13.120.214:9999/fedora-wd-uefi.img instance_info/image_checksum=83b0671c9dfef5315c78de6da133c902
+    ironic node-update $ironic_node add instance_info/image_source=http://10.13.120.214:9999/fedora-wd-uefi.img instance_info/image_checksum=17a6c6df66d4c90b05554cdc2285d851
     ironic node-set-power-state $ironic_node off
 
     # Run the tempest test.
@@ -110,14 +111,14 @@ function update_ironic {
     cd /opt/stack/ironic
     git config --global user.email "proliantutils@gmail.com"
     git config --global user.name "proliantci"
-    git fetch https://git.openstack.org/openstack/ironic refs/changes/51/535651/2 && git cherry-pick FETCH_HEAD
+    git fetch https://git.openstack.org/openstack/ironic refs/changes/51/535651/3 && git cherry-pick FETCH_HEAD
     git fetch https://git.openstack.org/openstack/ironic refs/changes/25/454625/18 && git cherry-pick FETCH_HEAD
-    git fetch https://git.openstack.org/openstack/ironic refs/changes/26/454026/23 && git cherry-pick FETCH_HEAD
+    git fetch https://git.openstack.org/openstack/ironic refs/changes/26/454026/24 && git cherry-pick FETCH_HEAD
 }
 
 function update_ironic_tempest_plugin {
     cd /opt/stack/ironic-tempest-plugin
-    git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/92/542792/1 && git cherry-pick FETCH_HEAD
+    git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/92/542792/2 && git cherry-pick FETCH_HEAD
     git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/52/535652/8 && git cherry-pick FETCH_HEAD
     sudo python setup.py install
 }
