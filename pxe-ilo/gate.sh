@@ -58,10 +58,6 @@ function configure_dhcp_server {
 
 function configure_interface {
     ip1=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
-    sudo sh -c 'echo web_root='/opt/stack/devstack/files' >> /etc/webfsd.conf'
-    sudo sh -c 'echo web_ip='$ip1' >> /etc/webfsd.conf'
-    sudo sh -c 'echo web_port=9999 >> /etc/webfsd.conf'
-    sudo service webfs restart
     sudo ip route add 10.0.0.0/8 via 10.13.120.193 dev ens3
     sudo modprobe 8021q
     sudo vconfig add ens3 100
