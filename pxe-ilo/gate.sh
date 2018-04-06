@@ -51,7 +51,9 @@ function clone_projects {
 function configure_dhcp_server {
     wget http://10.13.120.214:9999/pxe_dhcp_server.txt -P /opt/stack/devstack/files/
     ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+    mac=$(cat hardware_info |cut -f2 -d ' ')
     sed -i "s/8.8.8.8/$ip/g" /opt/stack/devstack/files/pxe_dhcp_server.txt
+    sed -i "s/8c:dc:d4:af:7d:ac/$mac/g" /opt/stack/devstack/files/pxe_dhcp_server.txt
     sudo cp /opt/stack/devstack/files/pxe_dhcp_server.txt /etc/dhcp/dhcpd.conf
     sudo service isc-dhcp-server restart
 }
