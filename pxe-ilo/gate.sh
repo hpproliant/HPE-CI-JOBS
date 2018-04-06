@@ -79,10 +79,10 @@ function run_stack {
     wget http://10.13.120.214:9999/bootx64.efi
     wget http://10.13.120.214:9999/shim.efi
     wget http://10.13.120.214:9999/ipxe.efi
+    cd /opt/stack/devstack/
     cp /tmp/pxe-ilo/HPE-CI-JOBS/pxe-ilo/local.conf.sample local.conf
     ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sed -i "s/192.168.1.2/$ip/g" local.conf
-    cd /opt/stack/devstack/
     # Run stack.sh
     ./stack.sh
     cp /opt/stack/devstack/files/ipxe.efi /opt/stack/data/ironic/tftpboot/
