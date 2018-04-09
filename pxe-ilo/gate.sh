@@ -81,6 +81,7 @@ function run_stack {
     wget http://10.13.120.214:9999/bootx64.efi
     wget http://10.13.120.214:9999/shim.efi
     wget http://10.13.120.214:9999/ipxe.efi
+    cp fedora-wd-uefi.img ir-deploy-pxe_ilo.kernel ir-deploy-pxe_ilo.initramfs cirros-0.3.5-x86_64-disk.img cirros-0.3.5-x86_64-uec.tar.gz /var/www/html
     # Add new line character in hardware_info so it will readable
     echo  >> /tmp/hardware_info
 
@@ -91,6 +92,10 @@ function run_stack {
     # Run stack.sh
     ./stack.sh
     cp /opt/stack/devstack/files/ipxe.efi /opt/stack/data/ironic/tftpboot/
+    sudo sed -i "s/bootx64.efi/ipxe.efi/g" /etc/ironic/ironic.conf
+    sudo sed -i "s/pxe_grub_config.template/ipxe_config.template/g" /etc/ironic/ironic.conf
+    sudo systemctl restart devstack@ir-api
+    sudo systemctl restart devstack@ir-cond
     
     # Modify the node to reflect the boot_mode and secure_boot capabilities.
     # Also modify the nova flavor accordingly.
@@ -112,7 +117,7 @@ function update_ironic {
     cd /opt/stack/ironic
     git config --global user.email "proliantutils@gmail.com"
     git config --global user.name "proliantci"
-    git fetch https://git.openstack.org/openstack/ironic refs/changes/51/535651/3 && git cherry-pick FETCH_HEAD
+    git fetch https://git.openstack.org/openstack/ironic refs/changes/51/535651/4 && git cherry-pick FETCH_HEAD
     git fetch https://git.openstack.org/openstack/ironic refs/changes/25/454625/18 && git cherry-pick FETCH_HEAD
     git fetch https://git.openstack.org/openstack/ironic refs/changes/26/454026/24 && git cherry-pick FETCH_HEAD
 }
