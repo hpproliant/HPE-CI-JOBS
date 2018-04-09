@@ -81,6 +81,9 @@ function run_stack {
     wget http://10.13.120.214:9999/bootx64.efi
     wget http://10.13.120.214:9999/shim.efi
     wget http://10.13.120.214:9999/ipxe.efi
+    # Add new line character in hardware_info so it will readable
+    echo  >> /tmp/hardware_info
+
     cd /opt/stack/devstack/
     cp /tmp/pxe-ilo/HPE-CI-JOBS/pxe-ilo/local.conf.sample local.conf
     ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
