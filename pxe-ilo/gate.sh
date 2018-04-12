@@ -76,12 +76,12 @@ function run_stack {
     wget http://10.13.120.214:9999/cirros-0.3.5-x86_64-disk.img
     wget http://10.13.120.214:9999/ir-deploy-pxe_ilo.initramfs
     wget http://10.13.120.214:9999/ir-deploy-pxe_ilo.kernel
-    wget http://10.13.120.214:9999/fedora-wd-uefi.img
+    wget http://10.13.120.214:9999/ubuntu-uefi.img
     wget http://10.13.120.214:9999/grubx64.efi
     wget http://10.13.120.214:9999/bootx64.efi
     wget http://10.13.120.214:9999/shim.efi
     wget http://10.13.120.214:9999/ipxe.efi
-    cp fedora-wd-uefi.img ir-deploy-pxe_ilo.kernel ir-deploy-pxe_ilo.initramfs cirros-0.3.5-x86_64-disk.img cirros-0.3.5-x86_64-uec.tar.gz /var/www/html
+    cp ubuntu-uefi.img ir-deploy-pxe_ilo.kernel ir-deploy-pxe_ilo.initramfs cirros-0.3.5-x86_64-disk.img cirros-0.3.5-x86_64-uec.tar.gz /var/www/html
     # Add new line character in hardware_info so it will readable
     echo  >> /tmp/hardware_info
 
@@ -104,8 +104,7 @@ function run_stack {
     ironic_node=$(ironic node-list | grep -v UUID | grep "\w" | awk '{print $2}' | tail -n1)
     #ironic node-update $ironic_node add driver_info/ilo_deploy_iso=http://10.13.120.214:9999/fedora-raid-deploy-ank-proliant-tools.iso
     ironic node-update $ironic_node add driver_info/deploy_kernel=http://10.13.120.214:9999/ir-deploy-pxe_ilo.kernel driver_info/deploy_ramdisk=http://10.13.120.214:9999/ir-deploy-pxe_ilo.initramfs 
-#    ironic node-update $ironic_node add instance_info/image_source=http://10.13.120.214:9999/ubuntu-16.04.wholedisk.qcow2 instance_info/image_checksum=a46f6297446f1197510839ef70d667c5
-     ironic node-update $ironic_node add instance_info/image_source=http://10.13.120.214:9999/fedora-wd-uefi.img instance_info/image_checksum=a46f6297446f1197510839ef70d667c5
+    ironic node-update $ironic_node add instance_info/image_source=http://10.13.120.214:9999/ubuntu-uefi.img instance_info/image_checksum=a46f6297446f1197510839ef70d667c5
 
     ironic node-set-power-state $ironic_node off
 
