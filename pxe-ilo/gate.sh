@@ -105,6 +105,7 @@ function run_stack {
     #ironic node-update $ironic_node add driver_info/ilo_deploy_iso=http://10.13.120.214:9999/fedora-raid-deploy-ank-proliant-tools.iso
     ironic node-update $ironic_node add driver_info/deploy_kernel=http://10.13.120.214:9999/ir-deploy-pxe_ilo.kernel driver_info/deploy_ramdisk=http://10.13.120.214:9999/ir-deploy-pxe_ilo.initramfs 
     ironic node-update $ironic_node add instance_info/image_source=http://10.13.120.214:9999/ubuntu-uefi.img instance_info/image_checksum=a46f6297446f1197510839ef70d667c5
+    ironic node-update $ironic_node add instance_info/capabilities='{"boot_option": "local"}'
 
     ironic node-set-power-state $ironic_node off
 
