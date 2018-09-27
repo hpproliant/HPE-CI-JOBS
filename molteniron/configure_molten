@@ -3,5 +3,7 @@ cd /tmp
 git clone https://github.com/openstack/molteniron
 cd molteniron
 pip install .
+pip install pbr
+pip install pyyaml
 sed -i -e 's/127.0.0.1/10.13.120.214/g' molteniron/conf.yaml
 python setup.py install
