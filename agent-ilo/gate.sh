@@ -37,7 +37,7 @@ function install_packages {
     sudo apt -y install isc-dhcp-server
     sudo apt -y install webfs
     sudo pip install setuptools
-    sudo pip install proliantutils
+    sudo pip3 install proliantutils
 }
 
 function clone_projects {
