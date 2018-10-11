@@ -34,6 +34,7 @@ export BRANCH=${ZUUL_BRANCH:-master}
 function install_packages {
     sudo apt -y install apache2
     sudo apt -y install python-pip
+    sudo apt -y install python3-pip
     sudo apt -y install isc-dhcp-server
     sudo apt -y install webfs
     sudo pip install setuptools
