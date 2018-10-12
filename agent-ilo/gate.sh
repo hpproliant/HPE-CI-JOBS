@@ -117,7 +117,7 @@ function update_ironic {
 function update_ironic_tempest_plugin {
     cd /opt/stack/ironic-tempest-plugin
     #git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/52/535652/11 && git cherry-pick FETCH_HEAD
-    sudo python setup.py install
+    sudo python3 setup.py install
 }
 
 install_packages
