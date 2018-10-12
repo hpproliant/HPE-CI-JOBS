@@ -40,7 +40,7 @@ enable_service s-proxy s-object s-container s-account
 disable_service nova n-api n-cond n-sch n-cpu n-crt n-net n-novnc n-xvnc n-cauth n-spice n-cell n-cell n-api-meta n-sproxy
 disable_service nova
 disable_service placement-api
-
+USE_PYTHON3=True
 enable_service ironic ir-api ir-cond
 enable_service tempest
 #IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image
