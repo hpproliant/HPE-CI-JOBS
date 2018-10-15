@@ -35,8 +35,10 @@ function install_packages {
     sudo apt -y install python-pip
     sudo apt -y install isc-dhcp-server
     sudo apt -y install webfs
+    sudo apt -y install python3-setuptools
+    sudo apt -y install python3-pip
     sudo pip install setuptools
-    sudo pip install proliantutils
+    sudo pip3 install proliantutils
 }
 
 function clone_projects {
@@ -114,7 +116,7 @@ function update_ironic {
 function update_ironic_tempest_plugin {
     cd /opt/stack/ironic-tempest-plugin
     #git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/52/535652/9 && git cherry-pick FETCH_HEAD
-    sudo python setup.py install
+    sudo python3 setup.py install
 }
 
 install_packages

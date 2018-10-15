@@ -38,7 +38,7 @@ function install_packages {
     sudo apt -y install python3-pip
     sudo apt -y install python3-setuptools
     sudo pip install setuptools
-    sudo pip install proliantutils
+    sudo pip3 install proliantutils
 }
 
 function clone_projects {
