@@ -84,7 +84,7 @@ function run_stack {
     wget http://10.13.120.214:9999/ipxe.efi
     cp ubuntu-uefi.img ir-deploy-pxe_ilo.kernel ir-deploy-pxe_ilo.initramfs cirros-0.3.5-x86_64-disk.img cirros-0.3.5-x86_64-uec.tar.gz /var/www/html
     # Add new line character in hardware_info so it will readable
-    sed -i 's/ironmantesting/ironmantesting 1/' /tmp/hardware_info
+    sed -i 's|ironmantesting|ironmantesting /redfish/v1/Systems/1|' /tmp/hardware_info
     echo  >> /tmp/hardware_info
 
     cd /opt/stack/devstack/
