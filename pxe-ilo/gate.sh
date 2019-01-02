@@ -33,8 +33,8 @@ function install_packages {
     sudo pip install setuptools
     sudo pip install proliantutils
     sudo chown ubuntu.ubuntu /var/www/html
-    #wget http://mirror.ord.rax.openstack.org/wheel/ubuntu-16.04-x86_64/tinyrpc/tinyrpc-0.7-py2-none-any.whl
-    #sudo pip install tinyrpc-0.7-py2-none-any.whl
+    wget http://mirror.mtl01.inap.openstack.org/wheel/ubuntu-18.04-x86_64/kombu/kombu-4.2.2-py2.py3-none-any.whl
+    sudo pip install kombu-4.2.2-py2.py3-none-any.whl
 }
 
 function clone_projects {
