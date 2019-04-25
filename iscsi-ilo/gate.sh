@@ -41,6 +41,8 @@ function install_packages {
     sudo pip3 install proliantutils
     wget http://mirror.mtl01.inap.openstack.org/wheel/ubuntu-18.04-x86_64/kombu/kombu-4.2.2-py2.py3-none-any.whl
     sudo pip3 install kombu-4.2.2-py2.py3-none-any.whl
+    sudo chmod 600 /home/ubuntu/zuul_id_rsa
+    sudo chmod 600 /home/ubuntu/log_server_id_rsa
 }
 
 function clone_projects {
