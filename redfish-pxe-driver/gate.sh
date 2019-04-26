@@ -46,9 +46,9 @@ function clone_projects {
     sudo chown ubuntu.ubuntu /opt/stack
     sudo chmod 0777 /opt/stack
     cd /opt/stack
-    git clone https://github.com/openstack-dev/devstack.git
-    git clone https://github.com/openstack/ironic.git
-    git clone https://github.com/openstack/ironic-tempest-plugin.git
+    git clone https://opendev.org/openstack-dev/devstack.git
+    git clone https://opendev.org/openstack/ironic.git
+    git clone https://opendev.org/openstack/ironic-tempest-plugin.git
 }
 
 function configure_dhcp_server {

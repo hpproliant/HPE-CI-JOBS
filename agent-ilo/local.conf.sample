@@ -135,7 +135,7 @@ HOST_IP=192.168.1.2
 
 # iLO driver plugin.
 IRONIC_USING_PLUGIN=true
-enable_plugin ironic https://git.openstack.org/openstack/ironic
+enable_plugin ironic https://opendev.org/openstack/ironic
 TEMPEST_PLUGINS+=' /opt/stack/ironic-tempest-plugin'
 
 [[post-config|$IRONIC_CONF_FILE]]
