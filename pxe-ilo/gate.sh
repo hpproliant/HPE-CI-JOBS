@@ -30,6 +30,7 @@ function install_packages {
     sudo apt -y install apache2
     sudo apt -y install python-pip
     sudo apt -y install isc-dhcp-server
+    sudo apt -y install ovmf
     sudo pip install setuptools
     sudo pip install proliantutils
     sudo chown ubuntu.ubuntu /var/www/html
