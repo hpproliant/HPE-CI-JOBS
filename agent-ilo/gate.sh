@@ -30,6 +30,8 @@ export SECURE_BOOT=${SECURE_BOOT:-}
 export BOOT_LOADER=${BOOT_LOADER:-grub2}
 export IRONIC_IPA_RAMDISK_DISTRO=ubuntu
 export BRANCH=${ZUUL_BRANCH:-master}
+wget http://172.17.1.171:9999/proxy /home/ubuntu/proxy
+source /home/ubuntu/proxy
 
 function install_packages {
     sudo apt -y install apache2
@@ -43,7 +45,7 @@ function install_packages {
     #wget http://mirror.mtl01.inap.openstack.org/wheel/ubuntu-18.04-x86_64/kombu/kombu-4.2.2-py2.py3-none-any.whl
     #sudo pip3 install kombu-4.2.2-py2.py3-none-any.whl
     sudo chmod 600 /home/ubuntu/zuul_id_rsa
-    sudo chmod 600 /home/ubuntu/log_server_id_rsa
+#    sudo chmod 600 /home/ubuntu/log_server_id_rsa
 }
 
 function clone_projects {
@@ -82,8 +84,8 @@ function run_stack {
     local capabilities
 
     cd /opt/stack/devstack
-    wget http://172.17.1.171:9999/cirros-0.3.5-x86_64-uec.tar.gz -P files/
-    wget http://172.17.1.171:9999/cirros-0.3.5-x86_64-disk.img -P files/
+#    wget http://172.17.1.171:9999/cirros-0.3.5-x86_64-uec.tar.gz -P files/
+#    wget http://172.17.1.171:9999/cirros-0.3.5-x86_64-disk.img -P files/
     wget http://172.17.1.171:9999/ir-deploy-ilo.iso -P files/
     wget http://172.17.1.171:9999/fedora-wd-uefi.img -P files/
     echo  >> /tmp/hardware_info
@@ -126,7 +128,7 @@ function update_ironic_tempest_plugin {
 
 install_packages
 clone_projects
-configure_dhcp_server
+#configure_dhcp_server
 #configure_interface
 update_ironic
 update_ironic_tempest_plugin
