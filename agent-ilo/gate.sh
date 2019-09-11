@@ -30,7 +30,7 @@ export SECURE_BOOT=${SECURE_BOOT:-}
 export BOOT_LOADER=${BOOT_LOADER:-grub2}
 export IRONIC_IPA_RAMDISK_DISTRO=ubuntu
 export BRANCH=${ZUUL_BRANCH:-master}
-wget http://172.17.1.171:9999/proxy /home/ubuntu/proxy
+wget http://172.17.1.171:9999/proxy -P /home/ubuntu/
 source /home/ubuntu/proxy
 
 function install_packages {
