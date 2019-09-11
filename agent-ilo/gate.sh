@@ -33,7 +33,11 @@ export BRANCH=${ZUUL_BRANCH:-master}
 export no_proxy=172.17.1.171
 wget http://172.17.1.171:9999/proxy -P /home/ubuntu/
 source /home/ubuntu/proxy
-sudo chmod 0600 /home/ubuntu/zuul_id_rsa 
+sudo chmod 0600 /home/ubuntu/zuul_id_rsa
+wget http://172.17.1.171:9999/log_upload_ssh -P /home/ubuntu/
+wget http://172.17.1.171:9999/config -P /home/.ssh/
+sudo chmod 0600 /home/ubuntu/log_upload_ssh
+sudo chmod 0664 /home/.ssh/config
 
 function install_packages {
     sudo apt -y install apache2
@@ -41,13 +45,10 @@ function install_packages {
     sudo apt -y install python3-pip
     sudo apt -y install python3-setuptools
     sudo apt -y install isc-dhcp-server
-    sudo apt -y install webfs
+    sudo apt -y install webfs socat
     sudo pip install setuptools
     sudo pip3 install proliantutils
-    #wget http://mirror.mtl01.inap.openstack.org/wheel/ubuntu-18.04-x86_64/kombu/kombu-4.2.2-py2.py3-none-any.whl
-    #sudo pip3 install kombu-4.2.2-py2.py3-none-any.whl
     sudo chmod 600 /home/ubuntu/zuul_id_rsa
-#    sudo chmod 600 /home/ubuntu/log_server_id_rsa
 }
 
 function clone_projects {
