@@ -30,8 +30,10 @@ export SECURE_BOOT=${SECURE_BOOT:-}
 export BOOT_LOADER=${BOOT_LOADER:-grub2}
 export IRONIC_IPA_RAMDISK_DISTRO=ubuntu
 export BRANCH=${ZUUL_BRANCH:-master}
+export no_proxy=172.17.1.171
 wget http://172.17.1.171:9999/proxy -P /home/ubuntu/
 source /home/ubuntu/proxy
+sudo chmod 0600 /home/ubuntu/zuul_id_rsa 
 
 function install_packages {
     sudo apt -y install apache2
