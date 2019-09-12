@@ -37,7 +37,7 @@ sudo chmod 0600 /home/ubuntu/zuul_id_rsa
 wget http://172.17.1.171:9999/log_upload_ssh -P /home/ubuntu/
 wget http://172.17.1.171:9999/config -P /home/.ssh/
 sudo chmod 0600 /home/ubuntu/log_upload_ssh
-sudo chmod 0664 /home/.ssh/config
+sudo chmod 0664 /home/ubuntu/.ssh/config
 
 function install_packages {
     sudo apt -y install apache2
