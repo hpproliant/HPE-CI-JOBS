@@ -30,12 +30,12 @@ export SECURE_BOOT=${SECURE_BOOT:-}
 export BOOT_LOADER=${BOOT_LOADER:-grub2}
 export IRONIC_IPA_RAMDISK_DISTRO=ubuntu
 export BRANCH=${ZUUL_BRANCH:-master}
-export no_proxy=172.17.1.171
-wget http://172.17.1.171:9999/proxy -P /home/ubuntu/
+export no_proxy=169.16.1.54
+wget http://169.16.1.54:9999/proxy -P /home/ubuntu/
 source /home/ubuntu/proxy
 sudo chmod 0600 /home/ubuntu/zuul_id_rsa
-wget http://172.17.1.171:9999/log_upload_ssh -P /home/ubuntu/
-wget http://172.17.1.171:9999/config -P /home/ubuntu/.ssh/
+wget http://169.16.1.54:9999/log_upload_ssh -P /home/ubuntu/
+wget http://169.16.1.54:9999/config -P /home/ubuntu/.ssh/
 sudo chmod 0600 /home/ubuntu/log_upload_ssh
 sudo chmod 0664 /home/ubuntu/.ssh/config
 
@@ -62,7 +62,7 @@ function clone_projects {
 }
 
 function configure_dhcp_server {
-    wget http://172.17.1.171:9999/agent_dhcp_server.txt -P /opt/stack/devstack/files/
+    wget http://169.16.1.54:9999/agent_dhcp_server.txt -P /opt/stack/devstack/files/
     mac=$(cat /tmp/hardware_info | awk '{print $2}')
     sed -i "s/8c:dc:d4:af:78:ec/$mac/g" /opt/stack/devstack/files/agent_dhcp_server.txt
     sudo sh -c 'cat /opt/stack/devstack/files/agent_dhcp_server.txt >> /etc/dhcp/dhcpd.conf'
@@ -89,8 +89,8 @@ function run_stack {
     cd /opt/stack/devstack
 #    wget http://172.17.1.171:9999/cirros-0.3.5-x86_64-uec.tar.gz -P files/
 #    wget http://172.17.1.171:9999/cirros-0.3.5-x86_64-disk.img -P files/
-    wget http://172.17.1.171:9999/ir-deploy-ilo.iso -P files/
-    wget http://172.17.1.171:9999/fedora-wd-uefi.img -P files/
+    wget http://169.16.1.54:9999/ir-deploy-ilo.iso -P files/
+    wget http://169.16.1.54:9999/fedora-wd-uefi.img -P files/
     echo  >> /tmp/hardware_info
     cp /tmp/agent-ilo/HPE-CI-JOBS/agent-ilo/local.conf.sample local.conf
     ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
@@ -104,8 +104,8 @@ function run_stack {
     source /opt/stack/devstack/openrc admin admin
     ironic_node=$(ironic node-list | grep -v UUID | grep "\w" | awk '{print $2}' | tail -n1)
     capabilities="boot_mode:uefi"
-    ironic node-update $ironic_node add driver_info/ilo_deploy_iso=http://172.17.1.171:9999/fedora-raid-deploy-ank-proliant-tools.iso
-    ironic node-update $ironic_node add instance_info/image_source=http://172.17.1.171:9999/fedora-wd-uefi.img instance_info/image_checksum=17a6c6df66d4c90b05554cdc2285d851
+    ironic node-update $ironic_node add driver_info/ilo_deploy_iso=http://169.16.1.54:9999/fedora-raid-deploy-ank-proliant-tools.iso
+    ironic node-update $ironic_node add instance_info/image_source=http://169.16.1.54:9999/fedora-wd-uefi.img instance_info/image_checksum=17a6c6df66d4c90b05554cdc2285d851
 
     ironic node-set-power-state $ironic_node off
     ironic node-update $ironic_node add properties/capabilities="$capabilities"
@@ -131,7 +131,7 @@ function update_ironic_tempest_plugin {
 
 install_packages
 clone_projects
-#configure_dhcp_server
+configure_dhcp_server
 configure_interface
 update_ironic
 update_ironic_tempest_plugin

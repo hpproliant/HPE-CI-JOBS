@@ -114,15 +114,15 @@ IRONIC_PING_TIMEOUT=1200
 IMAGE_URLS="file:///opt/stack/devstack/files/fedora-wd-uefi.img"
 #IRONIC_IMAGE_NAME=ubuntu-cloud-image-disk
 #IRONIC_HWINFO_FILE="/opt/stack/devstack/files/hardware_info"
-IRONIC_HWINFO_FILE="/tmp/hardware_info"
+#IRONIC_HWINFO_FILE="/tmp/hardware_info"
 IRONIC_TEMPEST_WHOLE_DISK_IMAGE="False"
 #IRONIC_ILO_HWINFO="10.12.12.229 8c:dc:d4:af:6e:20 Administrator ironmantesting"
 
 PUBLIC_INTERFACE=ens3.100
 OVS_PHYSICAL_BRIDGE=br-ens3
-FIXED_RANGE=172.17.1.0/24
-NETWORK_GATEWAY=172.17.1.1
-ALLOCATION_POOL=start=172.17.1.153,end=172.17.1.154
+FIXED_RANGE=169.16.1.0/24
+NETWORK_GATEWAY=169.16.1.1
+ALLOCATION_POOL=start=169.16.1.50,end=169.16.1.51
 #IRONIC_DEPLOY_DRIVER=agent_ilo
 HOST_IP=192.168.1.2
 
