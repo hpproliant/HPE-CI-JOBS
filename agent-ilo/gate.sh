@@ -101,26 +101,26 @@ function run_stack {
     # Modify the node to reflect the boot_mode and secure_boot capabilities.
     # Also modify the nova flavor accordingly.
 #    sudo ovs-vsctl del-br br-ens3.100
-    source /opt/stack/devstack/openrc admin admin
-    ironic_node=$(ironic node-list | grep -v UUID | grep "\w" | awk '{print $2}' | tail -n1)
-    capabilities="boot_mode:uefi"
-    ironic node-update $ironic_node add driver_info/ilo_deploy_iso=http://169.16.1.54:9999/fedora-raid-deploy-ank-proliant-tools.iso
-    ironic node-update $ironic_node add instance_info/image_source=http://169.16.1.54:9999/fedora-wd-uefi.img instance_info/image_checksum=17a6c6df66d4c90b05554cdc2285d851
+    #source /opt/stack/devstack/openrc admin admin
+    #ironic_node=$(ironic node-list | grep -v UUID | grep "\w" | awk '{print $2}' | tail -n1)
+    #capabilities="boot_mode:uefi"
+    #ironic node-update $ironic_node add driver_info/ilo_deploy_iso=http://169.16.1.54:9999/fedora-raid-deploy-ank-proliant-tools.iso
+    #ironic node-update $ironic_node add instance_info/image_source=http://169.16.1.54:9999/fedora-wd-uefi.img instance_info/image_checksum=17a6c6df66d4c90b05554cdc2285d851
 
-    ironic node-set-power-state $ironic_node off
-    ironic node-update $ironic_node add properties/capabilities="$capabilities"
+    #ironic node-set-power-state $ironic_node off
+    #ironic node-update $ironic_node add properties/capabilities="$capabilities"
 
     # Run the tempest test.
-    cd /opt/stack/tempest
-    export OS_TEST_TIMEOUT=3000
-    sudo tox -e all-plugin -- ironic_tempest_plugin.tests.scenario.ironic_standalone.test_basic_ops.BaremetalIloDirectWholediskHttpLink.test_ip_access_to_server
+    #cd /opt/stack/tempest
+    #export OS_TEST_TIMEOUT=3000
+    #sudo tox -e all-plugin -- ironic_tempest_plugin.tests.scenario.ironic_standalone.test_basic_ops.BaremetalIloDirectWholediskHttpLink.test_ip_access_to_server
 }
 
 function update_ironic {
     cd /opt/stack/ironic
     git config --global user.email "proliantutils@gmail.com"
     git config --global user.name "proliantci"
-    git fetch https://review.opendev.org/openstack/ironic refs/changes/25/454625/18 && git cherry-pick FETCH_HEAD
+    #git fetch https://review.opendev.org/openstack/ironic refs/changes/25/454625/18 && git cherry-pick FETCH_HEAD
 }
 
 function update_ironic_tempest_plugin {
