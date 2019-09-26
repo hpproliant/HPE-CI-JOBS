@@ -71,11 +71,10 @@ function configure_dhcp_server {
 
 function configure_interface {
     ip1=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
-    #sudo sh -c 'echo web_root='/opt/stack/devstack/files' >> /etc/webfsd.conf'
-    #sudo sh -c 'echo web_ip='$ip1' >> /etc/webfsd.conf'
-    #sudo sh -c 'echo web_port=9999 >> /etc/webfsd.conf'
-    #sudo service webfs restart
-    #sudo ip route add 10.0.0.0/8 via 10.13.120.193 dev ens3
+    sudo sh -c 'echo web_root='/opt/stack/devstack/files' >> /etc/webfsd.conf'
+    sudo sh -c 'echo web_ip='$ip1' >> /etc/webfsd.conf'
+    sudo sh -c 'echo web_port=9999 >> /etc/webfsd.conf'
+    sudo service webfs restart
     sudo modprobe 8021q
     sudo vconfig add ens3 100
     sudo ifconfig ens3.100 inet $ip1 netmask 255.255.255.0
@@ -87,8 +86,6 @@ function run_stack {
     local capabilities
 
     cd /opt/stack/devstack
-#    wget http://172.17.1.171:9999/cirros-0.3.5-x86_64-uec.tar.gz -P files/
-#    wget http://172.17.1.171:9999/cirros-0.3.5-x86_64-disk.img -P files/
     wget http://169.16.1.54:9999/ir-deploy-ilo.iso -P files/
     wget http://169.16.1.54:9999/fedora-wd-uefi.img -P files/
     echo  >> /tmp/hardware_info
@@ -98,22 +95,31 @@ function run_stack {
 
     ./stack.sh
 
-    # Modify the node to reflect the boot_mode and secure_boot capabilities.
-    # Also modify the nova flavor accordingly.
-#    sudo ovs-vsctl del-br br-ens3.100
-    #source /opt/stack/devstack/openrc admin admin
-    #ironic_node=$(ironic node-list | grep -v UUID | grep "\w" | awk '{print $2}' | tail -n1)
-    #capabilities="boot_mode:uefi"
-    #ironic node-update $ironic_node add driver_info/ilo_deploy_iso=http://169.16.1.54:9999/fedora-raid-deploy-ank-proliant-tools.iso
-    #ironic node-update $ironic_node add instance_info/image_source=http://169.16.1.54:9999/fedora-wd-uefi.img instance_info/image_checksum=17a6c6df66d4c90b05554cdc2285d851
+    #Reaccess to private network
+    sudo ovs-vsctl del-br br-ens3.100
+    sudo ip link set ens3 down
+    sudo ip link set ens3 up
 
-    #ironic node-set-power-state $ironic_node off
-    #ironic node-update $ironic_node add properties/capabilities="$capabilities"
+    #Create Node
+    source /opt/stack/devstack/openrc admin admin
+    ilo_ip=$(cat /tmp/hardware_info | awk '{print $1}')
+    mac=$(cat /tmp/hardware_info | awk '{print $2}')
+
+    openstack baremetal node create --driver ilo --driver-info ilo_address=$ilo_ip --driver-info ilo_username=Administrator --driver-info ilo_password=weg0th@ce@r --driver-info console_port=5000
+
+    ironic_node=$(openstack baremetal node list | grep -v UUID | grep "\w" | awk '{print $2}' | tail -n1)
+
+    openstack baremetal node manage $ironic_node
+    openstack baremetal node provide $ironic_node
+    openstack baremetal node set --driver-info ilo_deploy_iso=http://169.16.1.54:9999/fedora-raid-deploy-ank-proliant-tools.iso --instance-info image_source=http://169.16.1.54:9999/fedora-wd-uefi.img --instance-info image_checksum=17a6c6df66d4c90b05554cdc2285d851 --instance-info capabilities='{"boot_mode": "uefi"}' --property capabilities='boot_mode:uefi' $ironic_node
+    openstack baremetal port create --node $ironic_node $mac
+
+    openstack baremetal node power off $ironic_node
 
     # Run the tempest test.
-    #cd /opt/stack/tempest
-    #export OS_TEST_TIMEOUT=3000
-    #sudo tox -e all-plugin -- ironic_tempest_plugin.tests.scenario.ironic_standalone.test_basic_ops.BaremetalIloDirectWholediskHttpLink.test_ip_access_to_server
+    cd /opt/stack/tempest
+    export OS_TEST_TIMEOUT=3000
+    sudo tox -e all-plugin -- ironic_tempest_plugin.tests.scenario.ironic_standalone.test_basic_ops.BaremetalIloDirectWholediskHttpLink.test_ip_access_to_server
 }
 
 function update_ironic {
