@@ -29,20 +29,26 @@ export BOOT_OPTION=${BOOT_OPTION:-}
 export BOOT_LOADER=${BOOT_LOADER:-grub2}
 export IRONIC_IPA_RAMDISK_DISTRO=ubuntu
 export BRANCH=${ZUUL_BRANCH:-master}
+export no_proxy=169.16.1.54
+wget http://169.16.1.54:9999/proxy -P /home/ubuntu/
+source /home/ubuntu/proxy
+sudo chmod 0600 /home/ubuntu/zuul_id_rsa
+wget http://169.16.1.54:9999/log_upload_ssh -P /home/ubuntu/
+wget http://169.16.1.54:9999/config -P /home/ubuntu/.ssh/
+sudo chmod 0600 /home/ubuntu/log_upload_ssh
+sudo chmod 0664 /home/ubuntu/.ssh/config
 
 function install_packages {
     sudo apt -y install apache2
-    sudo apt -y install python-pip
+    sudo apt -y install python-pip python3-pip
     sudo apt -y install isc-dhcp-server
-    sudo apt -y install webfs
-    sudo apt -y install python3-pip
+    sudo apt -y install webfs socat
     sudo apt -y install python3-setuptools
     sudo pip install setuptools
     sudo pip3 install proliantutils
     #wget http://mirror.mtl01.inap.openstack.org/wheel/ubuntu-18.04-x86_64/kombu/kombu-4.2.2-py2.py3-none-any.whl
     #sudo pip3 install kombu-4.2.2-py2.py3-none-any.whl
     sudo chmod 600 /home/ubuntu/zuul_id_rsa
-    sudo chmod 600 /home/ubuntu/log_server_id_rsa
 }
 
 function clone_projects {
@@ -56,7 +62,7 @@ function clone_projects {
 }
 
 function configure_dhcp_server {
-    wget http://10.13.120.214:9999/iscsi_dhcp_server.txt -P /opt/stack/devstack/files/
+    wget http://169.16.1.54:9999/iscsi_dhcp_server.txt -P /opt/stack/devstack/files/
     mac=$(cat /tmp/hardware_info | awk '{print $2}')
     sed -i "s/8c:dc:d4:af:78:ec/$mac/g" /opt/stack/devstack/files/iscsi_dhcp_server.txt
     sudo sh -c 'cat /opt/stack/devstack/files/iscsi_dhcp_server.txt >> /etc/dhcp/dhcpd.conf'
@@ -69,10 +75,9 @@ function configure_interface {
     sudo sh -c 'echo web_ip='$ip1' >> /etc/webfsd.conf'
     sudo sh -c 'echo web_port=9999 >> /etc/webfsd.conf'
     sudo service webfs restart
-    sudo ip route add 10.0.0.0/8 via 10.13.120.193 dev ens3
     sudo modprobe 8021q
     sudo vconfig add ens3 100
-    sudo ifconfig ens3.100 inet $ip1 netmask 255.255.255.224
+    sudo ifconfig ens3.100 inet $ip1 netmask 255.255.255.0
 }
 
 function run_stack {
@@ -81,10 +86,10 @@ function run_stack {
     local capabilities
 
     cd /opt/stack/devstack
-    wget http://10.13.120.214:9999/cirros-0.3.5-x86_64-uec.tar.gz -P files/
-    wget http://10.13.120.214:9999/cirros-0.3.5-x86_64-disk.img -P files/
-    wget http://10.13.120.214:9999/ir-deploy-ilo.iso -P files/
-    wget http://10.13.120.214:9999/fedora-bios.img -P files/
+    #wget http://10.13.120.214:9999/cirros-0.3.5-x86_64-uec.tar.gz -P files/
+    #wget http://10.13.120.214:9999/cirros-0.3.5-x86_64-disk.img -P files/
+    wget http://169.16.1.54:9999/ir-deploy-ilo.iso -P files/
+    wget http://169.16.1.54:9999/fedora-bios.img -P files/
     echo  >> /tmp/hardware_info
     cp /tmp/iscsi-ilo/HPE-CI-JOBS/iscsi-ilo/local.conf.sample local.conf
     ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
@@ -93,13 +98,27 @@ function run_stack {
     # Run stack.sh
     ./stack.sh
 
+    #Reaccess to private network
     sudo ovs-vsctl del-br br-ens3.100
+    sudo ip link set ens3 down
+    sudo ip link set ens3 up
 
+    #Create Node
     source /opt/stack/devstack/openrc admin admin
-    ironic_node=$(ironic node-list | grep -v UUID | grep "\w" | awk '{print $2}' | tail -n1)
-    ironic node-update $ironic_node add driver_info/ilo_deploy_iso=http://10.13.120.214:9999/fedora-raid-deploy-ank-proliant-tools.iso
-    ironic node-update $ironic_node add instance_info/image_source=http://10.13.120.214:9999/fedora-bios.img instance_info/image_checksum=833de19d0e85ecac364669382389ad20
-    ironic node-set-power-state $ironic_node off
+    ilo_ip=$(cat /tmp/hardware_info | awk '{print $1}')
+    mac=$(cat /tmp/hardware_info | awk '{print $2}')
+
+    openstack baremetal node create --driver ilo --driver-info ilo_address=$ilo_ip --driver-info ilo_username=Administrator --driver-info ilo_password=weg0th@ce@r --driver-info console_port=5000
+
+    ironic_node=$(openstack baremetal node list | grep -v UUID | grep "\w" | awk '{print $2}' | tail -n1)
+
+    openstack baremetal node manage $ironic_node
+    openstack baremetal node provide $ironic_node
+
+    openstack baremetal node set --driver-info ilo_deploy_iso=http://169.16.1.54:9999/fedora-raid-deploy-ank-proliant-tools.iso --instance-info image_source=http://169.16.1.54:9999/fedora-bios.img --instance-info image_checksum=833de19d0e85ecac364669382389ad20 --instance-info capabilities='{"boot_mode": "bios"}' --property capabilities='boot_mode:bios' $ironic_node
+
+    openstack baremetal port create --node $ironic_node $mac
+    openstack baremetal node power off $ironic_node
 
     # Run the tempest test.
     cd /opt/stack/tempest
@@ -111,7 +130,7 @@ function update_ironic {
     cd /opt/stack/ironic
     git config --global user.email "proliantutils@gmail.com"
     git config --global user.name "proliantci"
-    git fetch https://review.opendev.org/openstack/ironic refs/changes/25/454625/18 && git cherry-pick FETCH_HEAD
+    git fetch https://review.opendev.org/openstack/ironic refs/changes/25/454625/19 && git cherry-pick FETCH_HEAD
 }
 
 function update_ironic_tempest_plugin {
