@@ -99,7 +99,7 @@ function run_stack {
     ./stack.sh
 
     #Reaccess to private network
-    sudo ovs-vsctl del-br br-ens3.100
+    sudo ovs-vsctl del-br br-ens3
     sudo ip link set ens3 down
     sudo ip link set ens3 up
 
