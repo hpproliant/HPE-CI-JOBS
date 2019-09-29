@@ -45,7 +45,7 @@ function install_packages {
     sudo apt -y install python3-pip
     sudo apt -y install python3-setuptools
     sudo apt -y install isc-dhcp-server
-    sudo apt -y install webfs socat
+    sudo apt -y install webfs socat vlan liberasurecode-dev libssl-dev
     sudo pip install setuptools
     sudo pip3 install proliantutils
     sudo chmod 600 /home/ubuntu/zuul_id_rsa

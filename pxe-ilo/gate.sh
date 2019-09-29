@@ -35,7 +35,7 @@ sudo chmod 0600 /home/ubuntu/log_upload_ssh
 sudo chmod 0664 /home/ubuntu/.ssh/config
 
 function install_packages {
-    sudo apt -y install apache2 python-pip isc-dhcp-server ovmf webfs socat
+    sudo apt -y install apache2 python-pip isc-dhcp-server ovmf webfs socat vlan liberasurecode-dev libssl-dev
     sudo pip install setuptools
     sudo pip install proliantutils
     sudo chown ubuntu.ubuntu /var/www/html
@@ -93,8 +93,6 @@ function run_stack {
     local capabilities
 
     cd /opt/stack/devstack/files
-    wget http://169.16.1.54:9999/cirros-0.3.5-x86_64-uec.tar.gz
-    wget http://169.16.1.54:9999/cirros-0.3.5-x86_64-disk.img
     wget http://169.16.1.54:9999/ir-deploy-pxe_ilo.initramfs
     wget http://169.16.1.54:9999/ir-deploy-pxe_ilo.kernel
     wget http://169.16.1.54:9999/ubuntu-uefi.img
@@ -102,7 +100,7 @@ function run_stack {
     wget http://169.16.1.54:9999/bootx64.efi
     wget http://169.16.1.54:9999/shim.efi
     wget http://169.16.1.54:9999/ipxe.efi
-    cp ubuntu-uefi.img ir-deploy-pxe_ilo.kernel ir-deploy-pxe_ilo.initramfs cirros-0.3.5-x86_64-disk.img cirros-0.3.5-x86_64-uec.tar.gz /var/www/html
+    cp ubuntu-uefi.img ir-deploy-pxe_ilo.kernel ir-deploy-pxe_ilo.initramfs /var/www/html
     # Add new line character in hardware_info so it will readable
     echo  >> /tmp/hardware_info
 
