@@ -73,7 +73,8 @@ function install_requirements {
 function configure_dhcp_server {
     wget http://169.16.1.54:9999/pxe_dhcp_server.txt -P /opt/stack/devstack/files/
     ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
-    mac=$(cat /tmp/hardware_info |cut -f2 -d ' ')
+    #mac=$(cat /tmp/hardware_info |cut -f2 -d ' ')
+    mac=94:57:a5:55:9f:34
     sed -i "s/8.8.8.8/$ip/g" /opt/stack/devstack/files/pxe_dhcp_server.txt
     sed -i "s/8c:dc:d4:af:7d:ac/$mac/g" /opt/stack/devstack/files/pxe_dhcp_server.txt
     sudo cp /opt/stack/devstack/files/pxe_dhcp_server.txt /etc/dhcp/dhcpd.conf
@@ -124,8 +125,10 @@ function run_stack {
 
     #Create Node
     source /opt/stack/devstack/openrc admin admin
-    ilo_ip=$(cat /tmp/hardware_info | awk '{print $1}')
-    mac=$(cat /tmp/hardware_info | awk '{print $2}')
+    #ilo_ip=$(cat /tmp/hardware_info | awk '{print $1}')
+    #mac=$(cat /tmp/hardware_info | awk '{print $2}')
+    ilo_ip=169.16.1.16
+    mac=94:57:a5:55:9f:34
 
     openstack baremetal node create --driver ilo --driver-info ilo_address=$ilo_ip --driver-info ilo_username=Administrator --driver-info ilo_password=weg0th@ce@r --driver-info console_port=5000
 

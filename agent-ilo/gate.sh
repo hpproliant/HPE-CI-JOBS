@@ -63,7 +63,8 @@ function clone_projects {
 
 function configure_dhcp_server {
     wget http://169.16.1.54:9999/agent_dhcp_server.txt -P /opt/stack/devstack/files/
-    mac=$(cat /tmp/hardware_info | awk '{print $2}')
+    #mac=$(cat /tmp/hardware_info | awk '{print $2}')
+    mac=70:10:6f:b4:cd:b6
     sed -i "s/8c:dc:d4:af:78:ec/$mac/g" /opt/stack/devstack/files/agent_dhcp_server.txt
     sudo sh -c 'cat /opt/stack/devstack/files/agent_dhcp_server.txt >> /etc/dhcp/dhcpd.conf'
     sudo service isc-dhcp-server restart
@@ -102,8 +103,10 @@ function run_stack {
 
     #Create Node
     source /opt/stack/devstack/openrc admin admin
-    ilo_ip=$(cat /tmp/hardware_info | awk '{print $1}')
-    mac=$(cat /tmp/hardware_info | awk '{print $2}')
+    #ilo_ip=$(cat /tmp/hardware_info | awk '{print $1}')
+    #mac=$(cat /tmp/hardware_info | awk '{print $2}')
+    ilo_ip=169.16.1.14
+    mac=70:10:6f:b4:cd:b6
 
     openstack baremetal node create --driver ilo --driver-info ilo_address=$ilo_ip --driver-info ilo_username=Administrator --driver-info ilo_password=weg0th@ce@r --driver-info console_port=5000
 

@@ -79,11 +79,11 @@ def create_html(path):
                 if os.path.isdir(new_path):
                     table_start = table_start + \
                         "<tr><td><a href = 'https://hpproliant.github.io/hpeproliant.github.io/{}/{}.html'>{}</a></td></tr>\n".format(
-                            new_path.split('/home/zuul/upload/hpproliant.github.io/')[-1], i, i)
+                            new_path.split(sys.argv[1])[-1], i, i)
                 else:
                     table_start = table_start + \
                         "<tr><td><a href = 'https://hpproliant.github.io/hpeproliant.github.io/{}.html'>{}</a></td></tr>\n".format(
-                            new_path.split('/home/zuul/upload/hpproliant.github.io/')[-1], i)
+                            new_path.split(sys.argv[1])[-1], i)
                 
                 create_html(new_path)
         table_data = table_start + "</table>\n"
