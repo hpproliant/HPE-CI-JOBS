@@ -50,12 +50,6 @@ function clone_projects {
     git clone https://opendev.org/openstack-dev/devstack.git
     git clone https://opendev.org/openstack/ironic.git
     git clone https://opendev.org/openstack/ironic-tempest-plugin.git
-    git clone https://opendev.org/openstack/neutron.git
-    git clone https://opendev.org/openstack/glance.git
-    git clone https://opendev.org/openstack/requirements.git
-    git clone https://opendev.org/openstack/swift.git
-    git clone https://opendev.org/openstack/keystone.git
-    git clone https://opendev.org/openstack/tempest.git
 }
 
 function install_requirements {
@@ -72,7 +66,7 @@ function install_requirements {
 
 function configure_dhcp_server {
     wget http://169.16.1.54:9999/pxe_dhcp_server.txt -P /opt/stack/devstack/files/
-    ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+    ip=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     mac=$(cat /tmp/hardware_info |cut -f2 -d ' ')
     #mac=94:57:a5:55:9f:34
     sed -i "s/8.8.8.8/$ip/g" /opt/stack/devstack/files/pxe_dhcp_server.txt
@@ -107,7 +101,7 @@ function run_stack {
 
     cd /opt/stack/devstack/
     cp /tmp/pxe-ilo/HPE-CI-JOBS/pxe-ilo/local.conf.sample local.conf
-    ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+    ip=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sed -i "s/192.168.1.2/$ip/g" local.conf
 
     # Run stack.sh
@@ -119,9 +113,10 @@ function run_stack {
     sudo systemctl restart devstack@ir-cond
 
     #Reaccess to private network
-    sudo ovs-vsctl del-br br-ens3
-    sudo ip link set ens3 down
-    sudo ip link set ens3 up
+    sudo ovs-vsctl del-br br-ens2
+    sudo ip link set ens2 down
+    sudo ip link set ens2 up
+    sudo ip addr add $ip/24 dev ens2
 
     #Create Node
     source /opt/stack/devstack/openrc admin admin
@@ -151,6 +146,7 @@ function update_ironic {
     cd /opt/stack/ironic
     git config --global user.email "proliantutils@gmail.com"
     git config --global user.name "proliantci"
+    git fetch https://review.opendev.org/openstack/ironic refs/changes/53/697953/1 && git cherry-pick FETCH_HEAD
 #    git fetch https://review.opendev.org/openstack/ironic refs/changes/25/454625/19 && git cherry-pick FETCH_HEAD
 }
 
@@ -163,8 +159,8 @@ function update_ironic_tempest_plugin {
 install_packages
 clone_projects
 configure_dhcp_server
-configure_interface
+#configure_interface
 update_ironic
 update_ironic_tempest_plugin
-install_requirements
+#install_requirements
 run_stack

@@ -58,7 +58,7 @@ function clone_projects {
 
 function configure_dhcp_server {
     wget http://169.16.1.54:9999/redfish_pxe_dhcp_server.txt -P /opt/stack/devstack/files/
-    ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+    ip=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     mac=$(cat /tmp/hardware_info |cut -f2 -d ' ')
     sed -i "s/8.8.8.8/$ip/g" /opt/stack/devstack/files/redfish_pxe_dhcp_server.txt
     sed -i "s/8c:dc:d4:af:7d:ac/$mac/g" /opt/stack/devstack/files/redfish_pxe_dhcp_server.txt
@@ -93,7 +93,7 @@ function run_stack {
 
     cd /opt/stack/devstack/
     cp /tmp/redfish-pxe-driver/HPE-CI-JOBS/redfish-pxe-driver/local.conf.sample local.conf
-    ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+    ip=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sed -i "s/192.168.1.2/$ip/g" local.conf
 
     # Run stack.sh
@@ -105,9 +105,9 @@ function run_stack {
     sudo systemctl restart devstack@ir-cond
 
     #Reaccess to private network
-    sudo ovs-vsctl del-br br-ens3
-    sudo ip link set ens3 down
-    sudo ip link set ens3 up
+    sudo ovs-vsctl del-br br-ens2
+    sudo ip link set ens2 down
+    sudo ip link set ens2 up
 
     #Create Node
     source /opt/stack/devstack/openrc admin admin
@@ -135,6 +135,7 @@ function update_ironic {
     cd /opt/stack/ironic
     git config --global user.email "proliantutils@gmail.com"
     git config --global user.name "proliantci"
+    git fetch https://review.opendev.org/openstack/ironic refs/changes/53/697953/1 && git cherry-pick FETCH_HEAD
 #    git fetch https://review.opendev.org/openstack/ironic refs/changes/25/454625/19 && git cherry-pick FETCH_HEAD
 }
 
@@ -147,7 +148,7 @@ function update_ironic_tempest_plugin {
 install_packages
 clone_projects
 configure_dhcp_server
-configure_interface
+#configure_interface
 update_ironic
 update_ironic_tempest_plugin
 run_stack

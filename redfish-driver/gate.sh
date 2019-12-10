@@ -65,14 +65,14 @@ function configure_dhcp_server {
 }
 
 function configure_interface {
-    ip1=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+    ip1=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sudo sh -c 'echo web_root='/opt/stack/devstack/files' >> /etc/webfsd.conf'
     sudo sh -c 'echo web_ip='$ip1' >> /etc/webfsd.conf'
     sudo sh -c 'echo web_port=9999 >> /etc/webfsd.conf'
     sudo service webfs restart
-    sudo modprobe 8021q
-    sudo vconfig add ens3 100
-    sudo ifconfig ens3.100 inet $ip1 netmask 255.255.255.0
+   # sudo modprobe 8021q
+   # sudo vconfig add ens3 100
+   # sudo ifconfig ens3.100 inet $ip1 netmask 255.255.255.0
 }
 
 function run_stack {
@@ -85,15 +85,15 @@ function run_stack {
     wget http://169.16.1.54:9999/fedora-wd-uefi.img -P files/
     echo  >> /tmp/hardware_info
     cp /tmp/redfish-driver/HPE-CI-JOBS/redfish-driver/local.conf.sample local.conf
-    ip=$(ip addr show ens3 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+    ip=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sed -i "s/192.168.1.2/$ip/g" local.conf
 
     ./stack.sh
 
     #Reaccess to private network
-    sudo ovs-vsctl del-br br-ens3
-    sudo ip link set ens3 down
-    sudo ip link set ens3 up
+    sudo ovs-vsctl del-br br-ens2
+    sudo ip link set ens2 down
+    sudo ip link set ens2 up
 
     #Create Node
     source /opt/stack/devstack/openrc admin admin
@@ -123,6 +123,7 @@ function update_ironic {
     cd /opt/stack/ironic
     git config --global user.email "proliantutils@gmail.com"
     git config --global user.name "proliantci"
+    git fetch https://review.opendev.org/openstack/ironic refs/changes/53/697953/1 && git cherry-pick FETCH_HEAD
 #    git fetch https://review.opendev.org/openstack/ironic refs/changes/25/454625/19 && git cherry-pick FETCH_HEAD
 }
 
