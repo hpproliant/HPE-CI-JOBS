@@ -118,6 +118,10 @@ function run_stack {
     sudo ip link set ens2 up
     sudo ip addr add $ip/24 dev ens2
 
+    #Reinstall Proliantutils
+    sudo pip install proliantutils
+    sudo systemctl restart devstack@ir-cond
+
     #Create Node
     source /opt/stack/devstack/openrc admin admin
     ilo_ip=$(cat /tmp/hardware_info | awk '{print $1}')
