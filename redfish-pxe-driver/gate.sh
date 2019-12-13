@@ -39,7 +39,7 @@ function install_packages {
     sudo apt -y install python-pip
     sudo apt -y install python3-pip
     sudo apt -y install python3-setuptools
-    sudo apt -y install isc-dhcp-server
+    sudo apt -y install isc-dhcp-server ovmf
     sudo pip install setuptools
     sudo pip3 install proliantutils
     sudo chown ubuntu.ubuntu /var/www/html

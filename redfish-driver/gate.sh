@@ -39,7 +39,7 @@ sudo chmod 0600 /home/ubuntu/log_upload_ssh
 sudo chmod 0664 /home/ubuntu/.ssh/config
 
 function install_packages {
-    sudo apt -y install apache2 python-pip isc-dhcp-server webfs python3-setuptools python3-pip socat vlan liberasurecode-dev libssl-dev
+    sudo apt -y install apache2 python-pip isc-dhcp-server webfs python3-setuptools python3-pip socat vlan liberasurecode-dev libssl-dev ovmf
     sudo pip install setuptools
     sudo pip3 install proliantutils
     sudo chmod 600 /home/ubuntu/zuul_id_rsa
