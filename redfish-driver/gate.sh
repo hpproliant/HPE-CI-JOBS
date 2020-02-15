@@ -53,6 +53,7 @@ function clone_projects {
     git clone https://opendev.org/openstack-dev/devstack.git
     git clone https://opendev.org/openstack/ironic.git
     git clone https://opendev.org/openstack/ironic-tempest-plugin.git
+    git clone https://opendev.org/x/proliantutils.git
 }
 
 function configure_dhcp_server {
@@ -131,10 +132,18 @@ function update_ironic_tempest_plugin {
     sudo python3 setup.py install
 }
 
+function update_proliantutils {
+    cd /opt/stack/proliantutils
+    git config --global user.email "proliantutils@gmail.com"
+    git config --global user.name "proliantci"
+    git fetch https://review.opendev.org/x/proliantutils refs/changes/33/707933/1 && git cherry-pick FETCH_HEAD
+}
+
 install_packages
 clone_projects
 configure_dhcp_server
 configure_interface
 update_ironic
 update_ironic_tempest_plugin
+update_proliantutils
 run_stack
