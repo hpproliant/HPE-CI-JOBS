@@ -59,6 +59,7 @@ function clone_projects {
     git clone https://opendev.org/openstack-dev/devstack.git
     git clone https://opendev.org/openstack/ironic.git
     git clone https://opendev.org/openstack/ironic-tempest-plugin.git
+    git clone https://opendev.org/openstack/neutron.git
 }
 
 function configure_dhcp_server {
