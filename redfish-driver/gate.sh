@@ -41,7 +41,6 @@ sudo chmod 0664 /home/ubuntu/.ssh/config
 function install_packages {
     sudo apt -y install apache2 python-pip isc-dhcp-server webfs python3-setuptools python3-pip socat vlan liberasurecode-dev libssl-dev ovmf
     sudo pip install setuptools
-    sudo pip3 install proliantutils
     sudo chmod 600 /home/ubuntu/zuul_id_rsa
 }
 
@@ -97,6 +96,10 @@ function run_stack {
     sudo ip link set ens2 down
     sudo ip link set ens2 up
 
+    #Run the update_proliantutils
+    update_proliantutils
+    sudo systemctl restart devstack@ir-cond
+
     #Create Node
     source /opt/stack/devstack/openrc admin admin
     ilo_ip=$(cat /tmp/hardware_info | awk '{print $1}')
@@ -134,10 +137,13 @@ function update_ironic_tempest_plugin {
 }
 
 function update_proliantutils {
+    echo "Updating and installing proliantutils"
     cd /opt/stack/proliantutils
     git config --global user.email "proliantutils@gmail.com"
     git config --global user.name "proliantci"
     git fetch https://review.opendev.org/x/proliantutils refs/changes/33/707933/1 && git cherry-pick FETCH_HEAD
+    sudo pip3 install -r requirements.txt
+    sudo python3 setup.py install
 }
 
 install_packages
@@ -146,5 +152,4 @@ configure_dhcp_server
 configure_interface
 update_ironic
 update_ironic_tempest_plugin
-update_proliantutils
 run_stack
