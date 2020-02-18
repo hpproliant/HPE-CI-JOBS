@@ -107,7 +107,7 @@ IRONIC_ENABLED_HARDWARE_TYPES=ilo
 IRONIC_ENABLED_DEPLOY_INTERFACES=direct
 IRONIC_ENABLED_MANAGEMENT_INTERFACES=ilo
 IRONIC_ENABLED_POWER_INTERFACES=ilo
-IRONIC_ENABLED_BOOT_INTERFACES=ilo-pxe
+IRONIC_ENABLED_BOOT_INTERFACES=ilo-ipxe
 IRONIC_PING_TIMEOUT=1200
 # Ironic iLO driver options
 
@@ -158,7 +158,6 @@ clean_nodes=false
 auth_version=3
 
 [pxe]
-ipxe_enabled=True
 uefi_pxe_bootfile_name="ipxe.efi"
 uefi_pxe_config_template="$pybasedir/drivers/modules/ipxe_config.template"
 pxe_append_params="console=ttyS1"
