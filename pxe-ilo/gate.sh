@@ -155,7 +155,9 @@ function update_ironic {
 
 function update_ironic_tempest_plugin {
     cd /opt/stack/ironic-tempest-plugin
-    #git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/52/535652/11 && git cherry-pick FETCH_HEAD
+    git config --global user.email "proliantutils@gmail.com"
+    git config --global user.name "proliantci"
+    git fetch https://review.opendev.org/openstack/ironic-tempest-plugin refs/changes/79/708379/1 && git cherry-pick FETCH_HEAD
     sudo python setup.py install
 }
 
