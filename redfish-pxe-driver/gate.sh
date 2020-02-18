@@ -31,7 +31,7 @@ source /home/ubuntu/proxy
 sudo chmod 0600 /home/ubuntu/zuul_id_rsa
 wget http://169.16.1.54:9999/log_upload_ssh -P /home/ubuntu/
 wget http://169.16.1.54:9999/config -P /home/ubuntu/.ssh/
-sudo chmod 0600 /home/ubuntu/log_upload_ssh
+sudo chmod 0600 /home/ubuntu/zuul_id_rsa
 sudo chmod 0664 /home/ubuntu/.ssh/config
 
 function install_packages {
