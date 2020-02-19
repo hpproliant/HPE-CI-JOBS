@@ -107,13 +107,13 @@ function run_stack {
     #ilo_ip=169.16.1.17
     #mac=98:f2:b3:2a:0e:3c
 
-    openstack baremetal node create --driver ilo --driver-info ilo_address=$ilo_ip --driver-info ilo_username=Administrator --driver-info ilo_password=weg0th@ce@r --driver-info console_port=5000
+    openstack baremetal node create --driver redfish --driver-info redfish_address=$ilo_ip --driver-info redfish_username=Administrator --driver-info redfish_password=weg0th@ce@r --driver-info console_port=5000 --driver-info redfish_verify_ca="False"
 
     ironic_node=$(openstack baremetal node list | grep -v UUID | grep "\w" | awk '{print $2}' | tail -n1)
 
     openstack baremetal node manage $ironic_node
     openstack baremetal node provide $ironic_node
-    openstack baremetal node set --driver-info ilo_deploy_iso=http://169.16.1.54:9999/fedora28_proliant_tools_11jul2019.iso --instance-info image_source=http://169.16.1.54:9999/rhel_7.6-uefi.img --instance-info image_checksum=fd9b31d6b754b078166387c86e7fd8ce --instance-info capabilities='{"boot_mode": "uefi"}' --property capabilities='boot_mode:uefi' $ironic_node
+    openstack baremetal node set --driver-info deploy_iso=http://169.16.1.54:9999/fedora28_proliant_tools_11jul2019.iso --instance-info image_source=http://169.16.1.54:9999/rhel_7.6-uefi.img --instance-info image_checksum=fd9b31d6b754b078166387c86e7fd8ce --instance-info capabilities='{"boot_mode": "uefi"}' --property capabilities='boot_mode:uefi' $ironic_node
 
     openstack baremetal port create --node $ironic_node $mac
     openstack baremetal node power off $ironic_node
@@ -121,7 +121,8 @@ function run_stack {
     # Run the tempest test.
     cd /opt/stack/tempest
     export OS_TEST_TIMEOUT=3000
-    sudo tox -e all -- ironic_standalone.test_basic_ops.BaremetalIloDirectWholediskHttpLink.test_ip_access_to_server
+    #sudo tox -e all -- ironic_standalone.test_basic_ops.BaremetalIloDirectWholediskHttpLink.test_ip_access_to_server
+    sudo tox -e all -- test_baremetal_basic_ops.test_baremetal_server_ops
 }
 
 function update_ironic {
