@@ -144,7 +144,7 @@ function run_stack {
     # Run the tempest test.
     cd /opt/stack/tempest
     export OS_TEST_TIMEOUT=3000
-    sudo tox -e all -- ironic_standalone.test_basic_ops.BaremetalIloPxeWholediskHttpLink.test_ip_access_to_server
+    sudo tox -e all -- ironic_standalone.test_basic_ops.BaremetalIloIPxeWholediskHttpLink.test_ip_access_to_server
 }
 
 function update_ironic {
@@ -157,7 +157,7 @@ function update_ironic_tempest_plugin {
     cd /opt/stack/ironic-tempest-plugin
     git config --global user.email "proliantutils@gmail.com"
     git config --global user.name "proliantci"
-    git fetch https://review.opendev.org/openstack/ironic-tempest-plugin refs/changes/79/708379/1 && git cherry-pick FETCH_HEAD
+    git fetch https://review.opendev.org/openstack/ironic-tempest-plugin refs/changes/79/708379/2 && git cherry-pick FETCH_HEAD
     sudo python setup.py install
 }
 
