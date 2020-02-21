@@ -44,7 +44,7 @@ disable_service placement-api
 enable_service ironic ir-api ir-cond
 enable_service tempest
 #IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image
-IRONIC_WHOLEDISK_IMAGE_NAME=ubuntu-uefi
+IRONIC_WHOLEDISK_IMAGE_NAME=rhel_7.6-uefi
 #IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image.qcow2
 #IRONIC_USE_MOD_WSGI=True
 USE_SYSTEMD=False
@@ -78,12 +78,12 @@ IRONIC_HTTP_PORT=9999
 IRONIC_HTTP_SERVER=169.16.1.54
 
 # Tempest related options
-IRONIC_USER_IMAGE_PREFERRED_DISTRO=ubuntu
+IRONIC_USER_IMAGE_PREFERRED_DISTRO=fedora
 BUILD_TIMEOUT=3000
 IRONIC_CALLBACK_TIMEOUT=3000
 POWER_TIMEOUT=600
 SERVICE_TIMEOUT=600
-DEFAULT_INSTANCE_USER=ubuntu
+DEFAULT_INSTANCE_USER=fedora
 TEMPEST_SSH_CONNECT_METHOD=fixed
 DEFAULT_INSTANCE_TYPE=baremetal
 
@@ -104,16 +104,17 @@ IRONIC_BUILD_DEPLOY_RAMDISK="false"
 IRONIC_DEPLOY_DRIVER="ilo"
 IRONIC_AUTOMATED_CLEAN_ENABLED=False
 IRONIC_IPXE_ENABLED=False
-IRONIC_ENABLED_HARDWARE_TYPES=ilo
+IRONIC_ENABLED_HARDWARE_TYPES=redfish
 IRONIC_ENABLED_DEPLOY_INTERFACES=direct
-IRONIC_ENABLED_MANAGEMENT_INTERFACES=ilo
-IRONIC_ENABLED_POWER_INTERFACES=ilo
-IRONIC_ENABLED_BOOT_INTERFACES=ilo-pxe
+IRONIC_ENABLED_MANAGEMENT_INTERFACES=redfish
+IRONIC_ENABLED_POWER_INTERFACES=redfish
+IRONIC_ENABLED_BOOT_INTERFACES=ipxe
 IRONIC_PING_TIMEOUT=1200
 # Ironic iLO driver options
 
 #IMAGE_URLS=file:///home/user/path/file
-IMAGE_URLS="file:///opt/stack/devstack/files/ubuntu-uefi.img"
+IMAGE_URLS="file:///opt/stack/devstack/files/rhel_7.6-uefi.img"
+#IMAGE_URLS="file:///opt/stack/devstack/files/ubuntu-uefi.img"
 #IRONIC_IMAGE_NAME=ubuntu-cloud-image-disk
 #IRONIC_HWINFO_FILE="/opt/stack/devstack/files/hardware_info"
 #IRONIC_HWINFO_FILE="/tmp/hardware_info"
@@ -128,8 +129,8 @@ ALLOCATION_POOL=start=169.16.1.66,end=169.16.1.67
 #IRONIC_DEPLOY_DRIVER=agent_ilo
 HOST_IP=192.168.1.2
 
-IRONIC_DEPLOY_RAMDISK=/opt/stack/devstack/files/ir-deploy-pxe_ilo.initramfs
-IRONIC_DEPLOY_KERNEL=/opt/stack/devstack/files/ir-deploy-pxe_ilo.kernel
+IRONIC_DEPLOY_RAMDISK=/opt/stack/devstack/files/ir-deploy-redfish.initramfs
+IRONIC_DEPLOY_KERNEL=/opt/stack/devstack/files/ir-deploy-redfish.kernel
 
 IRONIC_IPXE_ENABLED=False
 IRONIC_TFTPBOOT_DIR=/opt/stack/data/ironic/tftpboot
@@ -159,7 +160,6 @@ clean_nodes=false
 auth_version=3
 
 [pxe]
-ipxe_enabled=True
 uefi_pxe_bootfile_name="ipxe.efi"
 uefi_pxe_config_template="$pybasedir/drivers/modules/ipxe_config.template"
 pxe_append_params="console=ttyS1"

@@ -41,7 +41,6 @@ function install_packages {
     sudo apt -y install python3-setuptools
     sudo apt -y install isc-dhcp-server ovmf
     sudo pip install setuptools
-    sudo pip3 install proliantutils
     sudo chown ubuntu.ubuntu /var/www/html
     sudo chmod 600 /home/ubuntu/zuul_id_rsa
 }
@@ -80,14 +79,14 @@ function run_stack {
     local capabilities
 
     cd /opt/stack/devstack/files
-    wget http://169.16.1.54:9999/ir-deploy-pxe_ilo.initramfs
-    wget http://169.16.1.54:9999/ir-deploy-pxe_ilo.kernel
-    wget http://169.16.1.54:9999/ubuntu-uefi.img
+    wget http://169.16.1.54:9999/ir-deploy-redfish.initramfs
+    wget http://169.16.1.54:9999/ir-deploy-redfish.kernel
+    wget http://169.16.1.54:9999/rhel_7.6-uefi.img
     wget http://169.16.1.54:9999/grubx64.efi
     wget http://169.16.1.54:9999/bootx64.efi
     wget http://169.16.1.54:9999/shim.efi
     wget http://169.16.1.54:9999/ipxe.efi
-    cp ubuntu-uefi.img ir-deploy-pxe_ilo.kernel ir-deploy-pxe_ilo.initramfs /var/www/html
+    cp ir-deploy-redfish.initramfs ir-deploy-redfish.kernel rhel_7.6-uefi.img /var/www/html
     # Add new line character in hardware_info so it will readable
     sed -i 's|ironmantesting|ironmantesting /redfish/v1/Systems/1|' /tmp/hardware_info
     echo  >> /tmp/hardware_info
@@ -110,18 +109,25 @@ function run_stack {
     sudo ip link set ens2 down
     sudo ip link set ens2 up
 
+    #Run the update_proliantutils
+    update_proliantutils
+    sudo systemctl restart devstack@ir-cond
+
     #Create Node
     source /opt/stack/devstack/openrc admin admin
     ilo_ip=$(cat /tmp/hardware_info | awk '{print $1}')
     mac=$(cat /tmp/hardware_info | awk '{print $2}')
 
-    openstack baremetal node create --driver ilo --driver-info ilo_address=$ilo_ip --driver-info ilo_username=Administrator --driver-info ilo_password=weg0th@ce@r --driver-info console_port=5000
+    openstack baremetal node create --driver redfish --driver-info redfish_address=$ilo_ip --driver-info redfish_username=Administrator --driver-info redfish_password=weg0th@ce@r --driver-info console_port=5000 --deploy-interface=direct --boot-interface=ipxe --driver-info redfish_verify_ca="False" --driver-info redfish_system_id=/redfish/v1/Systems/1
+
+    #Update Boot Mode to UEFI
+    change_boot_mode_uefi
 
     ironic_node=$(openstack baremetal node list | grep -v UUID | grep "\w" | awk '{print $2}' | tail -n1)
 
     openstack baremetal node manage $ironic_node
     openstack baremetal node provide $ironic_node
-    openstack baremetal node set --driver-info deploy_kernel=http://169.16.1.54:9999/ir-deploy-pxe_ilo.kernel --driver-info deploy_ramdisk=http://169.16.1.54:9999/ir-deploy-pxe_ilo.initramfs --instance-info image_source=http://169.16.1.54:9999/ubuntu-uefi.img --instance-info image_checksum=a46f6297446f1197510839ef70d667c5 --instance-info capabilities='{"boot_mode": "uefi"}' --instance-info capabilities='{"boot_option": "local"}' --property capabilities='boot_mode:uefi' $ironic_node
+    openstack baremetal node set --driver-info deploy_kernel=http://169.16.1.54:9999/ir-deploy-redfish.kernel --driver-info deploy_ramdisk=http://169.16.1.54:9999/ir-deploy-redfish.initramfs --instance-info image_source=http://172.17.1.134:8010/rhel_7.6-uefi.img --instance-info image_checksum=fd9b31d6b754b078166387c86e7fd8ce --instance-info capabilities='{"boot_mode": "uefi"}' --instance-info capabilities='{"boot_option": "local"}' --property capabilities='boot_mode:uefi' $ironic_node
 
     openstack baremetal port create --node $ironic_node $mac
     openstack baremetal node power off $ironic_node
@@ -129,7 +135,7 @@ function run_stack {
     # Run the tempest test.
     cd /opt/stack/tempest
     export OS_TEST_TIMEOUT=3000
-    sudo tox -e all -- ironic_standalone.test_basic_ops.BaremetalIloPxeWholediskHttpLink.test_ip_access_to_server
+    sudo tox -e all -- ironic_standalone.test_basic_ops.BaremetalRedfishIPxeWholediskHttpLink.test_ip_access_to_server
 }
 
 function update_ironic {
@@ -140,8 +146,34 @@ function update_ironic {
 
 function update_ironic_tempest_plugin {
     cd /opt/stack/ironic-tempest-plugin
-    #git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/52/535652/11 && git cherry-pick FETCH_HEAD
+    git config --global user.email "proliantutils@gmail.com"
+    git config --global user.name "proliantci"
+    git fetch https://review.opendev.org/openstack/ironic-tempest-plugin refs/changes/79/708379/3 && git cherry-pick FETCH_HEAD
     sudo python3 setup.py install
+}
+
+function update_proliantutils {
+    echo "Updating and installing proliantutils"
+    cd /opt/stack/proliantutils
+    git config --global user.email "proliantutils@gmail.com"
+    git config --global user.name "proliantci"
+    #git fetch https://review.opendev.org/x/proliantutils refs/changes/33/707933/1 && git cherry-pick FETCH_HEAD
+    sudo pip3 install -r requirements.txt
+    sudo python3 setup.py install
+}
+
+function change_boot_mode_uefi {
+    ilo_ip=$(cat /tmp/hardware_info | awk '{print $1}')
+    ilo_user=$(cat /tmp/hardware_info | awk '{print $3}')
+    ilo_password=$(cat /tmp/hardware_info | awk '{print $4}')
+    cat <<EOF >./change_boot_mode.py
+import proliantutils.ilo.client as client
+cl=client.IloClient("$ilo_ip", "$ilo_user", "$ilo_password")
+cl.set_host_power('OFF')
+cl.set_pending_boot_mode('uefi')
+EOF
+
+    python3 ./change_boot_mode.py
 }
 
 install_packages
