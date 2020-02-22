@@ -25,14 +25,8 @@ export PATH=$PATH:/var/lib/gems/1.8/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin
 export DIB_DEPLOY_ISO_KERNEL_CMDLINE_ARGS="console=ttyS1"
 export IRONIC_USER_IMAGE_PREFERRED_DISTRO=${IRONIC_USER_IMAGE_PREFERRED_DISTRO:-fedora}
 export BOOT_LOADER=${BOOT_LOADER:-grub2}
-export no_proxy=169.16.1.54
-wget http://169.16.1.54:9999/proxy -P /home/ubuntu/
+
 source /home/ubuntu/proxy
-sudo chmod 0600 /home/ubuntu/zuul_id_rsa
-wget http://169.16.1.54:9999/log_upload_ssh -P /home/ubuntu/
-wget http://169.16.1.54:9999/config -P /home/ubuntu/.ssh/
-sudo chmod 0600 /home/ubuntu/zuul_id_rsa
-sudo chmod 0664 /home/ubuntu/.ssh/config
 
 function install_packages {
     sudo apt -y install apache2 python-pip isc-dhcp-server ovmf webfs socat vlan liberasurecode-dev libssl-dev
@@ -40,17 +34,6 @@ function install_packages {
     sudo pip install proliantutils
     sudo chown ubuntu.ubuntu /var/www/html
     sudo chmod 600 /home/ubuntu/zuul_id_rsa
-}
-
-function clone_projects {
-    sudo mkdir -p /opt/stack
-    sudo chown ubuntu.ubuntu /opt/stack
-    sudo chmod 0777 /opt/stack
-    cd /opt/stack
-    git clone https://opendev.org/openstack-dev/devstack.git
-    git clone https://opendev.org/openstack/ironic.git
-    git clone https://opendev.org/openstack/ironic-tempest-plugin.git
-    git clone https://opendev.org/openstack/neutron.git
 }
 
 function install_requirements {
@@ -132,7 +115,6 @@ function update_ironic_tempest_plugin {
 }
 
 install_packages
-clone_projects
 #configure_interface
 update_ironic
 update_ironic_tempest_plugin

@@ -30,14 +30,7 @@ export SECURE_BOOT=${SECURE_BOOT:-}
 export BOOT_LOADER=${BOOT_LOADER:-grub2}
 export IRONIC_IPA_RAMDISK_DISTRO=ubuntu
 export BRANCH=${ZUUL_BRANCH:-master}
-export no_proxy=169.16.1.54
-wget http://169.16.1.54:9999/proxy -P /home/ubuntu/
 source /home/ubuntu/proxy
-sudo chmod 0600 /home/ubuntu/zuul_id_rsa
-wget http://169.16.1.54:9999/log_upload_ssh -P /home/ubuntu/
-wget http://169.16.1.54:9999/config -P /home/ubuntu/.ssh/
-sudo chmod 0600 /home/ubuntu/zuul_id_rsa
-sudo chmod 0664 /home/ubuntu/.ssh/config
 
 function install_packages {
     sudo apt -y install apache2
@@ -47,17 +40,6 @@ function install_packages {
     sudo apt -y install isc-dhcp-server
     sudo apt -y install webfs socat vlan liberasurecode-dev libssl-dev
     sudo pip3 install proliantutils
-}
-
-function clone_projects {
-    sudo mkdir -p /opt/stack
-    sudo chown ubuntu.ubuntu /opt/stack
-    sudo chmod 0777 /opt/stack
-    cd /opt/stack
-    git clone https://opendev.org/openstack-dev/devstack.git
-    git clone https://opendev.org/openstack/ironic.git
-    git clone https://opendev.org/openstack/ironic-tempest-plugin.git
-    git clone https://opendev.org/openstack/neutron.git
 }
 
 function configure_interface {
@@ -104,7 +86,6 @@ function update_ironic_tempest_plugin {
 }
 
 install_packages
-clone_projects
 configure_interface
 update_ironic
 update_ironic_tempest_plugin

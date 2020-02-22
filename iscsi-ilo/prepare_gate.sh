@@ -29,14 +29,8 @@ export BOOT_OPTION=${BOOT_OPTION:-}
 export BOOT_LOADER=${BOOT_LOADER:-grub2}
 export IRONIC_IPA_RAMDISK_DISTRO=ubuntu
 export BRANCH=${ZUUL_BRANCH:-master}
-export no_proxy=169.16.1.54
-wget http://169.16.1.54:9999/proxy -P /home/ubuntu/
+
 source /home/ubuntu/proxy
-sudo chmod 0600 /home/ubuntu/zuul_id_rsa
-wget http://169.16.1.54:9999/log_upload_ssh -P /home/ubuntu/
-wget http://169.16.1.54:9999/config -P /home/ubuntu/.ssh/
-sudo chmod 0600 /home/ubuntu/zuul_id_rsa
-sudo chmod 0664 /home/ubuntu/.ssh/config
 
 function install_packages {
     sudo apt -y install apache2
@@ -51,26 +45,11 @@ function install_packages {
     sudo chmod 600 /home/ubuntu/zuul_id_rsa
 }
 
-function clone_projects {
-    sudo mkdir -p /opt/stack
-    sudo chown ubuntu.ubuntu /opt/stack
-    sudo chmod 0777 /opt/stack
-    cd /opt/stack
-    git clone https://opendev.org/openstack-dev/devstack.git
-    git clone https://opendev.org/openstack/ironic.git
-    git clone https://opendev.org/openstack/ironic-tempest-plugin.git
-    git clone https://opendev.org/openstack/neutron.git
-}
-
 function configure_interface {
     ip1=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sudo sh -c 'echo web_root='/opt/stack/devstack/files' >> /etc/webfsd.conf'
     sudo sh -c 'echo web_ip='$ip1' >> /etc/webfsd.conf'
     sudo sh -c 'echo web_port=9999 >> /etc/webfsd.conf'
-#    sudo service webfs restart
-#    sudo modprobe 8021q
-#    sudo vconfig add ens3 100
-#    sudo ifconfig ens3.100 inet $ip1 netmask 255.255.255.0
 }
 
 function run_stack {
@@ -110,7 +89,6 @@ function update_ironic_tempest_plugin {
 }
 
 install_packages
-clone_projects
 configure_dhcp_server
 configure_interface
 update_ironic
