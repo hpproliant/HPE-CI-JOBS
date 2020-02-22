@@ -96,21 +96,25 @@ function run_stack {
 
     # Run stack.sh
     ./stack.sh
+
+    sleep 30
+
     cp /opt/stack/devstack/files/ipxe.efi /opt/stack/data/ironic/tftpboot/
     sudo sed -i "s/bootx64.efi/ipxe.efi/g" /etc/ironic/ironic.conf
     sudo sed -i "s/pxe_grub_config.template/ipxe_config.template/g" /etc/ironic/ironic.conf
+
+    #Reinstall Proliantutils
+    sudo pip install proliantutils
+    sleep 10
     sudo systemctl restart devstack@ir-api
+    sleep 10
     sudo systemctl restart devstack@ir-cond
+    sleep 10
 
     #Reaccess to private network
     sudo ovs-vsctl del-br br-ens2
     sudo ip link set ens2 down
     sudo ip link set ens2 up
-    sudo ip addr add $ip/24 dev ens2
-
-    #Reinstall Proliantutils
-    sudo pip install proliantutils
-    sudo systemctl restart devstack@ir-cond
 }
 
 function update_ironic {

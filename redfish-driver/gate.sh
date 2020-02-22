@@ -4,7 +4,6 @@ function run_redfish_test {
     # Configure dhcp server
     wget http://169.16.1.54:9999/redfish_dhcp_server.txt -P /opt/stack/devstack/files/
     mac=$(cat /tmp/hardware_info | awk '{print $2}')
-    #mac=98:f2:b3:2a:0e:3c
     sed -i "s/8c:dc:d4:af:78:ec/$mac/g" /opt/stack/devstack/files/redfish_dhcp_server.txt
     sudo sh -c 'cat /opt/stack/devstack/files/redfish_dhcp_server.txt >> /etc/dhcp/dhcpd.conf'
     sudo service isc-dhcp-server restart

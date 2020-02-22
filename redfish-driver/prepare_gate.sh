@@ -40,7 +40,6 @@ sudo chmod 0664 /home/ubuntu/.ssh/config
 
 function install_packages {
     sudo apt -y install apache2 python-pip isc-dhcp-server webfs python3-setuptools python3-pip socat vlan liberasurecode-dev libssl-dev ovmf
-    sudo pip install setuptools
     sudo chmod 600 /home/ubuntu/zuul_id_rsa
 }
 
@@ -62,9 +61,6 @@ function configure_interface {
     sudo sh -c 'echo web_ip='$ip1' >> /etc/webfsd.conf'
     sudo sh -c 'echo web_port=9999 >> /etc/webfsd.conf'
     sudo service webfs restart
-   # sudo modprobe 8021q
-   # sudo vconfig add ens3 100
-   # sudo ifconfig ens3.100 inet $ip1 netmask 255.255.255.0
 }
 
 function run_stack {
@@ -82,14 +78,12 @@ function run_stack {
 
     ./stack.sh
 
+    sleep 30
+
     #Reaccess to private network
     sudo ovs-vsctl del-br br-ens2
     sudo ip link set ens2 down
     sudo ip link set ens2 up
-
-    #Run the update_proliantutils
-    update_proliantutils
-    sudo systemctl restart devstack@ir-cond
 }
 
 function update_ironic {
@@ -121,4 +115,5 @@ clone_projects
 configure_interface
 update_ironic
 update_ironic_tempest_plugin
+update_proliantutils
 run_stack

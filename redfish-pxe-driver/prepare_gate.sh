@@ -42,7 +42,6 @@ function install_packages {
     sudo apt -y install isc-dhcp-server ovmf
     sudo pip install setuptools
     sudo chown ubuntu.ubuntu /var/www/html
-    sudo chmod 600 /home/ubuntu/zuul_id_rsa
 }
 
 function clone_projects {
@@ -78,8 +77,8 @@ function run_stack {
     wget http://169.16.1.54:9999/ipxe.efi
     cp ir-deploy-redfish.initramfs ir-deploy-redfish.kernel rhel_7.6-uefi.img /var/www/html
     # Add new line character in hardware_info so it will readable
-    sed -i 's|ironmantesting|ironmantesting /redfish/v1/Systems/1|' /tmp/hardware_info
-    echo  >> /tmp/hardware_info
+    #sed -i 's|ironmantesting|ironmantesting /redfish/v1/Systems/1|' /tmp/hardware_info
+    #echo  >> /tmp/hardware_info
 
     cd /opt/stack/devstack/
     cp /tmp/redfish-pxe-driver/HPE-CI-JOBS/redfish-pxe-driver/local.conf.sample local.conf
@@ -88,20 +87,20 @@ function run_stack {
 
     # Run stack.sh
     ./stack.sh
+
+    sleep 30
     cp /opt/stack/devstack/files/ipxe.efi /opt/stack/data/ironic/tftpboot/
     sudo sed -i "s/bootx64.efi/ipxe.efi/g" /etc/ironic/ironic.conf
     sudo sed -i "s/pxe_grub_config.template/ipxe_config.template/g" /etc/ironic/ironic.conf
     sudo systemctl restart devstack@ir-api
+    sleep 10
     sudo systemctl restart devstack@ir-cond
+    sleep 10
 
     #Reaccess to private network
     sudo ovs-vsctl del-br br-ens2
     sudo ip link set ens2 down
     sudo ip link set ens2 up
-
-    #Run the update_proliantutils
-    update_proliantutils
-    sudo systemctl restart devstack@ir-cond
 }
 
 function update_ironic {
@@ -133,4 +132,5 @@ clone_projects
 #configure_interface
 update_ironic
 update_ironic_tempest_plugin
+update_proliantutils
 run_stack
