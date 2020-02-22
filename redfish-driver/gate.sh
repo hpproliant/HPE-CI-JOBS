@@ -1,5 +1,7 @@
 #!/bin/bash -x
 
+source /home/ubuntu/proxy
+
 function run_redfish_test {
     # Configure dhcp server
     wget http://169.16.1.54:9999/redfish_dhcp_server.txt -P /opt/stack/devstack/files/

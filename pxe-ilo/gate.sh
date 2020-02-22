@@ -1,5 +1,7 @@
 #!/bin/bash -x
 
+source /home/ubuntu/proxy
+
 # Configure dhcp server {
 wget http://169.16.1.54:9999/pxe_dhcp_server.txt -P /opt/stack/devstack/files/
 ip=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)

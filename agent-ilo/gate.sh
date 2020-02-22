@@ -1,5 +1,7 @@
 #!/bin/bash -x
 
+source /home/ubuntu/proxy
+
 # Configure dhcp server
 wget http://169.16.1.54:9999/agent_dhcp_server.txt -P /opt/stack/devstack/files/
 mac=$(cat /tmp/hardware_info | awk '{print $2}')
