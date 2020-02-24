@@ -50,6 +50,7 @@ function configure_interface {
     sudo sh -c 'echo web_root='/opt/stack/devstack/files' >> /etc/webfsd.conf'
     sudo sh -c 'echo web_ip='$ip1' >> /etc/webfsd.conf'
     sudo sh -c 'echo web_port=9999 >> /etc/webfsd.conf'
+    sudo service webfs restart
 }
 
 function run_stack {
@@ -58,11 +59,8 @@ function run_stack {
     local capabilities
 
     cd /opt/stack/devstack
-    #wget http://10.13.120.214:9999/cirros-0.3.5-x86_64-uec.tar.gz -P files/
-    #wget http://10.13.120.214:9999/cirros-0.3.5-x86_64-disk.img -P files/
     wget http://169.16.1.54:9999/ir-deploy-ilo.iso -P files/
     wget http://169.16.1.54:9999/fedora-bios.img -P files/
-    echo  >> /tmp/hardware_info
     cp /tmp/iscsi-ilo/HPE-CI-JOBS/iscsi-ilo/local.conf.sample local.conf
     ip=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sed -i "s/192.168.1.2/$ip/g" local.conf
