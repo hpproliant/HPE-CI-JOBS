@@ -44,6 +44,7 @@ disable_service placement-api
 enable_service ironic ir-api ir-cond
 enable_service tempest
 #IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image
+USE_PYTHON3=True
 IRONIC_WHOLEDISK_IMAGE_NAME=ubuntu-uefi
 #IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image.qcow2
 #IRONIC_USE_MOD_WSGI=True

@@ -29,9 +29,9 @@ export BOOT_LOADER=${BOOT_LOADER:-grub2}
 source /home/ubuntu/proxy
 
 function install_packages {
-    sudo apt -y install apache2 python-pip isc-dhcp-server ovmf webfs socat vlan liberasurecode-dev libssl-dev
+    sudo apt -y install apache2 python-pip isc-dhcp-server ovmf webfs socat vlan liberasurecode-dev libssl-dev python3-pip python3-setuptools
     sudo pip install setuptools
-    sudo pip install proliantutils
+    sudo pip3 install proliantutils
     sudo chown ubuntu.ubuntu /var/www/html
     sudo chmod 600 /home/ubuntu/zuul_id_rsa
 }
@@ -87,7 +87,7 @@ function run_stack {
     sudo sed -i "s/pxe_grub_config.template/ipxe_config.template/g" /etc/ironic/ironic.conf
 
     #Reinstall Proliantutils
-    sudo pip install proliantutils
+    sudo pip3 install proliantutils
     sleep 10
     sudo systemctl restart devstack@ir-api
     sleep 10
@@ -111,7 +111,7 @@ function update_ironic_tempest_plugin {
     git config --global user.email "proliantutils@gmail.com"
     git config --global user.name "proliantci"
     #git fetch https://review.opendev.org/openstack/ironic-tempest-plugin refs/changes/79/708379/2 && git cherry-pick FETCH_HEAD
-    sudo python setup.py install
+    sudo python3 setup.py install
 }
 
 install_packages
