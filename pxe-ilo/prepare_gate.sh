@@ -29,6 +29,7 @@ export BOOT_LOADER=${BOOT_LOADER:-grub2}
 source /home/ubuntu/proxy
 
 function install_packages {
+    sudo apt -y update
     sudo apt -y install apache2 python-pip isc-dhcp-server ovmf webfs socat vlan liberasurecode-dev libssl-dev python3-pip python3-setuptools
     sudo pip install setuptools
     sudo pip3 install proliantutils
