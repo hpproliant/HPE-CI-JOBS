@@ -23,7 +23,7 @@ ironic_node=$(openstack baremetal node list | grep -v UUID | grep "\w" | awk '{p
 
 openstack baremetal node manage $ironic_node
 openstack baremetal node provide $ironic_node
-openstack baremetal node set --driver-info ilo_deploy_iso=http://169.16.1.54:9999/fedora-raid-deploy-ank-proliant-tools.iso --instance-info image_source=http://169.16.1.54:9999/fedora-wd-uefi.img --instance-info image_checksum=17a6c6df66d4c90b05554cdc2285d851 --instance-info capabilities='{"boot_mode": "uefi"}' --property capabilities='boot_mode:uefi' $ironic_node
+openstack baremetal node set --driver-info ilo_deploy_iso=http://169.16.1.54:9999/fedora_30_03_20.iso --instance-info image_source=http://169.16.1.54:9999/fedora-wd-uefi.img --instance-info image_checksum=17a6c6df66d4c90b05554cdc2285d851 --instance-info capabilities='{"boot_mode": "uefi"}' --property capabilities='boot_mode:uefi' $ironic_node
 
 openstack baremetal port create --node $ironic_node $mac
 openstack baremetal node power off $ironic_node
