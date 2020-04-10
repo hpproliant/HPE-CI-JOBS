@@ -34,7 +34,7 @@ function install_packages {
     sudo apt -y install python-pip
     sudo apt -y install python3-pip
     sudo apt -y install python3-setuptools
-    sudo apt -y install isc-dhcp-server ovmf
+    sudo apt -y install isc-dhcp-server ovmf virtualenv
     sudo pip install setuptools
     sudo chown ubuntu.ubuntu /var/www/html
 }
