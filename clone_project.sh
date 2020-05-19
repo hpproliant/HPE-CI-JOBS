@@ -24,9 +24,9 @@ function clone_projects {
     sudo chmod -R 0777 /opt
     cd /opt/stack
     git clone https://opendev.org/openstack-dev/devstack.git
-#    git clone https://opendev.org/openstack/ironic.git
+    git clone https://opendev.org/openstack/ironic.git
     git clone https://opendev.org/openstack/ironic-tempest-plugin.git
-#    git clone https://opendev.org/x/proliantutils.git
+    git clone https://opendev.org/x/proliantutils.git
     git clone https://opendev.org/openstack/neutron.git
 }
 
