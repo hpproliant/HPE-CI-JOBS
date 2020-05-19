@@ -117,7 +117,7 @@ function update_ironic_tempest_plugin {
 
 install_packages
 #configure_interface
-update_ironic
-update_ironic_tempest_plugin
+#update_ironic
+#update_ironic_tempest_plugin
 #install_requirements
 run_stack

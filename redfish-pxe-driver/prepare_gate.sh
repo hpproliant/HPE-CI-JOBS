@@ -113,7 +113,7 @@ function update_proliantutils {
 
 install_packages
 #configure_interface
-update_ironic
-update_ironic_tempest_plugin
+#update_ironic
+#update_ironic_tempest_plugin
 update_proliantutils
 run_stack
