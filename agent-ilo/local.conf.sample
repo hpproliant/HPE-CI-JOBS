@@ -158,3 +158,6 @@ use_web_server_for_images=True
 [deploy]
 http_root=/opt/stack/devstack/files
 http_url=http://192.168.1.2:9999/
+
+[service_catalog]
+endpoint_override=http://192.168.1.2/baremetal
