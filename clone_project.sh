@@ -27,7 +27,18 @@ function clone_projects {
     git clone https://opendev.org/openstack/ironic.git
     git clone https://opendev.org/openstack/ironic-tempest-plugin.git
     git clone https://opendev.org/x/proliantutils.git
-    git clone https://opendev.org/openstack/neutron.git
+    while true; do
+        git clone https://opendev.org/openstack/neutron.git
+	RESULT=$?
+        if [ $RESULT == 0 ]; then
+            echo "Cloning neutron completed. Exiting.."
+            break
+        else
+            echo "Failed cloning neutron. Trying again.."
+            rm -rf neutron
+        fi
+    done
+    echo "Cloning of all projects completed.."
 }
 
 clone_projects
