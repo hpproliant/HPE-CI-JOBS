@@ -57,6 +57,7 @@ WSGI_MODE=uwsgi
 
 USE_SUBNETPOOL=False
 ## General settings.
+GIT_BASE=https://github.com
 
 # RECLONE is disabled for gate. Enable if required.
 RECLONE=no

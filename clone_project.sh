@@ -28,7 +28,7 @@ function clone_projects {
     git clone https://opendev.org/openstack/ironic-tempest-plugin.git
     git clone https://opendev.org/x/proliantutils.git
     while true; do
-        git clone https://opendev.org/openstack/neutron.git
+        git clone https://github.com/openstack/neutron.git
 	RESULT=$?
         if [ $RESULT == 0 ]; then
             echo "Cloning neutron completed. Exiting.."

@@ -57,7 +57,8 @@ WSGI_MODE=uwsgi
 USE_PYTHON3=True
 USE_SUBNETPOOL=False
 ## General settings.
-GIT_BASE=https://opendev.org
+GIT_BASE=https://github.com
+#GIT_BASE=https://opendev.org
 
 # RECLONE is disabled for gate. Enable if required.
 RECLONE=no
