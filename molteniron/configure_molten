@@ -1,9 +1,9 @@
-apt -y install python-setuptools python-pip
+apt -y install python3-setuptools python3-pip
 cd /tmp
 git clone https://github.com/openstack/molteniron
 cd molteniron
-pip install .
-pip install pyyaml
+pip3 install .
+pip3 install pyyaml
 sed -i -e 's/127.0.0.1/169.16.1.54/g' molteniron/conf.yaml
-pip install pbr
-python setup.py install
+pip3 install pbr
+python3 setup.py install
