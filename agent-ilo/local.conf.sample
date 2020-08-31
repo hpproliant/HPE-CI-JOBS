@@ -105,6 +105,7 @@ IRONIC_DEPLOY_DRIVER="ilo"
 IRONIC_AUTOMATED_CLEAN_ENABLED=False
 IRONIC_IPXE_ENABLED=False
 IRONIC_ENABLED_HARDWARE_TYPES=ilo
+IRONIC_ENABLED_NETWORK_INTERFACES=noop
 IRONIC_ENABLED_DEPLOY_INTERFACES=direct
 IRONIC_ENABLED_MANAGEMENT_INTERFACES=ilo
 IRONIC_ENABLED_POWER_INTERFACES=ilo
@@ -141,11 +142,11 @@ TEMPEST_PLUGINS+=' /opt/stack/ironic-tempest-plugin'
 
 [[post-config|$IRONIC_CONF_FILE]]
 
+[DEFAULT]
+auth_strategy = noauth
+
 [conductor]
 clean_nodes=false
-
-[keystone_authtoken]
-auth_version=3
 
 [pxe]
 pxe_append_params="console=ttyS1"
@@ -155,6 +156,9 @@ iscsi_verify_attempts = 10
 
 [ilo]
 use_web_server_for_images=True
+
+[dhcp]
+dhcp_provider=none
 
 [deploy]
 http_root=/opt/stack/devstack/files
