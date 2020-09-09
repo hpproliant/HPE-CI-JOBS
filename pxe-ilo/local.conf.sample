@@ -152,11 +152,11 @@ TEMPEST_PLUGINS+=' /opt/stack/ironic-tempest-plugin'
 
 [[post-config|$IRONIC_CONF_FILE]]
 
+[DEFAULT]
+auth_strategy = noauth
+
 [conductor]
 clean_nodes=false
-
-[keystone_authtoken]
-auth_version=3
 
 [pxe]
 uefi_pxe_bootfile_name="ipxe.efi"
