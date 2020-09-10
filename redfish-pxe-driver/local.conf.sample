@@ -15,8 +15,8 @@ DATABASE_PASSWORD=password
 RABBIT_PASSWORD=password
 SERVICE_PASSWORD=password
 SERVICE_TOKEN=password
-SWIFT_HASH=password
-SWIFT_TEMPURL_KEY=password
+#SWIFT_HASH=password
+#SWIFT_TEMPURL_KEY=password
 
 # Below lines enable only the minimum services required for Ironic.
 # Enable more services as required.
@@ -25,7 +25,7 @@ disable_service horizon
 disable_service heat h-api h-api-cfn h-api-cw
 disable_service cinder c-sch c-api c-vol
 SWIFT_START_ALL_SERVICES=False
-SWIFT_REPLICAS=1
+#SWIFT_REPLICAS=1
 
 SYSLOG=False
 SCREEN_LOGDIR=/tmp/devstack_logs
@@ -36,7 +36,7 @@ VERBOSE=True
 ETCD_DOWNLOAD_URL=https://github.com/coreos/etcd/releases/download/
 
 ENABLED_SERVICES+=,neutron,q-svc,q-agt,q-dhcp,q-meta,q-l3
-enable_service s-proxy s-object s-container s-account
+disable_service s-proxy s-object s-container s-account
 disable_service nova n-api n-cond n-sch n-cpu n-crt n-net n-novnc n-xvnc n-cauth n-spice n-cell n-cell n-api-meta n-sproxy
 disable_service nova
 disable_service placement-api
@@ -70,7 +70,7 @@ PROVIDER_NETWORK_TYPE=flat
 Q_USE_PROVIDER_NETWORKING=True
 
 # Swift related options
-SWIFT_ENABLE_TEMPURLS="True"
+#SWIFT_ENABLE_TEMPURLS="True"
 
 FORCE=yes
 LOG_COLOR=True
@@ -97,7 +97,7 @@ IRONIC_BAREMETAL_BASIC_OPS=True
 IRONIC_IPA_RAMDISK_DISTRO="ubuntu"
 IRONIC_DEPLOY_ISO_REQUIRED="False"
 IRONIC_DEPLOY_DRIVER_ISCSI_WITH_IPA="true"
-IRONIC_CONFIGURE_GLANCE_WITH_SWIFT="True"
+IRONIC_CONFIGURE_GLANCE_WITH_SWIFT="False"
 IRONIC_IS_HARDWARE="True"
 IRONIC_RAMDISK_TYPE="dib"
 IRONIC_BUILD_DEPLOY_RAMDISK="false"
@@ -174,6 +174,9 @@ use_web_server_for_images=True
 [deploy]
 http_root=/var/www/html
 http_url=http://192.168.1.2:80/
+
+[redfish]
+use_swift=False
 
 [service_catalog]
 endpoint_override=http://192.168.1.2/baremetal
