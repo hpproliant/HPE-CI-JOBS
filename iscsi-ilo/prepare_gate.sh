@@ -50,7 +50,7 @@ function configure_interface {
     ip1=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sudo sh -c 'echo web_root='/opt/stack/devstack/files' >> /etc/webfsd.conf'
     sudo sh -c 'echo web_ip='$ip1' >> /etc/webfsd.conf'
-    sudo sh -c 'echo web_port=9999 >> /etc/webfsd.conf'
+    sudo sh -c 'echo web_port=8010 >> /etc/webfsd.conf'
     sudo service webfs restart
 }
 
