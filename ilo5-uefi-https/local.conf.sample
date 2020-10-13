@@ -101,7 +101,7 @@ IRONIC_IS_HARDWARE=True
 IRONIC_RAMDISK_TYPE="dib"
 IRONIC_BUILD_DEPLOY_RAMDISK="false"
 IRONIC_DEPLOY_ISO="/opt/stack/devstack/files/ir-deploy-ilo.iso"
-IRONIC_DEPLOY_DRIVER="ilo"
+IRONIC_DEPLOY_DRIVER="ilo5"
 IRONIC_AUTOMATED_CLEAN_ENABLED=False
 IRONIC_IPXE_ENABLED=False
 IRONIC_ENABLED_HARDWARE_TYPES=ilo5
@@ -152,7 +152,7 @@ clean_nodes=false
 auth_version=3
 
 [pxe]
-pxe_append_params="console=ttyS1"
+pxe_append_params="console=ttyS1 ipa-insecure=True"
 
 [disk_utils]
 iscsi_verify_attempts = 10

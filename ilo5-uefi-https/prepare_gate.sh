@@ -39,16 +39,17 @@ function install_packages {
     sudo apt -y install python3-pip
     sudo apt -y install python3-setuptools
     sudo apt -y install isc-dhcp-server
-    sudo apt -y install webfs socat vlan liberasurecode-dev libssl-dev virtualenv nginx
+    sudo apt -y install socat vlan liberasurecode-dev libssl-dev virtualenv nginx
     sudo pip3 install proliantutils
 }
 
 function configure_interface {
-   # ip1=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
-   # sudo sh -c 'echo web_root='/opt/stack/devstack/files' >> /etc/webfsd.conf'
-   # sudo sh -c 'echo web_ip='$ip1' >> /etc/webfsd.conf'
-   # sudo sh -c 'echo web_port=8010 >> /etc/webfsd.conf'
-    sudo cp /tmp/HPE-CI-JOBS/ilo5-uefi-https/conf/* /etc/nginx/conf.d/
+    #ip1=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+    #sudo sh -c 'echo web_root='/opt/stack/devstack/files' >> /etc/webfsd.conf'
+    #sudo sh -c 'echo web_ip='$ip1' >> /etc/webfsd.conf'
+    #sudo sh -c 'echo web_port=8010 >> /etc/webfsd.conf'
+    sudo cp /tmp/uefi-https/HPE-CI-JOBS/ilo5-uefi-https/files/default.conf /tmp/uefi-https/HPE-CI-JOBS/ilo5-uefi-https/files/nginx.conf /etc/nginx/conf.d/
+    sudo rm -rf /etc/nginx/sites-*
     sudo service nginx restart
 }
 
@@ -68,8 +69,12 @@ function run_stack {
     cd /opt/stack/devstack
     wget http://169.16.1.54:9999/ir-deploy-ilo.iso -P files/
     wget http://169.16.1.54:9999/fedora-wd-uefi.img -P files/
+    wget http://169.16.1.54:9999/fedora_04_06_20.kernel -P files/
+    wget http://169.16.1.54:9999/fedora_04_06_20.initramfs -P files/
+    wget http://169.16.1.54:9999/ir-deploy-redfish.efiboot -P files/
+    wget http://169.16.1.54:9999/rhel_7.6-uefi.img -P files/
     echo  >> /tmp/hardware_info
-    cp /tmp/agent-ilo/HPE-CI-JOBS/agent-ilo/local.conf.sample local.conf
+    cp /tmp/uefi-https/HPE-CI-JOBS/ilo5-uefi-https/local.conf.sample local.conf
     ip=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sed -i "s/192.168.1.2/$ip/g" local.conf
 
@@ -91,13 +96,14 @@ function update_ironic {
 
 function update_ironic_tempest_plugin {
     cd /opt/stack/ironic-tempest-plugin
+    git fetch https://review.opendev.org/openstack/ironic-tempest-plugin refs/changes/96/757696/1 && git cherry-pick FETCH_HEAD
     #git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/52/535652/11 && git cherry-pick FETCH_HEAD
     sudo python3 setup.py install
 }
 
 install_packages
-configure_interface
 create_cert
+configure_interface
 #update_ironic
-#update_ironic_tempest_plugin
+update_ironic_tempest_plugin
 run_stack
