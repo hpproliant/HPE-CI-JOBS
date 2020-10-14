@@ -152,7 +152,7 @@ clean_nodes=false
 auth_version=3
 
 [pxe]
-pxe_append_params="console=ttyS1 ipa-insecure=True"
+pxe_append_params=""
 
 [disk_utils]
 iscsi_verify_attempts = 10

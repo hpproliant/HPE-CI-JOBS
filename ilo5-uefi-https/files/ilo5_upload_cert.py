@@ -13,8 +13,8 @@ time.sleep(10)
 print("Certificate upload completed. Now resetting the server.")
 
 #Server reboot
-cl.reset_server()
-time.sleep(600)
+#cl.reset_server()
+#time.sleep(600)
 
 
 

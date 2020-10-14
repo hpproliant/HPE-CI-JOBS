@@ -58,7 +58,7 @@ function create_cert {
     ip=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
 
     #Creating the certificate
-    sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /home/ubuntu/ssl_files/uefi_signed.key -out /home/ubuntu/ssl_files/uefi_signed.crt -subj "/C=IN/ST=KCN=$ip"
+    sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /home/ubuntu/ssl_files/uefi_signed.key -out /home/ubuntu/ssl_files/uefi_signed.crt -subj "/C=IN/ST=K/CN=$ip"
 }
 
 function run_stack {
@@ -92,10 +92,13 @@ function update_ironic {
     cd /opt/stack/ironic
     git config --global user.email "proliantutils@gmail.com"
     git config --global user.name "proliantci"
+    git fetch https://review.opendev.org/openstack/ironic refs/changes/89/755189/4 && git cherry-pick FETCH_HEAD
 }
 
 function update_ironic_tempest_plugin {
     cd /opt/stack/ironic-tempest-plugin
+    git config --global user.email "proliantutils@gmail.com"
+    git config --global user.name "proliantci"
     git fetch https://review.opendev.org/openstack/ironic-tempest-plugin refs/changes/96/757696/1 && git cherry-pick FETCH_HEAD
     #git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/52/535652/11 && git cherry-pick FETCH_HEAD
     sudo python3 setup.py install
@@ -104,6 +107,6 @@ function update_ironic_tempest_plugin {
 install_packages
 create_cert
 configure_interface
-#update_ironic
+update_ironic
 update_ironic_tempest_plugin
 run_stack
