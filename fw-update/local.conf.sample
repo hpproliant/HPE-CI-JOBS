@@ -1,0 +1,153 @@
+# local.conf file for bare metal deployment using iLO drivers.
+#
+# IMPORTANT: All the settings marked with <TBF> (To Be Filled)
+# are system dependent and are to be filled before running
+# stack.sh.  After filling relevant details, copy this file
+# to <devstack directory>/local.conf and then run stack.sh.
+# Only the ones mentioned as Mandatory needs to be filled
+# mandatorarily.
+
+[[local|localrc]]
+
+# Credentials
+ADMIN_PASSWORD=password
+DATABASE_PASSWORD=password
+RABBIT_PASSWORD=password
+SERVICE_PASSWORD=password
+SERVICE_TOKEN=password
+#SWIFT_HASH=password
+#SWIFT_TEMPURL_KEY=password
+
+# Below lines enable only the minimum services required for Ironic.
+# Enable more services as required.
+disable_service n-net
+disable_service horizon
+disable_service heat h-api h-api-cfn h-api-cw
+disable_service cinder c-sch c-api c-vol
+SWIFT_START_ALL_SERVICES=False
+#SWIFT_REPLICAS=1
+
+SYSLOG=False
+SCREEN_LOGDIR=/tmp/devstack_logs
+IRONIC_VM_LOG_DIR=/tmp/devstack_logs/ironic-bm-logs
+LOGFILE=/tmp/devstack_logs/devstacklog.txt
+VERBOSE=True
+#ETCD_DOWNLOAD_URL=http://tarballs.openstack.org/etcd/
+ETCD_DOWNLOAD_URL=https://github.com/coreos/etcd/releases/download/
+
+ENABLED_SERVICES+=,neutron,q-svc,q-agt,q-dhcp,q-meta,q-l3
+disable_service s-proxy s-object s-container s-account
+disable_service nova n-api n-cond n-sch n-cpu n-crt n-net n-novnc n-xvnc n-cauth n-spice n-cell n-cell n-api-meta n-sproxy
+disable_service nova
+disable_service placement-api
+USE_PYTHON3=True
+enable_service ironic ir-api ir-cond
+enable_service tempest
+#IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image
+IRONIC_WHOLEDISK_IMAGE_NAME=fedora-bios
+#IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image.qcow2
+#IRONIC_USE_MOD_WSGI=True
+USE_SYSTEMD=False
+#IRONIC_WHOLE_DISK_IMAGE=True
+#IRONIC_STANDALONE=True
+
+#WSGI_MODE=mod_wsgi
+WSGI_MODE=uwsgi
+
+USE_SUBNETPOOL=False
+## General settings.
+#GIT_BASE=https://opendev.org
+GIT_BASE=https://github.com
+
+# RECLONE is disabled for gate. Enable if required.
+RECLONE=no
+
+# Neutron settings.
+IP_VERSION=4
+PHYSICAL_NETWORK=private
+PROVIDER_NETWORK_TYPE=flat
+Q_USE_PROVIDER_NETWORKING=True
+
+# Swift related options
+#SWIFT_ENABLE_TEMPURLS="True"
+
+FORCE=yes
+LOG_COLOR=True
+
+IRONIC_HTTP_PORT=9999
+IRONIC_HTTP_SERVER=169.16.1.54
+
+# Tempest related options
+IRONIC_USER_IMAGE_PREFERRED_DISTRO=fedora
+BUILD_TIMEOUT=3000
+IRONIC_CALLBACK_TIMEOUT=3000
+POWER_TIMEOUT=600
+SERVICE_TIMEOUT=600
+DEFAULT_INSTANCE_USER=ubuntu
+TEMPEST_SSH_CONNECT_METHOD=fixed
+DEFAULT_INSTANCE_TYPE=baremetal
+
+# Ironic related options
+VIRT_DRIVER=ironic
+IRONIC_HW_NODE_CPU=2
+IRONIC_HW_NODE_RAM=16384
+IRONIC_HW_NODE_DISK=99
+IRONIC_BAREMETAL_BASIC_OPS=True
+IRONIC_IPA_RAMDISK_DISTRO="ubuntu"
+IRONIC_DEPLOY_ISO_REQUIRED="true"
+IRONIC_DEPLOY_DRIVER_ISCSI_WITH_IPA="true"
+IRONIC_CONFIGURE_GLANCE_WITH_SWIFT="False"
+IRONIC_IS_HARDWARE=True
+IRONIC_RAMDISK_TYPE="dib"
+IRONIC_BUILD_DEPLOY_RAMDISK="false"
+IRONIC_DEPLOY_ISO="/opt/stack/devstack/files/ir-deploy-ilo.iso"
+IRONIC_DEPLOY_DRIVER="ilo"
+IRONIC_AUTOMATED_CLEAN_ENABLED=False
+IRONIC_IPXE_ENABLED=False
+IRONIC_ENABLED_HARDWARE_TYPES=ilo
+IRONIC_ENABLED_DEPLOY_INTERFACES=iscsi
+IRONIC_ENABLED_MANAGEMENT_INTERFACES=ilo
+IRONIC_ENABLED_POWER_INTERFACES=ilo
+IRONIC_ENABLED_BOOT_INTERFACES=ilo-virtual-media
+IRONIC_PING_TIMEOUT=1200
+# Ironic iLO driver options
+
+#IMAGE_URLS=file:///home/user/path/file
+IMAGE_URLS="file:///opt/stack/devstack/files/fedora-bios.img"
+IRONIC_TEMPEST_WHOLE_DISK_IMAGE="False"
+
+PUBLIC_INTERFACE=ens2
+OVS_PHYSICAL_BRIDGE=br-ens2
+FIXED_RANGE=169.16.1.0/24
+NETWORK_GATEWAY=169.16.1.1
+ALLOCATION_POOL=start=169.16.1.62,end=169.16.1.63
+HOST_IP=192.168.1.2
+
+# iLO driver plugin.
+IRONIC_USING_PLUGIN=true
+enable_plugin ironic https://opendev.org/openstack/ironic
+TEMPEST_PLUGINS+=' /opt/stack/ironic-tempest-plugin'
+
+[[post-config|$IRONIC_CONF_FILE]]
+
+[DEFAULT]
+auth_strategy = noauth
+
+[conductor]
+clean_nodes=false
+
+[pxe]
+pxe_append_params="console=ttyS1"
+
+[disk_utils]
+iscsi_verify_attempts = 10
+
+[ilo]
+use_web_server_for_images=True
+
+[deploy]
+http_root=/opt/stack/devstack/files
+http_url=http://192.168.1.2:9999/
+
+[service_catalog]
+endpoint_override=http://192.168.1.2/baremetal
