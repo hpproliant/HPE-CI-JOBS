@@ -27,6 +27,7 @@ function clone_projects {
     git clone https://opendev.org/openstack/ironic.git
     git clone https://opendev.org/openstack/ironic-tempest-plugin.git
     git clone https://opendev.org/x/proliantutils.git
+    git clone https://opendev.org/openstack/sushy.git
     while true; do
         git clone https://github.com/openstack/neutron.git
 	RESULT=$?
