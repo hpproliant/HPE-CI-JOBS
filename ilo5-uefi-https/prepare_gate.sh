@@ -40,6 +40,7 @@ function install_packages {
     sudo apt -y install python3-setuptools
     sudo apt -y install isc-dhcp-server
     sudo apt -y install socat vlan liberasurecode-dev libssl-dev virtualenv nginx
+    sudo pip3 install cryptography==3.2.0
     sudo pip3 install proliantutils
 }
 

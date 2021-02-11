@@ -40,6 +40,7 @@ function install_packages {
     sudo apt -y install webfs socat vlan liberasurecode-dev libssl-dev virtualenv
     sudo apt -y install python3-setuptools
     sudo pip install setuptools
+    sudo pip3 install cryptography==3.2.0
     sudo pip3 install proliantutils
     #wget http://mirror.mtl01.inap.openstack.org/wheel/ubuntu-18.04-x86_64/kombu/kombu-4.2.2-py2.py3-none-any.whl
     #sudo pip3 install kombu-4.2.2-py2.py3-none-any.whl
