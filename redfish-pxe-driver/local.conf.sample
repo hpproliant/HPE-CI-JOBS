@@ -55,6 +55,7 @@ USE_SYSTEMD=False
 WSGI_MODE=uwsgi
 
 USE_PYTHON3=True
+PYTHON3_VERSION=3.8
 USE_SUBNETPOOL=False
 ## General settings.
 GIT_BASE=https://github.com
