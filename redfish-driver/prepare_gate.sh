@@ -34,7 +34,7 @@ source /home/ubuntu/proxy
 
 function install_packages {
     sudo apt -y update
-    sudo apt -y purge python3-yaml
+    sudo apt -y purge python3-yaml python3-httplib2
     sudo apt -y install apache2 python3.8 python-pip isc-dhcp-server webfs python3-setuptools python3-pip socat vlan liberasurecode-dev libssl-dev ovmf virtualenv
     sudo chmod 600 /home/ubuntu/zuul_id_rsa
 }
@@ -90,7 +90,7 @@ function update_proliantutils {
     git config --global user.email "proliantutils@gmail.com"
     git config --global user.name "proliantci"
     #git fetch https://review.opendev.org/x/proliantutils refs/changes/33/707933/1 && git cherry-pick FETCH_HEAD
-    sudo pip3 install cryptography==3.2.0
+    sudo pip3 install cryptography==3.2.0 setuptools
     sudo pip3 install -r requirements.txt
     sudo python3 setup.py install
 }

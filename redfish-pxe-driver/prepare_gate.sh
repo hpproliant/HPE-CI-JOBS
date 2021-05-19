@@ -31,7 +31,7 @@ source /home/ubuntu/proxy
 function install_packages {
     sudo apt -y update
     sudo apt -y install apache2 python3.8
-    sudo apt -y purge python3-yaml
+    sudo apt -y purge python3-yaml python3-httplib2
     sudo apt -y install python3-pip python3-setuptools isc-dhcp-server ovmf virtualenv
     sudo pip install setuptools
     sudo chown ubuntu.ubuntu /var/www/html

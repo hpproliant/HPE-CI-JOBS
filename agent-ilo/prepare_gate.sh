@@ -35,9 +35,9 @@ source /home/ubuntu/proxy
 function install_packages {
     sudo apt -y update
     sudo apt -y install apache2 python3.8
-    sudo apt -y purge python3-yaml
+    sudo apt -y purge python3-yaml python3-httplib2
     sudo apt -y install python3-pip python3-setuptools isc-dhcp-server webfs socat vlan liberasurecode-dev libssl-dev virtualenv
-    sudo pip3 install cryptography==3.2.0
+    sudo pip3 install cryptography==3.2.0 setuptools
     sudo pip3 install proliantutils
 }
 

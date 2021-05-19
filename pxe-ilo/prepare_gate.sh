@@ -30,10 +30,10 @@ source /home/ubuntu/proxy
 
 function install_packages {
     sudo apt -y update
-    sudo apt -y purge python3-yaml
+    sudo apt -y purge python3-yaml python3-httplib2
     sudo apt -y install apache2 python3.8 python-pip isc-dhcp-server ovmf webfs socat vlan liberasurecode-dev libssl-dev python3-pip python3-setuptools virtualenv
     #sudo pip install setuptools
-    sudo pip3 install cryptography==3.2.0
+    sudo pip3 install cryptography==3.2.0 setuptools
     sudo pip3 install proliantutils
     sudo chown ubuntu.ubuntu /var/www/html
     sudo chmod 600 /home/ubuntu/zuul_id_rsa
