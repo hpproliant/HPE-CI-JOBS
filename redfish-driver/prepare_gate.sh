@@ -34,6 +34,7 @@ source /home/ubuntu/proxy
 
 function install_packages {
     sudo apt -y update
+    sudo apt -y purge python3-yaml
     sudo apt -y install apache2 python3.8 python-pip isc-dhcp-server webfs python3-setuptools python3-pip socat vlan liberasurecode-dev libssl-dev ovmf virtualenv
     sudo chmod 600 /home/ubuntu/zuul_id_rsa
 }
