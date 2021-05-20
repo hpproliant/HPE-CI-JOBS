@@ -41,7 +41,7 @@ disable_service nova n-api n-cond n-sch n-cpu n-crt n-net n-novnc n-xvnc n-cauth
 disable_service nova
 disable_service placement-api
 USE_PYTHON3=True
-PYTHON3_VERSION=3.8
+#PYTHON3_VERSION=3.8
 enable_service ironic ir-api ir-cond
 enable_service tempest
 #IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image
