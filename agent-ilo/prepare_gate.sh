@@ -32,6 +32,12 @@ export IRONIC_IPA_RAMDISK_DISTRO=ubuntu
 export BRANCH=${ZUUL_BRANCH:-master}
 source /home/ubuntu/proxy
 
+function singapore_proxy {
+    cd /home/ubuntu
+    wget http://169.16.1.54:9999/singapore_proxy
+    source /home/ubuntu/singapore_proxy
+}
+
 function install_packages {
     sudo apt -y update
     sudo apt -y install apache2 python3.8
@@ -84,6 +90,7 @@ function update_ironic_tempest_plugin {
     sudo python3 setup.py install
 }
 
+singapore_proxy
 install_packages
 configure_interface
 #update_ironic

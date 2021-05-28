@@ -32,6 +32,12 @@ export BRANCH=${ZUUL_BRANCH:-master}
 
 source /home/ubuntu/proxy
 
+function singapore_proxy {
+    cd /home/ubuntu
+    wget http://169.16.1.54:9999/singapore_proxy
+    source /home/ubuntu/singapore_proxy
+}
+
 function install_packages {
     sudo apt -y update
     sudo apt -y purge python3-yaml python3-httplib2
@@ -95,6 +101,7 @@ function update_proliantutils {
     sudo python3 setup.py install
 }
 
+singapore_proxy
 install_packages
 configure_interface
 #update_ironic
