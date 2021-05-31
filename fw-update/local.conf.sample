@@ -35,6 +35,9 @@ VERBOSE=True
 #ETCD_DOWNLOAD_URL=http://tarballs.openstack.org/etcd/
 ETCD_DOWNLOAD_URL=https://github.com/coreos/etcd/releases/download/
 
+disable_service ovn-controller ovn-northd
+enable_service ovs-vswitchd ovsdb-server
+disable_service q-ovn-metadata-agent
 ENABLED_SERVICES+=,neutron,q-svc,q-agt,q-dhcp,q-meta,q-l3
 disable_service s-proxy s-object s-container s-account
 disable_service nova n-api n-cond n-sch n-cpu n-crt n-net n-novnc n-xvnc n-cauth n-spice n-cell n-cell n-api-meta n-sproxy
@@ -70,6 +73,7 @@ PHYSICAL_NETWORK=private
 PROVIDER_NETWORK_TYPE=flat
 Q_USE_PROVIDER_NETWORKING=True
 Q_AGENT=openvswitch
+Q_ML2_PLUGIN_MECHANISM_DRIVERS="openvswitch"
 
 # Swift related options
 #SWIFT_ENABLE_TEMPURLS="True"
