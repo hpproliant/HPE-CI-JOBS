@@ -24,7 +24,7 @@ function run_redfish_test {
 
     openstack baremetal node manage $ironic_node
     openstack baremetal node provide $ironic_node
-    openstack baremetal node set --driver-info deploy_kernel=http://169.16.1.54:9999/ipa-centos8-master_18_05_21.kernel --driver-info deploy_ramdisk=http://169.16.1.54:9999/ipa-centos8-master-password_18_05_21.initramfs --driver-info bootloader=http://169.16.1.54:9999/ir-deploy-redfish.efiboot --instance-info image_source=http://169.16.1.54:9999/rhel_7.6-uefi.img --instance-info image_checksum=fd9b31d6b754b078166387c86e7fd8ce --instance-info capabilities='{"boot_mode": "uefi"}' --property capabilities='boot_mode:uefi' $ironic_node
+    openstack baremetal node set --driver-info deploy_kernel=http://169.16.1.54:9999/ipa-centos8-master_18_05_21.kernel --driver-info deploy_ramdisk=http://169.16.1.54:9999/ipa-centos8-master_tls_disabled.initramfs --driver-info bootloader=http://169.16.1.54:9999/ir-deploy-redfish.efiboot --instance-info image_source=http://169.16.1.54:9999/rhel_7.6-uefi.img --instance-info image_checksum=fd9b31d6b754b078166387c86e7fd8ce --instance-info capabilities='{"boot_mode": "uefi"}' --property capabilities='boot_mode:uefi' $ironic_node
 
     openstack baremetal port create --node $ironic_node $mac
     openstack baremetal node power off $ironic_node

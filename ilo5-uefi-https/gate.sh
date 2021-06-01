@@ -43,7 +43,7 @@ ironic_node=$(openstack baremetal node list | grep -v UUID | grep "\w" | awk '{p
 
 openstack baremetal node manage $ironic_node
 openstack baremetal node provide $ironic_node
-openstack baremetal node set --driver-info ilo_deploy_kernel=https://$ip:443/ipa-centos8-master_18_05_21.kernel --driver-info ilo_deploy_ramdisk=https://$ip:443/ipa-centos8-master-password_18_05_21.initramfs --driver-info ilo_bootloader=https://$ip:443/ir-deploy-redfish.efiboot --instance-info image_source=https://$ip:443/rhel_7.6-uefi.img --instance-info image_checksum=fd9b31d6b754b078166387c86e7fd8ce --instance-info capabilities='{"boot_mode": "uefi"}' --property capabilities='boot_mode:uefi' $ironic_node
+openstack baremetal node set --driver-info ilo_deploy_kernel=https://$ip:443/ipa-centos8-master_18_05_21.kernel --driver-info ilo_deploy_ramdisk=https://$ip:443/ipa-centos8-master_tls_disabled.initramfs --driver-info ilo_bootloader=https://$ip:443/ir-deploy-redfish.efiboot --instance-info image_source=https://$ip:443/rhel_7.6-uefi.img --instance-info image_checksum=fd9b31d6b754b078166387c86e7fd8ce --instance-info capabilities='{"boot_mode": "uefi"}' --property capabilities='boot_mode:uefi' $ironic_node
 
 openstack baremetal port create --node $ironic_node $mac
 openstack baremetal node power off $ironic_node
