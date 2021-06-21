@@ -72,6 +72,7 @@ function run_stack {
     cp /tmp/redfish-pxe-driver/HPE-CI-JOBS/redfish-pxe-driver/local.conf.sample local.conf
     ip=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     sed -i "s/192.168.1.2/$ip/g" local.conf
+    sed -i "s/\$ADD_DEFAULT_ROUTE; \$ARP_CMD/\$ADD_DEFAULT_ROUTE/g" lib/neutron-legacy
 
     # Run stack.sh
     ./stack.sh
