@@ -67,6 +67,8 @@ function run_stack {
     cd /opt/stack/devstack
     wget http://169.16.1.54:9999/ir-deploy-ilo.iso -P files/
     wget http://169.16.1.54:9999/fedora-wd-uefi.img -P files/
+    wget http://169.16.1.54:9999/ipa-centos8-master_tls_disabled.initramfs -P files/
+    wget http://169.16.1.54:9999/ipa-centos8-master_18_05_21.kernel -P files/
     wget http://169.16.1.54:9999/fedora_04_06_20.kernel -P files/
     wget http://169.16.1.54:9999/fedora_04_06_20.initramfs -P files/
     wget http://169.16.1.54:9999/ir-deploy-redfish.efiboot -P files/
