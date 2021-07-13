@@ -165,7 +165,7 @@ iscsi_verify_attempts = 10
 
 [ilo]
 use_web_server_for_images=True
-kernel_append_params = "console=ttyS1 ipa-insecure=True"
+kernel_append_params = "ipa-insecure=True"
 
 [deploy]
 http_root=/opt/stack/devstack/files
