@@ -40,7 +40,7 @@ function singapore_proxy {
 
 function install_packages {
     sudo apt -y update
-    sudo apt -y purge python3-yaml python3-httplib2
+    sudo apt -y purge python3-yaml python3-httplib2 python3-simplejson
     sudo apt -y install apache2 isc-dhcp-server webfs python3-setuptools python3-pip socat vlan liberasurecode-dev libssl-dev ovmf
     sudo chmod 600 /home/ubuntu/zuul_id_rsa
 }
