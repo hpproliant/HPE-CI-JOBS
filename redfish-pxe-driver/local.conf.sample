@@ -100,7 +100,7 @@ IRONIC_HW_NODE_CPU=2
 IRONIC_HW_NODE_RAM=16384
 IRONIC_HW_NODE_DISK=99
 IRONIC_BAREMETAL_BASIC_OPS=True
-IRONIC_IPA_RAMDISK_DISTRO="ubuntu"
+IRONIC_IPA_RAMDISK_DISTRO="centos"
 IRONIC_DEPLOY_ISO_REQUIRED="False"
 IRONIC_DEPLOY_DRIVER_ISCSI_WITH_IPA="true"
 IRONIC_CONFIGURE_GLANCE_WITH_SWIFT="False"
@@ -159,6 +159,9 @@ enable_plugin ironic https://opendev.org/openstack/ironic
 TEMPEST_PLUGINS+=' /opt/stack/ironic-tempest-plugin'
 
 [[post-config|$IRONIC_CONF_FILE]]
+
+[DEFAULT]
+grub_config_path ="EFI/centos/grub.cfg"
 
 [conductor]
 clean_nodes=false
