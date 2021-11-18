@@ -150,7 +150,7 @@ TEMPEST_PLUGINS+=' /opt/stack/ironic-tempest-plugin'
 [DEFAULT]
 auth_strategy = noauth
 webserver_verify_ca = /home/ubuntu/ssl_files/uefi_signed.crt
-grub_config_path ="EFI/centos/grub.cfg"
+grub_config_path=EFI/centos/grub.cfg
 
 [conductor]
 clean_nodes=false

@@ -161,7 +161,7 @@ TEMPEST_PLUGINS+=' /opt/stack/ironic-tempest-plugin'
 [[post-config|$IRONIC_CONF_FILE]]
 
 [DEFAULT]
-grub_config_path ="EFI/centos/grub.cfg"
+grub_config_path=EFI/centos/grub.cfg
 
 [conductor]
 clean_nodes=false

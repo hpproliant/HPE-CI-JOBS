@@ -37,6 +37,13 @@ unset OS_REGION_NAME OS_PROJECT_DOMAIN_ID OS_AUTH_URL OS_TENANT_NAME OS_USER_DOM
 export OS_AUTH_TYPE=none
 export OS_ENDPOINT=http://$ip/baremetal
 
+# Fix ironic config
+sudo sed -i 's|EFI/ubuntu/grub.cfg|EFI/centos/grub.cfg|g' /etc/ironic/ironic.conf
+sudo systemctl restart devstack@ir-api
+sleep 10
+sudo systemctl restart devstack@ir-cond
+sleep 30
+
 openstack baremetal node create --driver ilo5 --driver-info ilo_address=$ilo_ip --driver-info ilo_username=Administrator --driver-info ilo_password=weg0th@ce@r --driver-info console_port=5000 --driver-info ilo_verify_ca=False
 
 ironic_node=$(openstack baremetal node list | grep -v UUID | grep "\w" | awk '{print $2}' | tail -n1)

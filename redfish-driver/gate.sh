@@ -15,6 +15,13 @@ function run_redfish_test {
     ilo_ip=$(cat /tmp/hardware_info | awk '{print $1}')
     mac=$(cat /tmp/hardware_info | awk '{print $2}')
 
+    # Fix ironic config
+    sudo sed -i 's|EFI/ubuntu/grub.cfg|EFI/centos/grub.cfg|g' /etc/ironic/ironic.conf
+    sudo systemctl restart devstack@ir-api
+    sleep 10
+    sudo systemctl restart devstack@ir-cond
+    sleep 30
+
     openstack baremetal node create --driver redfish --driver-info redfish_address=$ilo_ip --driver-info redfish_username=Administrator --driver-info redfish_password=weg0th@ce@r --driver-info console_port=5000 --driver-info redfish_verify_ca="False" --driver-info redfish_system_id=/redfish/v1/Systems/1
 
     #Update Boot Mode to UEFI
