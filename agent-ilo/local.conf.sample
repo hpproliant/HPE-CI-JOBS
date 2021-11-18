@@ -148,8 +148,8 @@ TEMPEST_PLUGINS+=' /opt/stack/ironic-tempest-plugin'
 [[post-config|$IRONIC_CONF_FILE]]
 
 [DEFAULT]
-auth_strategy = noauth
-grub_config_path ="EFI/centos/grub.cfg"
+auth_strategy=noauth
+grub_config_path=EFI/centos/grub.cfg
 
 [conductor]
 clean_nodes=false
