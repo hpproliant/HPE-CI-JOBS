@@ -35,7 +35,9 @@ ironic_node=$(openstack baremetal node list | grep -v UUID | grep "\w" | awk '{p
 openstack baremetal node manage $ironic_node
 openstack baremetal node provide $ironic_node
 
-openstack baremetal node set --driver-info ilo_deploy_iso=http://169.16.1.54:9999/fedora_04_06_20.iso --instance-info image_source=http://169.16.1.54:9999/fedora-bios.img --instance-info image_checksum=833de19d0e85ecac364669382389ad20 --instance-info capabilities='{"boot_mode": "bios"}' --property capabilities='boot_mode:bios' $ironic_node
+openstack baremetal node set --driver-info ilo_deploy_kernel=http://169.16.1.54:9999/ipa-centos8-master_18_05_21.kernel --driver-info ilo_deploy_ramdisk=http://169.16.1.54:9999/ipa-centos8-master_tls_disabled.initramfs --driver-info ilo_bootloader=http://169.16.1.54:9999/ir-deploy-redfish.efiboot --instance-info image_source=http://169.16.1.54:9999/fedora-wd-uefi.img --instance-info image_checksum=17a6c6df66d4c90b05554cdc2285d851 --instance-info capabilities='{"boot_mode": "uefi"}' --property capabilities='boot_mode:uefi' $ironic_node
+
+#openstack baremetal node set --driver-info ilo_deploy_iso=http://169.16.1.54:9999/fedora_04_06_20.iso --instance-info image_source=http://169.16.1.54:9999/fedora-bios.img --instance-info image_checksum=833de19d0e85ecac364669382389ad20 --instance-info capabilities='{"boot_mode": "bios"}' --property capabilities='boot_mode:bios' $ironic_node
 
 openstack baremetal port create --node $ironic_node $mac
 openstack baremetal node power off $ironic_node

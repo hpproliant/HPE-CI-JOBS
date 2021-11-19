@@ -48,7 +48,7 @@ USE_PYTHON3=True
 enable_service ironic ir-api ir-cond
 enable_service tempest
 #IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image
-IRONIC_WHOLEDISK_IMAGE_NAME=fedora-bios
+IRONIC_WHOLEDISK_IMAGE_NAME=fedora-wd-uefi
 IRONIC_FIRMWARE_IMAGE_NAME=ilo4_272.bin
 #IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image.qcow2
 #IRONIC_USE_MOD_WSGI=True
@@ -120,7 +120,8 @@ IRONIC_PING_TIMEOUT=1200
 # Ironic iLO driver options
 
 #IMAGE_URLS=file:///home/user/path/file
-IMAGE_URLS="file:///opt/stack/devstack/files/fedora-bios.img"
+#IMAGE_URLS="file:///opt/stack/devstack/files/fedora-bios.img"
+IMAGE_URLS="file:///opt/stack/devstack/files/fedora-wd-uefi.img"
 IRONIC_TEMPEST_WHOLE_DISK_IMAGE="False"
 
 PUBLIC_INTERFACE=ens2
@@ -138,11 +139,14 @@ TEMPEST_PLUGINS+=' /opt/stack/ironic-tempest-plugin'
 [[post-config|$IRONIC_CONF_FILE]]
 
 [DEFAULT]
-auth_strategy = noauth
+auth_strategy=noauth
 grub_config_path=EFI/centos/grub.cfg
 
 [conductor]
 clean_nodes=false
+
+[keystone_authtoken]
+auth_version=3
 
 [pxe]
 pxe_append_params="console=ttyS1"
