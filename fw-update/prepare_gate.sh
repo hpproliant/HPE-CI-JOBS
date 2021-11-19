@@ -66,7 +66,7 @@ function run_stack {
 
     cd /opt/stack/devstack
     wget http://169.16.1.54:9999/ir-deploy-ilo.iso -P files/
-    wget http://169.16.1.54:9999/fedora-bios.img -P files/
+    wget http://169.16.1.54:9999/fedora-wd-uefi.img -P files/
     wget http://169.16.1.54:9999/ilo4_272.bin -P files/
     cp /tmp/fw-update/HPE-CI-JOBS/fw-update/local.conf.sample local.conf
     ip=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
