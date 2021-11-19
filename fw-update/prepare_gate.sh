@@ -66,7 +66,7 @@ function run_stack {
 
     cd /opt/stack/devstack
     wget http://169.16.1.54:9999/ir-deploy-ilo.iso -P files/
-    wget http://169.16.1.54:9999/fedora-wd-uefi.img -P files/
+    wget http://169.16.1.54:9999/fedora-bios.img -P files/
     wget http://169.16.1.54:9999/ilo4_272.bin -P files/
     cp /tmp/fw-update/HPE-CI-JOBS/fw-update/local.conf.sample local.conf
     ip=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
@@ -87,6 +87,7 @@ function update_ironic {
     git config --global user.email "proliantutils@gmail.com"
     git config --global user.name "proliantci"
     git fetch "https://review.opendev.org/openstack/ironic" refs/changes/41/763341/2 && git cherry-pick FETCH_HEAD
+    sudo python3 setup.py install
 }
 
 function update_ironic_tempest_plugin {
@@ -94,7 +95,7 @@ function update_ironic_tempest_plugin {
     git config --global user.email "proliantutils@gmail.com"
     git config --global user.name "proliantci"
     git fetch "https://review.opendev.org/openstack/ironic-tempest-plugin" refs/changes/40/763340/2 && git cherry-pick FETCH_HEAD
-#    sudo python3 setup.py install
+    sudo python3 setup.py install
 }
 
 singapore_proxy
