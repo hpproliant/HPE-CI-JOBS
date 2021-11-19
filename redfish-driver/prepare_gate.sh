@@ -61,6 +61,7 @@ function run_stack {
     cd /opt/stack/devstack
     wget http://169.16.1.54:9999/ir-deploy-ilo.iso -P files/
     wget http://169.16.1.54:9999/rhel_7.6-uefi.img -P files/
+    wget http://169.16.1.54:9999/ir-deploy-redfish.efiboot -P files/
     echo  >> /tmp/hardware_info
     cp /tmp/redfish-driver/HPE-CI-JOBS/redfish-driver/local.conf.sample local.conf
     ip=$(ip addr show ens2 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)

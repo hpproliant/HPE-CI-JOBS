@@ -70,6 +70,7 @@ function run_stack {
     local capabilities
 
     cd /opt/stack/devstack/files
+    wget http://169.16.1.54:9999/ir-deploy-ilo.efiboot
     wget http://169.16.1.54:9999/ir-deploy-pxe_ilo.initramfs
     wget http://169.16.1.54:9999/ir-deploy-pxe_ilo.kernel
     wget http://169.16.1.54:9999/ubuntu-uefi.img

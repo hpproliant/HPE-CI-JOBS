@@ -56,6 +56,7 @@ function run_stack {
     local capabilities
 
     cd /opt/stack/devstack/files
+    wget http://169.16.1.54:9999/ir-deploy-redfish.efiboot
     wget http://169.16.1.54:9999/ir-deploy-redfish.initramfs
     wget http://169.16.1.54:9999/ir-deploy-redfish.kernel
     wget http://169.16.1.54:9999/rhel_7.6-uefi.img
