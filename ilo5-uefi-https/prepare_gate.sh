@@ -109,5 +109,5 @@ install_packages
 create_cert
 configure_interface
 update_ironic
-update_ironic_tempest_plugin
-run_stack
+#update_ironic_tempest_plugin
+#run_stack

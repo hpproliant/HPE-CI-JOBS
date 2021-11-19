@@ -94,7 +94,7 @@ function update_ironic_tempest_plugin {
     git config --global user.email "proliantutils@gmail.com"
     git config --global user.name "proliantci"
     git fetch "https://review.opendev.org/openstack/ironic-tempest-plugin" refs/changes/40/763340/2 && git cherry-pick FETCH_HEAD
-    sudo python3 setup.py install
+#    sudo python3 setup.py install
 }
 
 singapore_proxy
