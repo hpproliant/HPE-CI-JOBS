@@ -37,8 +37,8 @@ ETCD_DOWNLOAD_URL=https://github.com/coreos/etcd/releases/download/
 
 disable_service ovn-controller ovn-northd
 enable_service ovs-vswitchd ovsdb-server
-ENABLED_SERVICES+=,neutron,q-svc,q-agt,q-dhcp,q-meta,q-l3
 disable_service q-ovn-metadata-agent
+ENABLED_SERVICES+=,neutron,q-svc,q-agt,q-dhcp,q-meta,q-l3
 disable_service s-proxy s-object s-container s-account
 disable_service nova n-api n-cond n-sch n-cpu n-crt n-net n-novnc n-xvnc n-cauth n-spice n-cell n-cell n-api-meta n-sproxy
 disable_service nova
@@ -47,9 +47,7 @@ disable_service placement-api
 enable_service ironic ir-api ir-cond
 enable_service tempest
 #IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image
-USE_PYTHON3=True
-#PYTHON3_VERSION=3.8
-IRONIC_WHOLEDISK_IMAGE_NAME=fedora-wd-uefi
+IRONIC_WHOLEDISK_IMAGE_NAME=rhel_7.6-uefi
 #IRONIC_PARTITIONED_IMAGE_NAME=ubuntu-cloud-image.qcow2
 #IRONIC_USE_MOD_WSGI=True
 USE_SYSTEMD=False
@@ -59,9 +57,12 @@ USE_SYSTEMD=False
 #WSGI_MODE=mod_wsgi
 WSGI_MODE=uwsgi
 
+USE_PYTHON3=True
+#PYTHON3_VERSION=3.8
 USE_SUBNETPOOL=False
 ## General settings.
 GIT_BASE=https://github.com
+#GIT_BASE=https://opendev.org
 
 # RECLONE is disabled for gate. Enable if required.
 RECLONE=no
@@ -94,34 +95,33 @@ TEMPEST_SSH_CONNECT_METHOD=fixed
 DEFAULT_INSTANCE_TYPE=baremetal
 
 # Ironic related options
-# NOTE: redfish virtual media changes will be applied manually after stack is up
-
 VIRT_DRIVER=ironic
 IRONIC_HW_NODE_CPU=2
 IRONIC_HW_NODE_RAM=16384
 IRONIC_HW_NODE_DISK=99
 IRONIC_BAREMETAL_BASIC_OPS=True
 IRONIC_IPA_RAMDISK_DISTRO="centos"
-IRONIC_DEPLOY_ISO_REQUIRED="true"
+IRONIC_DEPLOY_ISO_REQUIRED="False"
 IRONIC_DEPLOY_DRIVER_ISCSI_WITH_IPA="true"
 IRONIC_CONFIGURE_GLANCE_WITH_SWIFT="False"
-IRONIC_IS_HARDWARE=True
+IRONIC_IS_HARDWARE="True"
 IRONIC_RAMDISK_TYPE="dib"
 IRONIC_BUILD_DEPLOY_RAMDISK="false"
-IRONIC_DEPLOY_ISO="/opt/stack/devstack/files/ir-deploy-ilo.iso"
-IRONIC_DEPLOY_DRIVER="ilo"
+#IRONIC_DEPLOY_ISO="/opt/stack/devstack/files/ir-deploy-ilo.iso"
+IRONIC_DEPLOY_DRIVER="redfish"
 IRONIC_AUTOMATED_CLEAN_ENABLED=False
 IRONIC_IPXE_ENABLED=False
-IRONIC_ENABLED_HARDWARE_TYPES=ilo
+IRONIC_ENABLED_HARDWARE_TYPES=redfish
 IRONIC_ENABLED_DEPLOY_INTERFACES=direct
-IRONIC_ENABLED_MANAGEMENT_INTERFACES=ilo
-IRONIC_ENABLED_POWER_INTERFACES=ilo
-IRONIC_ENABLED_BOOT_INTERFACES=ilo-virtual-media
+IRONIC_ENABLED_MANAGEMENT_INTERFACES=redfish
+IRONIC_ENABLED_POWER_INTERFACES=redfish
+IRONIC_ENABLED_BOOT_INTERFACES=ipxe
 IRONIC_PING_TIMEOUT=1200
 # Ironic iLO driver options
 
 #IMAGE_URLS=file:///home/user/path/file
-IMAGE_URLS="file:///opt/stack/devstack/files/fedora-wd-uefi.img"
+IMAGE_URLS="file:///opt/stack/devstack/files/rhel_7.6-uefi.img"
+#IMAGE_URLS="file:///opt/stack/devstack/files/ubuntu-uefi.img"
 #IRONIC_IMAGE_NAME=ubuntu-cloud-image-disk
 #IRONIC_HWINFO_FILE="/opt/stack/devstack/files/hardware_info"
 #IRONIC_HWINFO_FILE="/tmp/hardware_info"
@@ -132,9 +132,20 @@ PUBLIC_INTERFACE=ens2
 OVS_PHYSICAL_BRIDGE=br-ens2
 FIXED_RANGE=169.16.1.0/24
 NETWORK_GATEWAY=169.16.1.1
-ALLOCATION_POOL=start=169.16.1.68,end=169.16.1.69
+ALLOCATION_POOL=start=169.16.1.66,end=169.16.1.67
 #IRONIC_DEPLOY_DRIVER=agent_ilo
 HOST_IP=192.168.1.2
+
+IRONIC_DEPLOY_RAMDISK=/opt/stack/devstack/files/ir-deploy-redfish.initramfs
+IRONIC_DEPLOY_KERNEL=/opt/stack/devstack/files/ir-deploy-redfish.kernel
+
+IRONIC_IPXE_ENABLED=False
+IRONIC_TFTPBOOT_DIR=/opt/stack/data/ironic/tftpboot
+
+IRONIC_UEFI_BOOT_LOADER=grub2
+IRONIC_GRUB2_SHIM_FILE=/opt/stack/devstack/files/shim.efi
+IRONIC_GRUB2_FILE=/opt/stack/devstack/files/grubx64.efi
+IRONIC_BOOT_MODE="uefi"
 
 # The subnet for iLO NICs. Leave this empty if iLO NIC is in same
 # subnet as that of server NIC.
@@ -150,7 +161,6 @@ TEMPEST_PLUGINS+=' /opt/stack/ironic-tempest-plugin'
 [[post-config|$IRONIC_CONF_FILE]]
 
 [DEFAULT]
-auth_strategy=noauth
 grub_config_path=EFI/centos/grub.cfg
 
 [conductor]
@@ -160,6 +170,8 @@ clean_nodes=false
 auth_version=3
 
 [pxe]
+uefi_pxe_bootfile_name="ipxe.efi"
+uefi_pxe_config_template="$pybasedir/drivers/modules/ipxe_config.template"
 pxe_append_params="console=ttyS1"
 
 [disk_utils]
@@ -169,8 +181,11 @@ iscsi_verify_attempts = 10
 use_web_server_for_images=True
 
 [deploy]
-http_root=/opt/stack/devstack/files
-http_url=http://192.168.1.2:8010/
+http_root=/var/www/html
+http_url=http://192.168.1.2:80/
+
+[redfish]
+use_swift=False
 
 [service_catalog]
 endpoint_override=http://192.168.1.2/baremetal

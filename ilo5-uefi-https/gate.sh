@@ -37,8 +37,14 @@ unset OS_REGION_NAME OS_PROJECT_DOMAIN_ID OS_AUTH_URL OS_TENANT_NAME OS_USER_DOM
 export OS_AUTH_TYPE=none
 export OS_ENDPOINT=http://$ip/baremetal
 
+echo "Make ilo5 uefi https changes"
+
 # Fix ironic config
 sudo sed -i 's|EFI/ubuntu/grub.cfg|EFI/centos/grub.cfg|g' /etc/ironic/ironic.conf
+sudo sed -i 's|enabled_boot_interfaces = ilo-virtual-media|enabled_boot_interfaces = ilo-uefi-https|g' /etc/ironic/ironic.conf
+sudo sed -i 's|enabled_management_interfaces = ilo|enabled_management_interfaces = ilo5|g' /etc/ironic/ironic.conf
+sudo sed -i 's|enabled_hardware_types = ilo|enabled_hardware_types = ilo5|g' /etc/ironic/ironic.conf
+
 sudo systemctl restart devstack@ir-api
 sleep 10
 sudo systemctl restart devstack@ir-cond

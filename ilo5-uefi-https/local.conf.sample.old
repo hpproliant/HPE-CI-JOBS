@@ -37,8 +37,8 @@ ETCD_DOWNLOAD_URL=https://github.com/coreos/etcd/releases/download/
 
 disable_service ovn-controller ovn-northd
 enable_service ovs-vswitchd ovsdb-server
-ENABLED_SERVICES+=,neutron,q-svc,q-agt,q-dhcp,q-meta,q-l3
 disable_service q-ovn-metadata-agent
+ENABLED_SERVICES+=,neutron,q-svc,q-agt,q-dhcp,q-meta,q-l3
 disable_service s-proxy s-object s-container s-account
 disable_service nova n-api n-cond n-sch n-cpu n-crt n-net n-novnc n-xvnc n-cauth n-spice n-cell n-cell n-api-meta n-sproxy
 disable_service nova
@@ -94,8 +94,6 @@ TEMPEST_SSH_CONNECT_METHOD=fixed
 DEFAULT_INSTANCE_TYPE=baremetal
 
 # Ironic related options
-# NOTE: redfish virtual media changes will be applied manually after stack is up
-
 VIRT_DRIVER=ironic
 IRONIC_HW_NODE_CPU=2
 IRONIC_HW_NODE_RAM=16384
@@ -109,14 +107,14 @@ IRONIC_IS_HARDWARE=True
 IRONIC_RAMDISK_TYPE="dib"
 IRONIC_BUILD_DEPLOY_RAMDISK="false"
 IRONIC_DEPLOY_ISO="/opt/stack/devstack/files/ir-deploy-ilo.iso"
-IRONIC_DEPLOY_DRIVER="ilo"
+IRONIC_DEPLOY_DRIVER="ilo5"
 IRONIC_AUTOMATED_CLEAN_ENABLED=False
 IRONIC_IPXE_ENABLED=False
-IRONIC_ENABLED_HARDWARE_TYPES=ilo
+IRONIC_ENABLED_HARDWARE_TYPES=ilo5
 IRONIC_ENABLED_DEPLOY_INTERFACES=direct
-IRONIC_ENABLED_MANAGEMENT_INTERFACES=ilo
+IRONIC_ENABLED_MANAGEMENT_INTERFACES=ilo5
 IRONIC_ENABLED_POWER_INTERFACES=ilo
-IRONIC_ENABLED_BOOT_INTERFACES=ilo-virtual-media
+IRONIC_ENABLED_BOOT_INTERFACES=ilo-uefi-https
 IRONIC_PING_TIMEOUT=1200
 # Ironic iLO driver options
 
@@ -132,7 +130,7 @@ PUBLIC_INTERFACE=ens2
 OVS_PHYSICAL_BRIDGE=br-ens2
 FIXED_RANGE=169.16.1.0/24
 NETWORK_GATEWAY=169.16.1.1
-ALLOCATION_POOL=start=169.16.1.68,end=169.16.1.69
+ALLOCATION_POOL=start=169.16.1.58,end=169.16.1.59
 #IRONIC_DEPLOY_DRIVER=agent_ilo
 HOST_IP=192.168.1.2
 
@@ -150,7 +148,8 @@ TEMPEST_PLUGINS+=' /opt/stack/ironic-tempest-plugin'
 [[post-config|$IRONIC_CONF_FILE]]
 
 [DEFAULT]
-auth_strategy=noauth
+auth_strategy = noauth
+webserver_verify_ca = /home/ubuntu/ssl_files/uefi_signed.crt
 grub_config_path=EFI/centos/grub.cfg
 
 [conductor]
@@ -160,17 +159,18 @@ clean_nodes=false
 auth_version=3
 
 [pxe]
-pxe_append_params="console=ttyS1"
+pxe_append_params=""
 
 [disk_utils]
 iscsi_verify_attempts = 10
 
 [ilo]
 use_web_server_for_images=True
+kernel_append_params = "ipa-insecure=True"
 
 [deploy]
 http_root=/opt/stack/devstack/files
-http_url=http://192.168.1.2:8010/
+http_url=https://192.168.1.2:443/
 
 [service_catalog]
 endpoint_override=http://192.168.1.2/baremetal

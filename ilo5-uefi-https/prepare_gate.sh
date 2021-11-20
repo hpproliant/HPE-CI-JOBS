@@ -89,25 +89,7 @@ function run_stack {
     sudo ip link set ens2 up
 }
 
-function update_ironic {
-    cd /opt/stack/ironic
-#    git config --global user.email "proliantutils@gmail.com"
-#    git config --global user.name "proliantci"
-#    git fetch https://review.opendev.org/openstack/ironic refs/changes/89/755189/4 && git cherry-pick FETCH_HEAD
-}
-
-function update_ironic_tempest_plugin {
-    cd /opt/stack/ironic-tempest-plugin
-    git config --global user.email "proliantutils@gmail.com"
-    git config --global user.name "proliantci"
-#    git fetch https://review.opendev.org/openstack/ironic-tempest-plugin refs/changes/96/757696/1 && git cherry-pick FETCH_HEAD
-    #git fetch https://git.openstack.org/openstack/ironic-tempest-plugin refs/changes/52/535652/11 && git cherry-pick FETCH_HEAD
-    sudo python3 setup.py install
-}
-
 install_packages
 create_cert
 configure_interface
-update_ironic
-#update_ironic_tempest_plugin
-#run_stack
+run_stack

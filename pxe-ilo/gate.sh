@@ -26,8 +26,10 @@ export OS_AUTH_TYPE=none
 export OS_ENDPOINT=http://$ip/baremetal
 
 # Fix ironic config
+echo "Make ilo pxe changes in ironic.conf"
+
 sudo sed -i 's|EFI/ubuntu/grub.cfg|EFI/centos/grub.cfg|g' /etc/ironic/ironic.conf
-sudo sed -i 's|enabled_boot_interfaces = ilo-virtual-media|enabled_boot_interfaces = ilo-virtual-media,ilo-ipxe|g' /etc/ironic/ironic.conf
+sudo sed -i 's|enabled_boot_interfaces = ilo-virtual-media|enabled_boot_interfaces = ilo-ipxe|g' /etc/ironic/ironic.conf
 
 sudo systemctl restart devstack@ir-api
 sleep 10
@@ -42,7 +44,6 @@ openstack baremetal node manage $ironic_node
 openstack baremetal node provide $ironic_node
 openstack baremetal node set --driver-info deploy_kernel=http://169.16.1.54:9999/ipa-centos8-master_18_05_21.kernel --driver-info deploy_ramdisk=http://169.16.1.54:9999/ipa-centos8-master_tls_disabled.initramfs --instance-info image_source=http://169.16.1.54:9999/ubuntu-uefi.img --instance-info image_checksum=a46f6297446f1197510839ef70d667c5 --instance-info capabilities='{"boot_mode": "uefi"}' --instance-info capabilities='{"boot_option": "local"}' --property capabilities='boot_mode:uefi' $ironic_node
 
-openstack baremetal node set --boot-interface ilo-pxe $ironic_node
 
 openstack baremetal port create --node $ironic_node $mac
 openstack baremetal node power off $ironic_node

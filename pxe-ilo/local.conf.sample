@@ -94,6 +94,8 @@ TEMPEST_SSH_CONNECT_METHOD=fixed
 DEFAULT_INSTANCE_TYPE=baremetal
 
 # Ironic related options
+# NOTE: ilo pxe changes will be applied manually after stack is up
+
 VIRT_DRIVER=ironic
 IRONIC_HW_NODE_CPU=2
 IRONIC_HW_NODE_RAM=16384

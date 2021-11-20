@@ -18,7 +18,14 @@ function run_redfish_ipxe_test {
     mac=$(cat /tmp/hardware_info | awk '{print $2}')
 
     # Fix ironic config
+    echo "Make redfish pxe changes in ironic.conf"
+
     sudo sed -i 's|EFI/ubuntu/grub.cfg|EFI/centos/grub.cfg|g' /etc/ironic/ironic.conf
+    sudo sed -i 's|enabled_boot_interfaces = ilo-virtual-media|enabled_boot_interfaces = ipxe|g' /etc/ironic/ironic.conf
+    sudo sed -i 's|enabled_power_interfaces = ilo|enabled_power_interfaces = redfish|g' /etc/ironic/ironic.conf
+    sudo sed -i 's|enabled_management_interfaces = ilo|enabled_management_interfaces = redfish|g' /etc/ironic/ironic.conf
+    sudo sed -i 's|enabled_hardware_types = ilo|enabled_hardware_types = redfish|g' /etc/ironic/ironic.conf
+
     sudo systemctl restart devstack@ir-api
     sleep 10
     sudo systemctl restart devstack@ir-cond

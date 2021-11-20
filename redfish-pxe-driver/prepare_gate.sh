@@ -56,6 +56,8 @@ function run_stack {
     local capabilities
 
     cd /opt/stack/devstack/files
+    wget http://169.16.1.54:9999/ir-deploy-ilo.iso
+    wget http://169.16.1.54:9999/fedora-wd-uefi.img
     wget http://169.16.1.54:9999/ir-deploy-redfish.efiboot
     wget http://169.16.1.54:9999/ir-deploy-redfish.initramfs
     wget http://169.16.1.54:9999/ir-deploy-redfish.kernel
