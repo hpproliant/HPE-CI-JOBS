@@ -36,10 +36,11 @@ ironic_node=$(openstack baremetal node list | grep -v UUID | grep "\w" | awk '{p
 
 openstack baremetal node manage $ironic_node
 openstack baremetal node provide $ironic_node
-#openstack baremetal node set --driver-info ilo_deploy_iso=http://169.16.1.54:9999/fedora_04_06_20.iso --instance-info image_source=http://169.16.1.54:9999/fedora-wd-uefi.img --instance-info image_checksum=17a6c6df66d4c90b05554cdc2285d851 --instance-info capabilities='{"boot_mode": "uefi"}' --property capabilities='boot_mode:uefi' $ironic_node
-#openstack baremetal node set --driver-info deploy_iso=http://169.16.1.54:9999/ps-ipa.iso  --instance-info image_source=http://169.16.1.54:9999/fedora-wd-uefi.img --instance-info image_checksum=17a6c6df66d4c90b05554cdc2285d851 --instance-info capabilities='{"boot_mode": "uefi"}' --property capabilities='boot_mode:uefi' $ironic_node
 
-openstack baremetal node set --driver-info ilo_deploy_kernel=http://169.16.1.54:9999/ipa-centos8-master_18_05_21.kernel --driver-info ilo_deploy_ramdisk=http://169.16.1.54:9999/ipa-centos8-master_tls_disabled.initramfs --driver-info ilo_bootloader=http://169.16.1.54:9999/ir-deploy-redfish.efiboot --instance-info image_source=http://169.16.1.54:9999/fedora-wd-uefi.img --instance-info image_checksum=17a6c6df66d4c90b05554cdc2285d851 --instance-info capabilities='{"boot_mode": "uefi"}' --property capabilities='boot_mode:uefi' $ironic_node
+# Original
+#openstack baremetal node set --driver-info ilo_deploy_kernel=http://169.16.1.54:9999/ipa-centos8-master_18_05_21.kernel --driver-info ilo_deploy_ramdisk=http://169.16.1.54:9999/ipa-centos8-master_tls_disabled.initramfs --driver-info ilo_bootloader=http://169.16.1.54:9999/ir-deploy-redfish.efiboot --instance-info image_source=http://169.16.1.54:9999/fedora-wd-uefi.img --instance-info image_checksum=17a6c6df66d4c90b05554cdc2285d851 --instance-info capabilities='{"boot_mode": "uefi"}' --property capabilities='boot_mode:uefi' $ironic_node
+# Secure boot
+openstack baremetal node set --driver-info ilo_deploy_kernel=http://169.16.1.54:9999/ipa-centos8-master_18_05_21.kernel --driver-info ilo_deploy_ramdisk=http://169.16.1.54:9999/ipa-centos8-master_tls_disabled.initramfs --driver-info ilo_bootloader=http://169.16.1.54:9999/ir-deploy-redfish.efiboot --instance-info image_source=http://169.16.1.54:9999/signed-ubuntu-cloud-image.qcow2 --instance-info image_checksum=23482f9bec532cb9c6c4e3820085c29d --instance-info capabilities='{"boot_mode": "uefi"}' --property capabilities='boot_mode:uefi,secure_boot:true' $ironic_node
 
 openstack baremetal port create --node $ironic_node $mac
 openstack baremetal node power off $ironic_node
